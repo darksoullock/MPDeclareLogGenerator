@@ -1,0 +1,45 @@
+/task definition
+ApplyForTrip
+ApproveApplication
+BookMeansOfTransport
+BookAccomodation
+CollectTickets
+ArchiveDocuments
+UseTransport
+DoSomething
+
+/constraints
+Init[ApplyForTrip]
+Response[CollectTickets, ArchiveDocuments]
+Precedence[BookMeansOfTransport, ApproveApplication]
+Precedence[BookAccomodation, ApproveApplication]
+Precedence[CollectTickets, BookMeansOfTransport]
+Precedence[CollectTickets, BookAccomodation] 
+Absence[BookAccomodation, 2]
+Absence[BookMeansOfTransport, 3]
+ChainResponse[UseTransport, DoSomething]
+Existence[DoSomething]
+Absence[ApplyForTrip, 1]
+Existence[CollectTickets]
+Existence[ArchiveDocuments]
+Absence[ArchiveDocuments, 1]
+Absence[ApproveApplication, 1]
+
+/data definition
+TransportType: Car, Plane, Train, Bus
+Something: One, None, Another
+
+/data binding
+bind BookMeansOfTransport: TransportType
+bind UseTransport: TransportType, Something
+bind DoSomething: Something
+
+/trace attributes
+trace Date datetime
+trace ConstNumber int 42
+trace RandomNumber range 42 422
+trace Enum enum values v2 v3
+
+/data constraints
+Absence[BookMeansOfTransport A] | not A.TransportType=Car
+

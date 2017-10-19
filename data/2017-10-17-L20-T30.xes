@@ -1,0 +1,2353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the XML serialization of the XES standard for log storage and -->
+<!-- management. -->
+<!-- XES standard version: 1.0 -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.openxes.org/ -->
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7" xmlns="http://www.xes-standard.org/">
+	<extension name="Organizational" prefix="org" uri="http://www.xes-standard.org/org.xesext"/>
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+	<extension name="Semantic" prefix="semantic" uri="http://www.xes-standard.org/semantic.xesext"/>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<global scope="trace">
+		<string key="concept:name" value="__INVALID__"/>
+	</global>
+	<global scope="event">
+		<string key="concept:name" value="__INVALID__"/>
+	</global>
+	<string key="concept:name" value="Artificial Log"/>
+	<string key="lifecycle:model" value="standard"/>
+	<string key="source" value="DAlloy"/>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 1"/>
+		<string key="RandomNumber" value="398"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:25.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:36.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:48.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:44.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:13.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:03:14.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:57.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:06:49.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 2"/>
+		<string key="RandomNumber" value="130"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:22.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 3"/>
+		<string key="RandomNumber" value="142"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:52.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:14.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:51.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:53.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:42.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:00.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:02.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:34.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 4"/>
+		<string key="RandomNumber" value="190"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:45.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:43.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:59.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:22.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 5"/>
+		<string key="RandomNumber" value="218"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:31.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:07.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:04.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:23.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 6"/>
+		<string key="RandomNumber" value="150"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:51.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:36.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:52.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:42.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:38.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:03:33.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:33.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:06:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:07:53.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 7"/>
+		<string key="RandomNumber" value="308"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:14.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:30.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:52.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:52.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:57.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:26.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:03:13.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:12.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 8"/>
+		<string key="RandomNumber" value="379"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:14.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:49.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:26.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:57.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 9"/>
+		<string key="RandomNumber" value="222"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:49.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:39.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:33.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:15.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 10"/>
+		<string key="RandomNumber" value="113"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:31.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:15.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:44.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:27.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 11"/>
+		<string key="RandomNumber" value="325"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:27.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:36.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:57.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:56.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:44.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:38.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:16.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 12"/>
+		<string key="RandomNumber" value="415"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:07.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:56.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Train"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:39.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:28.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 13"/>
+		<string key="RandomNumber" value="257"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:56.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:45.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:13.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:58.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 14"/>
+		<string key="RandomNumber" value="251"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:25.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:44.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:08.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 15"/>
+		<string key="RandomNumber" value="116"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:38.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:39.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Bus"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:57.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:03:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:49.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 16"/>
+		<string key="RandomNumber" value="238"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:28.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Train"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:51.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:23.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 17"/>
+		<string key="RandomNumber" value="172"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:14.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:33.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:53.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:25.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:45.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:17.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 18"/>
+		<string key="RandomNumber" value="173"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Train"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:43.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:30.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 19"/>
+		<string key="RandomNumber" value="414"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:48.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:43.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:16.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 20"/>
+		<string key="RandomNumber" value="81"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:25.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:13.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Bus"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:16.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:04.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:25.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 21"/>
+		<string key="RandomNumber" value="161"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:30.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:45.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:06.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:52.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:26.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:27.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:22.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 22"/>
+		<string key="RandomNumber" value="318"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:59.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Plane"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:30.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:49.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:07.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:28.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:31.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:59.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Bus"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:00.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:04.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:18.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 23"/>
+		<string key="RandomNumber" value="290"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:24.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:26.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:13.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:02.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:39.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:34.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:02.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:38.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:03:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:21.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:07:00.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:07:29.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 24"/>
+		<string key="RandomNumber" value="179"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:30.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:25.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:24.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:53.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:24.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:31.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:57.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Bus"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T19:04:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:05:36.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Plane"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:06:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:07:34.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 25"/>
+		<string key="RandomNumber" value="89"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:30.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:42.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:26.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:48.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="One"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:51.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:32.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:03.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:31.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T19:02:34.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v2"/>
+		<string key="concept:name" value="Case No. 26"/>
+		<string key="RandomNumber" value="286"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:01.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:39.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:27.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:15.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:10.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="v3"/>
+		<string key="concept:name" value="Case No. 27"/>
+		<string key="RandomNumber" value="298"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:47.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:24.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:50.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:09.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:20.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:58.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:49.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:56.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:59:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Train"/>
+			<string key="concept:name" value="UseTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:18.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="None"/>
+			<date key="time:timestamp" value="2017-10-17T19:01:44.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 28"/>
+		<string key="RandomNumber" value="74"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:41.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:44.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:37.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:59.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:19.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:22.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:40.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:49.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:11.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:41.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 29"/>
+		<string key="RandomNumber" value="175"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:48:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:12.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:10.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:52:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:04.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:55.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:29.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:46.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:58:07.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T19:00:05.115+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="Enum" value="values"/>
+		<string key="concept:name" value="Case No. 30"/>
+		<string key="RandomNumber" value="359"/>
+		<string key="Date" value="2017-10-17"/>
+		<string key="ConstNumber" value="42"/>
+		<event>
+			<string key="concept:name" value="ApplyForTrip"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:00.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ApproveApplication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:49:08.115+03:00"/>
+		</event>
+		<event>
+			<string key="TransportType" value="Car"/>
+			<string key="concept:name" value="BookMeansOfTransport"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:50:35.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:51:23.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:05.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:53:28.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="CollectTickets"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:54:15.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="ArchiveDocuments"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:55:54.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="DoSomething"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<string key="Something" value="Another"/>
+			<date key="time:timestamp" value="2017-10-17T18:56:17.115+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="BookAccomodation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2017-10-17T18:57:11.115+03:00"/>
+		</event>
+	</trace>
+</log>
