@@ -12,8 +12,14 @@ public class UnaryExpression extends DataExpression {
     }
 
     @Override
-    public String toAlloyInt() {
-        return null;
+    public String toAlloyInt() {    // TODO: fix sme/different -- variable name
+        if (node.getValue().equals("same"))
+            return "(A&"+value.toAlloy()+"=B&"+value.toAlloy()+")";
+
+        if (node.getValue().equals("different"))
+            return "(not A&"+value.toAlloy()+"=B&"+value.toAlloy()+")";
+
+        return node.getValue() + " (" + value.toAlloy() + ')';
     }
 
     public DataExpression getValue() {

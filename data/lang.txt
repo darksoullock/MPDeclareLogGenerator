@@ -1,0 +1,163 @@
+actions:
+	task definitions
+	trace attributes
+	data definition
+	data binding
+	constraints
+	data constraints
+
+------------------
+task definition
+example:
+
+ApplyForTrip
+ApproveApplication
+BookMeansOfTransport
+BookAccomodation
+CollectTickets
+ArchiveDocuments
+UseTransport
+DoSomething
+
+------------------
+constraints
+
+supported:
+	Init[task]
+	Existence[task] 
+	Absence[task]
+	Absence[task, n]
+	Choice[taskA, taskB] 
+	ExclusiveChoice[taskA, taskB] 
+	RespondedExistence[taskA, taskB] 
+	Response[taskA, taskB] 
+	AlternateResponse[taskA, taskB] 
+	ChainResponse[taskA, taskB]
+	Precedence[taskA, taskB] 
+	AlternatePrecedence[taskA, taskB] 
+	ChainPrecedence[taskA, taskB] 
+	NotRespondedExistence[taskA, taskB] 
+	NotResponse[taskA, taskB] 
+	NotPrecedence[taskA, taskB] 
+	NotChainResponse[taskA, taskB]
+	NotChainPrecedence[taskA, taskB]
+
+Syntax:
+	Constraint[Task]
+	Constraint[Task, int]
+	Constraint[Task, Task2]
+
+example:
+
+Init[ApplyForTrip]
+Response[CollectTickets, ArchiveDocuments]
+Precedence[BookMeansOfTransport, ApproveApplication]
+ChainResponse[UseTransport, DoSomething]
+Existence[CollectTickets]
+Absence[ApproveApplication, 1]
+
+------------------
+data definition
+Syntax:
+	Attribute: Value1, Value2, ...
+	Attribute type between Number and Number
+	
+example:
+	
+TransportType: Car, Plane, Train, Bus
+Price integer between 0 and 300
+Angle float between 0 and 180
+
+------------------
+trace attributes
+Syntax:
+	trace Attribute: Value1, Value2, ...
+	trace Attribute type between Number and Number
+
+example:
+
+trace AttrName: value1, value2, ..
+trace Age integer between 10 and 100
+trace Angle float between 0.01 and 179.99
+
+------------------
+data binding
+Syntax:
+	bind Task: Attribute
+	bind Task: Attribute1, Attribute2, ...
+
+example:
+	
+bind BookMeansOfTransport: TransportType
+bind UseTransport: TransportType, Something
+
+------------------
+data constraints
+
+Syntax:
+	Constraint[Task Name] | function
+	Constraint[Task Name, Task2 Name2] | function | function
+
+Operators:
+binary:
+	is
+	is not
+	in
+	not in
+	or
+	xor?
+	and
+
+unary:
+	not
+	same
+	different
+	
+	()
+	.
+
+comparators:
+	>
+	<
+	>=
+	<=
+	=
+	
+values:
+	number
+	variable
+	set
+	
+	
+	
+example:
+
+Absence[BookMeansOfTransport A] | A.TransportType is Car
+Absence[BookMeansOfTransport A] | A.TransportType is not Car
+Absence[BookMeansOfTransport A] | A.TransportType in (Car, Train)
+Absence[BookMeansOfTransport A] | A.TransportType not in (Car, Train)
+Existence[BookMeansOfTransport A] | A.TransportType is Bus or A.Distance is Big
+Absence[BookMeansOfTransport A] | A.TransportType is Plane and A.Distance is not Big
+
+Response[BookMeansOfTransport A, UseTransport B] | A.TransportType is Plane | B.TransportType is not Train
+Response[BookMeansOfTransport A, UseTransport B] || same TransportType
+Response[BookMeansOfTransport A, UseTransport B] || different TransportType
+Response[BookMeansOfTransport A, UseTransport B] || different TransportType and B.TransportType is not Car
+
+Absence[BookMeansOfTransport A] | A.Price>5
+
+?Response[BookMeansOfTransport A, UseTransport B] || A.Price>B.Price
+?Response[BookMeansOfTransport A, UseTransport B] || A.Price>N
+?Response[BookMeansOfTransport A, UseTransport B] || B.Price<N
+
+
+
+
+
+
+
+
+
+
+
+

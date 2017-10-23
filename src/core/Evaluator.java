@@ -1,9 +1,12 @@
 package core;
 
 import core.alloy.codegen.AlloyCodeGenerator;
-import core.alloy.codegen.fnparser.DataFunction;
+import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.integration.AlloyComponent;
+import core.alloy.serialization.AlloyXESSerializer;
 import core.models.Expr;
+import edu.mit.csail.sdg.alloy4compiler.ast.Module;
+import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +22,7 @@ public class Evaluator {
     public static void main(String[] args) throws Exception {
         long start = System.nanoTime();
 
-        new DataFunction().parse("(different TransportType and (B.TransportType is not Car or A.Price<=2) and A.TransportType in (Car, Plane,Train))");
+        new DataExpressionParser().parse("(different TransportType and (B.TransportType is not Car or A.Price<=2) and A.TransportType in (Car, Plane,Train))");
 
         int l = 20;
         int minl = 10;
@@ -43,13 +46,13 @@ public class Evaluator {
         }
 
         AlloyComponent alloy = new AlloyComponent();
-//        Module world = alloy.parse(alsFilename);
-//        A4Solution solution = alloy.executeFromFile(l, bitwidth);
-//
-//        System.out.println("Found Solution: " + (solution != null && solution.satisfiable()));
-//
-//        AlloyXESSerializer serializer = new AlloyXESSerializer(world, getMapping(), gen.getTraceAttr());
-//        serializer.serialize(solution, ntrace, outFilename, l);
+        Module world = alloy.parse(alsFilename);
+        A4Solution solution = alloy.executeFromFile(l, bitwidth);
+
+        System.out.println("Found Solution: " + (solution != null && solution.satisfiable()));
+
+        AlloyXESSerializer serializer = new AlloyXESSerializer(world, getMapping(), gen.getTraceAttr());
+        serializer.serialize(solution, ntrace, outFilename, l);
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000);

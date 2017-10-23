@@ -21,7 +21,7 @@ public class DeclareParser
 
     public boolean isData(String line)
     {
-        return line.contains(":") && !isDataBinding(line);
+        return (line.contains(":") && !isDataBinding(line) || line.contains(" between ") )&& !isTraceAttribute(line);
     }
 
     public boolean isDataBinding(String line)

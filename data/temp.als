@@ -138,17 +138,6 @@ one sig CollectTickets extends Task {}
 one sig ArchiveDocuments extends Task {}
 one sig UseTransport extends Task {}
 one sig DoSomething extends Task {}
-abstract sig TransportType extends Payload {}
-fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-one sig  Car extends TransportType{}
-one sig  Plane extends TransportType{}
-one sig  Train extends TransportType{}
-one sig  Bus extends TransportType{}
-abstract sig Something extends Payload {}
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-one sig  One extends Something{}
-one sig  None extends Something{}
-one sig  Another extends Something{}
 fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
 fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType) & te.data} = 1 }
 fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something) & te.data} = 2 }
@@ -173,6 +162,17 @@ Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
 }
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p1593902378[te.data] }
-pred p1593902378(A: set Payload) { {  not A&TransportType=Car } }
+fact { no te: TaskEvent | te.task = BookMeansOfTransport and p1976874382[te.data] }
+pred p1976874382(A: set Payload) { { (not A&TransportType=Car) } }
+abstract sig TransportType extends Payload {}
+fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
+one sig Car extends TransportType{}
+one sig Plane extends TransportType{}
+one sig Train extends TransportType{}
+one sig Bus extends TransportType{}
+abstract sig Something extends Payload {}
+fact { all te: TaskEvent | #{Something & te.data} <= 1 }
+one sig One extends Something{}
+one sig None extends Something{}
+one sig Another extends Something{}
 

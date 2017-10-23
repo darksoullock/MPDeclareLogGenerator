@@ -18,8 +18,4 @@ public abstract class DataExpression {
     public Token getNode() {
         return node;
     }
-
-    public void setNode(Token node) {
-        this.node = node;
-    }
 }

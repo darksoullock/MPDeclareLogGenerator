@@ -23,3 +23,11 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+out/
+
+*.xes
+*.xez
+
+*.class
+*.jar

@@ -10,6 +10,13 @@ public class ValueExpression extends DataExpression {
 
     @Override
     public String toAlloyInt() {
-        return null;
+        if (node.getType() == Token.Type.Set)
+            return node.getValue().replace(',','+');
+
+        if (node.getType() == Token.Type.Variable)
+            return node.getValue().replace('.','&');
+
+
+        return node.getValue();
     }
 }

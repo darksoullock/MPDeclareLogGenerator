@@ -10,7 +10,7 @@ import core.alloy.integration.AlloyPMSolutionBrowser;
 import core.models.Expr;
 import core.models.serialization.Payload;
 import core.models.serialization.TaskEventAdapter;
-import core.models.serialization.TraceProperty;
+import core.models.serialization.trace.AbstractTraceAttribute;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
@@ -32,9 +32,9 @@ public class AlloyXESSerializer {
     private Module module;
     private Map<String, Expr> numericMap;
     Random rand = new Random();
-    List<TraceProperty> traceAttributes;
+    List<AbstractTraceAttribute> traceAttributes;
 
-    public AlloyXESSerializer(Module module, Map<String, Expr> numericMap, List<TraceProperty> traceAttributes) {
+    public AlloyXESSerializer(Module module, Map<String, Expr> numericMap, List<AbstractTraceAttribute> traceAttributes) {
         xesXmlSerializer = new XesXmlSerializer();
         this.module = module;
         this.numericMap = numericMap;
@@ -108,7 +108,7 @@ public class AlloyXESSerializer {
     }
 
     private void handleTraceAttributes(XTraceImpl oneTrace) {
-        for (TraceProperty i : traceAttributes) {
+        for (AbstractTraceAttribute i : traceAttributes) {
             oneTrace.getAttributes().put(i.getName(), new XAttributeLiteralImpl(i.getName(), i.getValue()));
         }
     }

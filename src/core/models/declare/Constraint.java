@@ -18,15 +18,15 @@ public class Constraint {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public List<String> getArgs() {
         return args;
     }
 
-    public void setArgs(List<String> args) {
-        this.args = args;
+    public String getFirstArg() {
+        return args.get(0);
+    }
+
+    public String getSecondArg() {
+        return args.get(1);
     }
 }
