@@ -162,8 +162,8 @@ Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
 }
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p1976874382[te.data] }
-pred p1976874382(A: set Payload) { { (not A&TransportType=Car) } }
+fact { no te: TaskEvent | te.task = BookMeansOfTransport and p878736542[te.data] }
+pred p878736542(A: set Payload) { { ((not A&TransportType=Car)and(BookMeansOfTransport&Something=BookMeansOfTransport&Something)) } }
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 one sig Car extends TransportType{}

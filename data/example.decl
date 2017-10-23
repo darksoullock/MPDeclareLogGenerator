@@ -41,5 +41,5 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Absence[BookMeansOfTransport A] | A.TransportType is not Car
+Absence[BookMeansOfTransport A] | A.TransportType is not Car and same Something
 

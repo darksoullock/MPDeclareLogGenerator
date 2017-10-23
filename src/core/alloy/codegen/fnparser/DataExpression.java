@@ -5,15 +5,6 @@ package core.alloy.codegen.fnparser;
  */
 public abstract class DataExpression {
     protected Token node;
-    String alloy;
-
-    public String toAlloy() {
-        if (alloy == null)
-            alloy = toAlloyInt();
-        return alloy;
-    }
-
-    protected abstract String toAlloyInt();
 
     public Token getNode() {
         return node;

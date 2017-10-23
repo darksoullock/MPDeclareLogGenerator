@@ -55,6 +55,8 @@ public class AlloyCodeGenerator {
 
     Pattern inRectBrackets = Pattern.compile(".*\\[\\s*(.+?)\\s*\\].*");
 
+    Random rnd = new Random();
+
     public AlloyCodeGenerator(int traceLength, int minTraceLength, int bitwidth) {
         this.traceLength = traceLength;
         this.minTraceLength = minTraceLength;
@@ -124,7 +126,7 @@ public class AlloyCodeGenerator {
 
     private void GenerateDataConstraints() {
         for (DataConstraint i : dataConstraints) {
-            alloy.append(gen.Generate(i));
+            alloy.append(gen.Generate(i, getRandomFunctionName()));
         }
     }
 
@@ -135,6 +137,10 @@ public class AlloyCodeGenerator {
         }
 
         alloy.append("}\n");
+    }
+
+    private String getRandomFunctionName() {
+        return "p" + Math.abs(rnd.nextInt());   //TODO: change
     }
 
     private void ParseAndGenerateDataBindings() {

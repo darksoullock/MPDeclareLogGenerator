@@ -18,15 +18,7 @@ public class DataFunction {
         return args;
     }
 
-    public void setArgs(List<String> args) {
-        this.args = args;
-    }
-
     public DataExpression getExpression() {
         return expression;
-    }
-
-    public void setExpression(DataExpression expression) {
-        this.expression = expression;
     }
 }

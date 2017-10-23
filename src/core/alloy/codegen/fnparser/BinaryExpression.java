@@ -13,36 +13,11 @@ public class BinaryExpression extends DataExpression {
         this.right = right;
     }
 
-    @Override
-    public String toAlloyInt() {
-        if (node.getValue().equals("is"))
-            return "("+left.toAlloy()+"="+right.toAlloy()+")";
-
-        if (node.getValue().equals("is not"))
-            return "(not "+left.toAlloy()+"="+right.toAlloy()+")";
-
-        if (node.getValue().equals("in"))
-            return "(#{"+left.toAlloy()+"&"+right.toAlloy()+"} = 1)";
-
-        if (node.getValue().equals("not in"))
-            return "(#{"+left.toAlloy()+"&"+right.toAlloy()+"} = 0)";
-
-        return "("+left.toAlloy()+node.getValue()+right.toAlloy()+")";
-    }
-
     public DataExpression getLeft() {
         return left;
     }
 
-    public void setLeft(DataExpression left) {
-        this.left = left;
-    }
-
     public DataExpression getRight() {
         return right;
-    }
-
-    public void setRight(DataExpression right) {
-        this.right = right;
     }
 }

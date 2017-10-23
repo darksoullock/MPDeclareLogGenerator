@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Created by Vasiliy on 2017-10-09.
  */
-public abstract class AbstractTraceAttribute {    // TODO: review
+public abstract class AbstractTraceAttribute {
     String name;
     Random rnd = new Random();
 
