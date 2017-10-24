@@ -7,4 +7,9 @@ public class ValueExpression extends DataExpression {
     public ValueExpression(Token value) {
         this.node = value;
     }
+
+    @Override
+    public String toString() {
+        return node.getValue();
+    }
 }

@@ -139,8 +139,10 @@ one sig ArchiveDocuments extends Task {}
 one sig UseTransport extends Task {}
 one sig DoSomething extends Task {}
 fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something) & te.data} = 2 }
+fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price) & te.data} = 2 }
+fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
+fact { all te: TaskEvent | #{Price & te.data} <= 1 }
+fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
 fact { all te: TaskEvent | #{Something & te.data} <= 1 }
@@ -162,8 +164,6 @@ Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
 }
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p878736542[te.data] }
-pred p878736542(A: set Payload) { { ((not A&TransportType=Car)and(BookMeansOfTransport&Something=BookMeansOfTransport&Something)) } }
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 one sig Car extends TransportType{}
@@ -175,4 +175,13 @@ fact { all te: TaskEvent | #{Something & te.data} <= 1 }
 one sig One extends Something{}
 one sig None extends Something{}
 one sig Another extends Something{}
+abstract sig Price extends Payload {}
+fact { all te: TaskEvent | #{Price & te.data} <= 1 }
+one sig intEqualsTo0 extends Price{}
+one sig intEqualsTo50 extends Price{}
+one sig intEqualsTo300 extends Price{}
+one sig intBetween50and300 extends Price{}
+one sig intBetween0and50 extends Price{}
+fact { no te: TaskEvent | te.task = BookMeansOfTransport and p1165382834[te.data] }
+pred p1165382834(A: set Payload) { { (A&Price>50) } }
 

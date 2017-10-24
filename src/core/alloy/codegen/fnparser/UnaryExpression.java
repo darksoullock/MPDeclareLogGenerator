@@ -14,4 +14,9 @@ public class UnaryExpression extends DataExpression {
     public DataExpression getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return node.getValue() + "(" + value + ")";
+    }
 }

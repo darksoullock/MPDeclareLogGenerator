@@ -7,7 +7,7 @@ package core.alloy.serialization;
 
 import core.TimestampComposer;
 import core.alloy.integration.AlloyPMSolutionBrowser;
-import core.models.Expr;
+import core.models.Interval;
 import core.models.serialization.Payload;
 import core.models.serialization.TaskEventAdapter;
 import core.models.serialization.trace.AbstractTraceAttribute;
@@ -30,11 +30,11 @@ import java.util.Random;
 public class AlloyXESSerializer {
     private XesXmlSerializer xesXmlSerializer;
     private Module module;
-    private Map<String, Expr> numericMap;
+    private Map<String, Interval> numericMap;
     Random rand = new Random();
     List<AbstractTraceAttribute> traceAttributes;
 
-    public AlloyXESSerializer(Module module, Map<String, Expr> numericMap, List<AbstractTraceAttribute> traceAttributes) {
+    public AlloyXESSerializer(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes) {
         xesXmlSerializer = new XesXmlSerializer();
         this.module = module;
         this.numericMap = numericMap;
@@ -117,25 +117,12 @@ public class AlloyXESSerializer {
         for (Payload p : payloads) {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
-            if (dataKey.equals("Price")) {
-                dataValue = convertToNumeric(dataValue) + "";
-            }
+//            if (dataKey.equals("Price")) {
+//                dataValue = numericMap.get(dataValue).get();
+//            }
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
         }
-    }
-
-    private int convertToNumeric(String dataValue) { // TODO review, negative numbers
-        Expr e = numericMap.get(dataValue);
-        if (e.getName().charAt(0) == 'E')
-            return e.getValue1();
-        if (e.getName().charAt(0) == 'M')
-            return e.getValue1() + rand.nextInt(1000000);
-        if (e.getName().charAt(0) == 'L')
-            return rand.nextInt(e.getValue1());
-        if (e.getName().charAt(0) == 'B')
-            return rand.nextInt(e.getValue2() - e.getValue1()) + e.getValue1();
-        return -1;
     }
 
     public String unqualifyLabel(String qualifiedLabel) {

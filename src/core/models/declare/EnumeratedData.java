@@ -23,10 +23,6 @@ public class EnumeratedData {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public List<String> getValues() {
         return values;
     }

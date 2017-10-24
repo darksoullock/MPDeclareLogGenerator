@@ -4,6 +4,7 @@ import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,13 +12,13 @@ import java.util.regex.Pattern;
  * Created by Vasiliy on 2017-10-19.
  */
 public class DataExpressionParser {
-    Pattern tokenPattern = Pattern.compile("\\(\\w+(,\\s*\\w+)+\\)|is not|is|not in|in|or|and|not|same|different|\\w+\\.\\w+|\\w+|\\(|\\)|\\d+|<=|>=|<|>|=");
-    Pattern setTokenPattern = Pattern.compile("\\(\\w+(,\\s*\\w+)+\\)");
+    Pattern tokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)|is not|is|not in|in|or|and|not|same|different|-?\\d+|\\w+\\.\\w+|\\w+|\\(|\\)|<=|>=|<|>|=");
+    Pattern setTokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)");
     Pattern opTokenPattern = Pattern.compile("is not|is|not in|in|or|and|not|same|different");
     Pattern varTokenPattern = Pattern.compile("\\w+\\.\\w+");
+    Pattern numTokenPattern = Pattern.compile("-?\\d+");
     Pattern taskTokenPattern = Pattern.compile("\\w+");
     Pattern groupTokenPattern = Pattern.compile("\\(|\\)");
-    Pattern numTokenPattern = Pattern.compile("\\d+");
     Pattern compTokenPattern = Pattern.compile("<=|>=|<|>|=");
 
     public DataExpression parse(String code) {
@@ -25,25 +26,6 @@ public class DataExpressionParser {
         DataExpression tree = buildExpressionTree(tokens);
         return tree;
     }
-
-//    void printTree(DataExpression tree){ // for debug
-//        if (tree instanceof ValueExpression)
-//            System.out.print(tree.getNode().getValue());
-//
-//        if (tree instanceof UnaryExpression) {
-//            System.out.print(tree.getNode().getValue() + "(");
-//            printTree(((UnaryExpression)tree).getValue());
-//            System.out.print(")");
-//        }
-//
-//        if (tree instanceof BinaryExpression) {
-//            System.out.print(tree.getNode().getValue() + "(");
-//            printTree(((BinaryExpression)tree).getLeft());
-//            System.out.print(",");
-//            printTree(((BinaryExpression)tree).getRight());
-//            System.out.print(")");
-//        }
-//    }
 
     private DataExpression buildExpressionTree(List<Token> tokens) {
         //priority: is/is not/in/not in, not/same/different/<>=, not, and, or
@@ -93,7 +75,7 @@ public class DataExpressionParser {
                 return new ValueExpression(i);
         }
 
-        throw new AssertionError("not recognized");
+        throw new InvalidStateException("not recognized");
     }
 
     private List<Token> unwrap(List<Token> tokens) {
@@ -148,7 +130,7 @@ public class DataExpressionParser {
         }
 
         if (tokens.stream().map(i -> i.getType() == Token.Type.Group ? i.getValue().equals("(") ? 1 : -1 : 0).reduce((i, j) -> i + j).get() != 0)
-            throw new AssertionError("Parenthesis count not match");
+            throw new InvalidStateException("Parenthesis count not match");
 
         return tokens;
     }
@@ -165,18 +147,51 @@ public class DataExpressionParser {
         if (varTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Variable, value);
 
+        if (numTokenPattern.matcher(value).matches())
+            return new Token(i, Token.Type.Number, value);
+
         if (taskTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Task, value);
 
         if (groupTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Group, value);
 
-        if (numTokenPattern.matcher(value).matches())
-            return new Token(i, Token.Type.Number, value);
-
         if (compTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Comparator, value);
 
-        throw new AssertionError("unknown token: " + value);
+        throw new InvalidStateException("unknown token: " + value);
     }
+
+    public void retrieveNumericExpressions(Map<String, List<DataExpression>> map, DataExpression expr) {
+        if (expr.getNode().getType() == Token.Type.Comparator) {
+            String var = getVariableNameFromComparison((BinaryExpression) expr);
+            var = var.substring(var.indexOf('.')+1);
+            if(!map.containsKey(var))
+                map.put(var, new ArrayList<>());
+            map.get(var).add(expr);
+        }
+
+        if (expr instanceof UnaryExpression)
+            retrieveNumericExpressions(map, ((UnaryExpression)expr).getValue());
+
+        if (expr instanceof BinaryExpression) {
+            retrieveNumericExpressions(map, ((BinaryExpression) expr).getLeft());
+            retrieveNumericExpressions(map, ((BinaryExpression) expr).getRight());
+        }
+    }
+
+    private String getVariableNameFromComparison(BinaryExpression expr) {
+        if (expr.getLeft().getNode().getType() == expr.getRight().getNode().getType())
+            throw new AssertionError("Comparison of variables unsupported yet");
+
+        if (expr.getLeft().getNode().getType() == Token.Type.Variable)
+            return expr.getLeft().getNode().getValue();
+
+        if (expr.getRight().getNode().getType() == Token.Type.Variable)
+            return expr.getRight().getNode().getValue();
+
+        throw new InvalidStateException("Comparison should include variable");
+    }
+
+
 }

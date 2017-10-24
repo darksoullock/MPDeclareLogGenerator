@@ -20,4 +20,9 @@ public class BinaryExpression extends DataExpression {
     public DataExpression getRight() {
         return right;
     }
+
+    @Override
+    public String toString() {
+        return node.getValue() + '(' + left + ',' + right + ')';
+    }
 }
