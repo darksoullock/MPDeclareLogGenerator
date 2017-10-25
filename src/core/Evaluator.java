@@ -20,20 +20,21 @@ public class Evaluator {
         int l = 20;
         int minl = 10;
         int ntrace = 30;
+        String inFilename = "./data/example.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + l + "-T";
 
-        doStuff(l, minl, ntrace, alsFilename, outFilename);
+        doStuff(l, minl, ntrace, inFilename, alsFilename, outFilename);
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000);
     }
 
-    private static void doStuff(int traceLength, int minTraceLength, int numberOfTraces, String alsFilename, String outFilename) throws Err, IOException, IllegalAccessException {
+    private static void doStuff(int traceLength, int minTraceLength, int numberOfTraces, String inFilename, String alsFilename, String outFilename) throws Err, IOException, IllegalAccessException {
         System.out.println("Maximum no of traces: " + numberOfTraces);
 
         int bitwidth = (int) Math.ceil(Math.log((double) traceLength) / Math.log(2.0D));
-        String declare = GetDeclare();
+        String declare = GetDeclare(inFilename);
         AlloyCodeGenerator gen = new AlloyCodeGenerator(traceLength, minTraceLength, bitwidth);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
@@ -50,7 +51,7 @@ public class Evaluator {
         serializer.serialize(solution, numberOfTraces, outFilename, traceLength);
     }
 
-    private static String GetDeclare() throws FileNotFoundException {
-        return IOHelper.readAllText(new FileInputStream("./data/example.decl"));
+    private static String GetDeclare(String file) throws FileNotFoundException {
+        return IOHelper.readAllText(new FileInputStream(file));
     }
 }

@@ -1,6 +1,6 @@
-package core.models.declare;
+package core.models.declare.data;
 
-import core.models.Interval;
+import core.models.intervals.Interval;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;

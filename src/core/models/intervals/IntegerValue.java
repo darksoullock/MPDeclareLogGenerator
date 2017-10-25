@@ -1,4 +1,4 @@
-package core.models;
+package core.models.intervals;
 
 /**
  * Created by Vasiliy on 2017-10-24.
@@ -10,6 +10,6 @@ public class IntegerValue extends IntegerInterval {
 
     @Override
     public String get() {
-        return String.valueOf(min);
+        return String.valueOf(max);
     }
 }

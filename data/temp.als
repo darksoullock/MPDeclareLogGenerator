@@ -139,10 +139,12 @@ one sig ArchiveDocuments extends Task {}
 one sig UseTransport extends Task {}
 one sig DoSomething extends Task {}
 fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price) & te.data} = 2 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
+fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price + Speed) & te.data} = 3 }
+fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something) & te.data} = 2 }
+fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
+fact { all te: TaskEvent | #{Speed & te.data} = 1 implies te.task in (BookMeansOfTransport) }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
+fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport) }
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
 fact { all te: TaskEvent | #{Something & te.data} <= 1 }
@@ -177,11 +179,18 @@ one sig None extends Something{}
 one sig Another extends Something{}
 abstract sig Price extends Payload {}
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-one sig intEqualsTo0 extends Price{}
-one sig intEqualsTo50 extends Price{}
-one sig intEqualsTo300 extends Price{}
-one sig intBetween50and300 extends Price{}
-one sig intBetween0and50 extends Price{}
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p1165382834[te.data] }
-pred p1165382834(A: set Payload) { { (A&Price>50) } }
+one sig intBetween50and300r100003 extends Price{}
+one sig intBetween0and50r100001 extends Price{}
+one sig intEqualsTo50r100002 extends Price{}
+one sig intEqualsTo0r100000 extends Price{}
+one sig intEqualsTo300r100004 extends Price{}
+abstract sig Speed extends Payload {}
+fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
+one sig intEqualsTo50r100007 extends Speed{}
+one sig intEqualsTo300r100009 extends Speed{}
+one sig intBetween50and300r100008 extends Speed{}
+one sig intBetween0and50r100006 extends Speed{}
+one sig intEqualsTo0r100005 extends Speed{}
+fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100010[te.data] }
+pred p100010(A: set Payload) { { (A&Price in (intBetween50and300r100003 + intEqualsTo300r100004) or A&Speed in (intEqualsTo50r100007 + intEqualsTo300r100009 + intBetween50and300r100008)) } }
 

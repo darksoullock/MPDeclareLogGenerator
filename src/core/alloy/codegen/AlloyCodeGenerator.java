@@ -1,20 +1,20 @@
 package core.alloy.codegen;
 
 import core.IOHelper;
-import core.alloy.codegen.fnparser.*;
-import core.models.Interval;
-import core.models.declare.*;
+import core.RandomHelper;
+import core.alloy.codegen.fnparser.BinaryExpression;
+import core.alloy.codegen.fnparser.DataExpression;
+import core.alloy.codegen.fnparser.Token;
+import core.models.intervals.Interval;
+import core.models.declare.DataConstraint;
+import core.models.declare.data.EnumeratedData;
+import core.models.declare.data.NumericData;
 import core.models.serialization.trace.AbstractTraceAttribute;
-import core.models.serialization.trace.EnumTraceAttribute;
-import core.models.serialization.trace.FloatTraceAttribute;
-import core.models.serialization.trace.IntTraceAttribute;
 import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -27,8 +27,6 @@ public class AlloyCodeGenerator {
 
     StringBuilder alloy;
     List<AbstractTraceAttribute> traceAttributes;
-    List<EnumeratedData> data;
-    List<DataConstraint> dataConstraints;
 
     List<String> tasksCode;
     List<String> traceAttributesCode;
@@ -37,22 +35,14 @@ public class AlloyCodeGenerator {
     List<String> constraintsCode;
     List<String> dataConstraintsCode;
 
-    List<NumericData> numericData;
+    Map<String, NumericData> numericData;
     Map<String, List<DataExpression>> numericExpressions;
 
     Map<String, List<String>> taskToData;
     Map<String, List<String>> dataToTask;
 
-    boolean dataConstraintsParsed = false;
-
     DeclareParser parser = new DeclareParser();
-    DataExpressionParser expressionParser = new DataExpressionParser();
-
     DataConstraintGenerator gen = new DataConstraintGenerator();
-
-    Pattern inRectBrackets = Pattern.compile(".*\\[\\s*(.+?)\\s*].*");
-
-    Random rnd = new Random();
 
     public AlloyCodeGenerator(int traceLength, int minTraceLength, int bitwidth) {
         this.traceLength = traceLength;
@@ -66,14 +56,14 @@ public class AlloyCodeGenerator {
         GenerateTaskEvents(traceLength, bitwidth);
         SortInput(parser.SplitStatements(declare));
         ParseAndGenerateTasks();
-        ParseData();
+        List<EnumeratedData> data = parser.ParseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
         ParseAndGenerateConstraints();
-        ParseDataConstraints();
+        List<DataConstraint> dataConstraints = parser.ParseDataConstraints(dataConstraintsCode, numericExpressions);
         ExtendNumericData();
-        GenerateData();
-        GenerateDataConstraints();
-        AddTraceAttributes();
+        GenerateData(data);
+        GenerateDataConstraints(dataConstraints);
+        traceAttributes = parser.parseTraceAttributes(traceAttributesCode);
     }
 
     public String getAlloyCode() {
@@ -88,8 +78,8 @@ public class AlloyCodeGenerator {
 
     public Map<String, Interval> generateNumericMap() {
         Map<String, Interval> map = new HashMap<>();
-        for (NumericData ed : numericData)
-            for (String i: ed.getMapping().keySet())
+        for (NumericData ed : numericData.values())
+            for (String i : ed.getMapping().keySet())
                 map.put(i, ed.getMapping().get(i));
 
         return map;
@@ -106,11 +96,7 @@ public class AlloyCodeGenerator {
         taskToData = new HashMap<>();
         dataToTask = new HashMap<>();
 
-        data = new ArrayList<>();
-        dataConstraints = new ArrayList<>();
-        traceAttributes = new ArrayList<>();
-
-        numericData = new ArrayList<>();
+        numericData = new HashMap<>();
         numericExpressions = new HashMap<>();
 
         alloy = new StringBuilder(GetBase());
@@ -120,31 +106,10 @@ public class AlloyCodeGenerator {
         alloy.append("fact {#{te:TaskEvent | te.task=Dummy } <= ").append(traceLength - minTraceLength).append("}\n");
     }
 
-    private void ParseDataConstraints() {
-        for (String line : dataConstraintsCode) {
-            String[] lr = line.split("\\|");
-            String activity = lr[0].substring(0, lr[0].indexOf('['));
-            List<String[]> args = Arrays.stream(getActivityArgsFromConstraintText(lr[0]).split(",\\s*"))
-                    .map(i -> i.split("\\s+"))
-                    .collect(Collectors.toList());
-            List<DataFunction> fns = new ArrayList<>();
-            for (int i = 1; i < lr.length; ++i) {
-                DataExpression expr = expressionParser.parse(lr[i]);
-                expressionParser.retrieveNumericExpressions(numericExpressions, expr);
-                DataFunction fn = new DataFunction(args.stream().map(x -> x[1]).collect(Collectors.toList()), expr);
-                fns.add(fn);
-            }
 
-            DataConstraint c = new DataConstraint(activity, args.stream().map(i -> i[0]).collect(Collectors.toList()), fns);
-            dataConstraints.add(c);
-        }
-
-        dataConstraintsParsed = true;
-    }
-
-    private void GenerateDataConstraints() {
+    private void GenerateDataConstraints(List<DataConstraint> dataConstraints) {
         for (DataConstraint i : dataConstraints) {
-            alloy.append(gen.Generate(i, getRandomFunctionName()));
+            alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
         }
     }
 
@@ -158,7 +123,7 @@ public class AlloyCodeGenerator {
     }
 
     private String getRandomFunctionName() {
-        return "p" + Math.abs(rnd.nextInt());   //TODO: change
+        return "p" + RandomHelper.getNext();
     }
 
     private void ParseAndGenerateDataBindings() {
@@ -179,29 +144,9 @@ public class AlloyCodeGenerator {
         WriteDataBinding();
     }
 
-    private void ParseData() {
-        for (String i : dataCode) {
-            String[] a = i.split(":\\s*|,?\\s+");
-
-            if (i.contains(":"))
-                data.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList())));
-
-            if (a[1].equals("integer")) {
-                IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]));
-                data.add(b);
-                numericData.add(b);
-            }
-
-            if (a[1].equals("float")) {
-                FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]));
-                data.add(b);
-                numericData.add(b);
-            }
-        }
-    }
 
     private void ExtendNumericData() {
-        for (EnumeratedData d : numericData)
+        for (EnumeratedData d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
                     d.addValue(getNumberFromComparison((BinaryExpression) i));
@@ -217,10 +162,7 @@ public class AlloyCodeGenerator {
         throw new InvalidStateException("No number in comparison operator");
     }
 
-    private void GenerateData() {
-        if (!dataConstraintsParsed)
-            throw new InvalidStateException("Data constraints should be parsed first. Otherwise numbers might be skipped");
-
+    private void GenerateData(List<EnumeratedData> data) {
         for (EnumeratedData item : data) {
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
             alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
@@ -265,27 +207,6 @@ public class AlloyCodeGenerator {
         int offset = 1 << bitwidth;
         for (int i = 0; i < length; i++) {
             alloy.append("one sig TE").append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
-        }
-    }
-
-    private String getActivityArgsFromConstraintText(String v) {
-        Matcher m = inRectBrackets.matcher(v);
-        m.matches();
-        return m.group(1);
-    }
-
-    private void AddTraceAttributes() {
-        for (String i : traceAttributesCode) {
-            String[] a = i.split(":\\s*|,?\\s+");
-
-            if (i.contains(":"))
-                traceAttributes.add(new EnumTraceAttribute(a[1], Arrays.stream(a).skip(2).collect(Collectors.toList())));
-
-            if (a[2].equals("integer"))
-                traceAttributes.add(new IntTraceAttribute(a[1], Integer.parseInt(a[4]), Integer.parseInt(a[6])));
-
-            if (a[2].equals("float"))
-                traceAttributes.add(new FloatTraceAttribute(a[1], Float.parseFloat(a[4]), Float.parseFloat(a[6])));
         }
     }
 

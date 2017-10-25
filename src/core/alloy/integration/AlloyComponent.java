@@ -18,7 +18,7 @@ public class AlloyComponent {
     private A4Reporter reporter;
     private Module world;
 
-    public Module parse(String fileName) throws Err {
+    public Module parse(String filename) throws Err {
         this.config = new A4Options();
         this.config.solver = SatSolver.SAT4J; // use for windows
         //this.config.solver = SatSolver.MiniSatJNI; // use for linux
@@ -33,7 +33,7 @@ public class AlloyComponent {
             }
         };
 
-        return this.world = CompUtil.parseEverything_fromFile(this.reporter, null, fileName);
+        return this.world = CompUtil.parseEverything_fromFile(this.reporter, null, filename);
     }
 
     public A4Solution executeFromFile(int maxTraceLength, int bitwidth) throws Err {

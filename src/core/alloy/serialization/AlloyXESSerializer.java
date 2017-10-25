@@ -7,7 +7,7 @@ package core.alloy.serialization;
 
 import core.TimestampComposer;
 import core.alloy.integration.AlloyPMSolutionBrowser;
-import core.models.Interval;
+import core.models.intervals.Interval;
 import core.models.serialization.Payload;
 import core.models.serialization.TaskEventAdapter;
 import core.models.serialization.trace.AbstractTraceAttribute;
@@ -25,13 +25,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class AlloyXESSerializer {
     private XesXmlSerializer xesXmlSerializer;
     private Module module;
     private Map<String, Interval> numericMap;
-    Random rand = new Random();
     List<AbstractTraceAttribute> traceAttributes;
 
     public AlloyXESSerializer(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes) {
@@ -113,13 +111,13 @@ public class AlloyXESSerializer {
         }
     }
 
-    private void handlePayload(List<Payload> payloads, XAttributeMapImpl attributes) { // TODO hardcoded numeric price
+    private void handlePayload(List<Payload> payloads, XAttributeMapImpl attributes) {
         for (Payload p : payloads) {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
-//            if (dataKey.equals("Price")) {
-//                dataValue = numericMap.get(dataValue).get();
-//            }
+            if (numericMap.containsKey(dataValue)) {
+                dataValue = numericMap.get(dataValue).get();
+            }
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
         }

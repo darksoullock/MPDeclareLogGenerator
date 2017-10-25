@@ -1,8 +1,9 @@
-package core.models.declare;
+package core.models.declare.data;
 
-import core.models.IntegerInterval;
-import core.models.IntegerValue;
-import core.models.Interval;
+import core.RandomHelper;
+import core.models.intervals.IntegerInterval;
+import core.models.intervals.IntegerValue;
+import core.models.intervals.Interval;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,10 +68,10 @@ public class IntegerData extends NumericData {
     }
 
     private String formatBetween(int a, int b) {
-        return "intBetween" + a + "and" + b;
+        return "intBetween" + a + "and" + b + 'r' + RandomHelper.getNext();
     }
 
     private String formatEquals(int a) {
-        return "intEqualsTo" + a;
+        return "intEqualsTo" + a + 'r' + RandomHelper.getNext();
     }
 }

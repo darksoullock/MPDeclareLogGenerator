@@ -29,10 +29,11 @@ Absence[ApproveApplication, 1]
 TransportType: Car, Plane, Train, Bus
 Something: One, None, Another
 Price integer between 0 and 300
+Speed integer between 0 and 300
 
 /data binding
-bind BookMeansOfTransport: TransportType, Price
-bind UseTransport: TransportType, Something, Price
+bind BookMeansOfTransport: TransportType, Price, Speed
+bind UseTransport: TransportType, Something
 bind DoSomething: Something
 
 /trace attributes
@@ -42,5 +43,5 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Absence[BookMeansOfTransport A] | A.Price>50
+Absence[BookMeansOfTransport A] | A.Price>50 or A.Speed>=50
 

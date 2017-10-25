@@ -1,4 +1,6 @@
-package core.models;
+package core.models.intervals;
+
+import core.alloy.codegen.fnparser.DataExpression;
 
 import java.util.Random;
 
@@ -8,4 +10,5 @@ import java.util.Random;
 public abstract class Interval {
     protected Random rnd = new Random();
     public abstract String get();
+    public abstract boolean isCompliant(DataExpression expr);
 }

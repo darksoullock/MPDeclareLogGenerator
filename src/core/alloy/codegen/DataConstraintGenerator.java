@@ -1,7 +1,14 @@
 package core.alloy.codegen;
 
 import core.alloy.codegen.fnparser.*;
+import core.models.intervals.Interval;
 import core.models.declare.DataConstraint;
+import core.models.declare.data.NumericData;
+import sun.plugin.dom.exception.InvalidStateException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vasiliy on 2017-10-23.
@@ -9,10 +16,12 @@ import core.models.declare.DataConstraint;
 public class DataConstraintGenerator {
 
     DataConstraint constraint;
+    Map<String, NumericData> map;
     StringBuilder alloy = new StringBuilder();
 
-    public String Generate(DataConstraint c, String name) {
+    public String Generate(DataConstraint c, String name, Map<String, NumericData> map) {
         constraint = c;
+        this.map = map;
         if (c.getName().equals("Absence"))
             AddAbsenceDataConstraint(c, name);
 
@@ -82,6 +91,11 @@ public class DataConstraintGenerator {
     }
 
     private void handleBinaryExpression(BinaryExpression bex) {
+        if (bex.getNode().getType() == Token.Type.Comparator) {
+            handleNumeric(bex);
+            return;
+        }
+
         if (bex.getNode().getValue().equals("is")) {
             alloy.append('(');
             generateExpression(bex.getLeft());
@@ -120,9 +134,31 @@ public class DataConstraintGenerator {
 
         alloy.append('(');
         generateExpression(bex.getLeft());
-        alloy.append(bex.getNode().getValue());
+        alloy.append(' ').append(bex.getNode().getValue()).append(' ');
         generateExpression(bex.getRight());
         alloy.append(')');
+    }
+
+    private void handleNumeric(BinaryExpression bex) {
+        String var = getVariable(bex);
+        String field = var.substring(var.indexOf('.') + 1);
+        Map<String, Interval> intervalsMap = map.get(field).getMapping();
+        List<String> intervalsNames = new ArrayList<>();
+        for (String i : intervalsMap.keySet())
+            if (intervalsMap.get(i).isCompliant(bex))
+                intervalsNames.add(i);
+
+        alloy.append(var.replace('.', '&')).append(" in ").append('(').append(String.join(" + ", intervalsNames)).append(')');
+    }
+
+    private String getVariable(BinaryExpression bex) {
+        if (bex.getLeft().getNode().getType() == Token.Type.Variable)
+            return bex.getLeft().getNode().getValue();
+
+        if (bex.getRight().getNode().getType() == Token.Type.Variable)
+            return bex.getRight().getNode().getValue();
+
+        throw new InvalidStateException("No variable in " + bex.toString());
     }
 
     private String getFstFnArg() {
