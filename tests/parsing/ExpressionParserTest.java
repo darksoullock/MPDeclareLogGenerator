@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 /**
  * Created by Vasiliy on 2017-10-23.
  */
-public class ExpressionIdTest {
+public class ExpressionParserTest {
 
     DataExpressionParser parser = new DataExpressionParser();
 

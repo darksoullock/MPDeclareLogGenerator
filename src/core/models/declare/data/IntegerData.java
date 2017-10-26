@@ -18,8 +18,6 @@ public class IntegerData extends NumericData {
     int min;
     int max;
 
-    Map<String, Interval> intervals;
-
     public IntegerData(String type, int min, int max) {
         this.min = min;
         this.max = max;
@@ -27,20 +25,7 @@ public class IntegerData extends NumericData {
     }
 
     @Override
-    public List<String> getValues() {
-        if (intervals == null)
-            generate();
-        return new ArrayList<>(intervals.keySet());
-    }
-
-    @Override
-    public Map<String, Interval> getMapping() {
-        if (intervals == null)
-            generate();
-        return intervals;
-    }
-
-    private void generate() {
+    protected void generate() {
         intervals = new HashMap<>();
 
         if (values.size() == 0) {

@@ -22,11 +22,11 @@ public class Constraint {
         return args;
     }
 
-    public String getFirstArg() {
+    public String taskA() {
         return args.get(0);
     }
 
-    public String getSecondArg() {
+    public String taskB() {
         return args.get(1);
     }
 }

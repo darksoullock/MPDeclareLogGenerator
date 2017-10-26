@@ -56,7 +56,7 @@ public class AlloyCodeGenerator {
         GenerateTaskEvents(traceLength, bitwidth);
         SortInput(parser.SplitStatements(declare));
         ParseAndGenerateTasks();
-        List<EnumeratedData> data = parser.ParseData(dataCode, numericData);
+        List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
         ParseAndGenerateConstraints();
         List<DataConstraint> dataConstraints = parser.ParseDataConstraints(dataConstraintsCode, numericExpressions);

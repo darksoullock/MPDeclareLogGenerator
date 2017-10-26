@@ -21,7 +21,6 @@ fun getHTEventAtPos(givenPos : Int) : one TaskEvent{
 // declare templates
 
 pred Init(taskA: Task) { 
-	one te: TaskEvent | taskA = te.task
 	one te: TaskEvent | taskA = te.task and te.pos = TE0.pos
 }
 
@@ -29,23 +28,21 @@ pred Existence(taskA: Task) {
 	some te: TaskEvent | te.task = taskA
 }
 
+pred Existence(taskA: Task, n: Int) {
+	#{ te: TaskEvent | taskA in te.task } >= n
+}
+
 pred Absence(taskA: Task) { 
 	no te: TaskEvent | te.task = taskA
 }
 
 pred Absence(taskA: Task, n: Int) {
-	#{ te: TaskEvent | taskA in te.task} <= n
+	#{ te: TaskEvent | taskA in te.task } <= n
 }
 
-// existence(n,A)
-//fact {
-//	#{ hte: TaskEvent | \Task\ in hte.assoEl } >= n		//tested
-//}
-
-// exactly(n,A)
-//fact {
-//	#{ hte: TaskEvent | \Task\ in hte.assoEl } = n	//tested
-//}
+pred Exactly(taskA: Task, n: Int) {
+	#{ te: TaskEvent | taskA in te.task } = n
+}
 
 pred Choice(taskA, taskB: Task) { 
 	some te: TaskEvent | te.task = taskA or te.task = taskB
@@ -140,11 +137,11 @@ one sig UseTransport extends Task {}
 one sig DoSomething extends Task {}
 fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
 fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price + Speed) & te.data} = 3 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something) & te.data} = 2 }
+fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
 fact { all te: TaskEvent | #{Speed & te.data} = 1 implies te.task in (BookMeansOfTransport) }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport) }
+fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
 fact { all te: TaskEvent | #{Something & te.data} <= 1 }
@@ -179,18 +176,23 @@ one sig None extends Something{}
 one sig Another extends Something{}
 abstract sig Price extends Payload {}
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-one sig intBetween50and300r100003 extends Price{}
-one sig intBetween0and50r100001 extends Price{}
-one sig intEqualsTo50r100002 extends Price{}
-one sig intEqualsTo0r100000 extends Price{}
-one sig intEqualsTo300r100004 extends Price{}
+one sig floatBetween0p0and50p0r100001 extends Price{}
+one sig floatEqualsTo50p0r100002 extends Price{}
+one sig floatBetween50p0and200p0r100003 extends Price{}
+one sig floatEqualsTo0p0r100000 extends Price{}
+one sig floatEqualsTo200p0r100004 extends Price{}
+one sig floatEqualsTo300p0r100006 extends Price{}
+one sig floatBetween200p0and300p0r100005 extends Price{}
 abstract sig Speed extends Payload {}
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
-one sig intEqualsTo50r100007 extends Speed{}
-one sig intEqualsTo300r100009 extends Speed{}
-one sig intBetween50and300r100008 extends Speed{}
-one sig intBetween0and50r100006 extends Speed{}
-one sig intEqualsTo0r100005 extends Speed{}
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100010[te.data] }
-pred p100010(A: set Payload) { { (A&Price in (intBetween50and300r100003 + intEqualsTo300r100004) or A&Speed in (intEqualsTo50r100007 + intEqualsTo300r100009 + intBetween50and300r100008)) } }
+one sig intEqualsTo0r100007 extends Speed{}
+one sig intBetween50and300r100010 extends Speed{}
+one sig intEqualsTo50r100009 extends Speed{}
+one sig intEqualsTo300r100011 extends Speed{}
+one sig intBetween0and50r100008 extends Speed{}
+fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100012[te.data] }
+pred p100012(A: set Payload) { { (A&Price in (floatBetween50p0and200p0r100003 + floatEqualsTo200p0r100004 + floatEqualsTo300p0r100006 + floatBetween200p0and300p0r100005) and A&Speed in (intBetween50and300r100010 + intEqualsTo50r100009 + intEqualsTo300r100011)) } }
+fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100013[te.data]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100013c[te.data, fte.data] } > 0 }
+pred p100013(A: set Payload) { { 1=1 } }
+pred p100013c(A, B: set Payload) { { (B&Price in (floatEqualsTo200p0r100004) and (A&TransportType=B&TransportType)) } }
 

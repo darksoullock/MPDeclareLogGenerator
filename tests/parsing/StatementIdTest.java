@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Vasiliy on 2017-10-19.
  */
-public class StatementAnalysis {
+public class StatementIdTest {
     DeclareParser parser = new DeclareParser();
 
     List<String> tasks = Arrays.asList(

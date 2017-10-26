@@ -25,8 +25,10 @@ constraints
 supported:
 	Init[task]
 	Existence[task] 
+	Existence[task, n]
 	Absence[task]
 	Absence[task, n]
+	Exactly[task, n]
 	Choice[taskA, taskB] 
 	ExclusiveChoice[taskA, taskB] 
 	RespondedExistence[taskA, taskB] 

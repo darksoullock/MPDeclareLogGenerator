@@ -64,8 +64,8 @@ public class DataExpressionParser {
                 return new BinaryExpression(i, getLeft(tokens, i.position), getRight(tokens, i.position));
         }
 
-        if (tokens.size() != 1)
-            throw new AssertionError("tokens: " + tokens.size());
+        if (tokens.size() > 1)
+            throw new InvalidStateException("tokens: " + tokens.size());
 
         for (Token i : tokens) {    //values
             if (i.getType() == Token.Type.Set
@@ -75,11 +75,11 @@ public class DataExpressionParser {
                 return new ValueExpression(i);
         }
 
-        throw new InvalidStateException("not recognized");
+        return new ValueExpression(new Token(0, Token.Type.Task, "1=1"));   // empty expression evaluates to true
     }
 
     private List<Token> unwrap(List<Token> tokens) {
-        if (tokens.get(0).getType() != Token.Type.Group)
+        if (tokens.isEmpty() || tokens.get(0).getType() != Token.Type.Group)
             return tokens;
 
         int depth = 1;
@@ -129,7 +129,7 @@ public class DataExpressionParser {
             tokens.add(createToken(index++, token.group(0)));
         }
 
-        if (tokens.stream().map(i -> i.getType() == Token.Type.Group ? i.getValue().equals("(") ? 1 : -1 : 0).reduce((i, j) -> i + j).get() != 0)
+        if (!tokens.isEmpty() && tokens.stream().map(i -> i.getType() == Token.Type.Group ? i.getValue().equals("(") ? 1 : -1 : 0).reduce((i, j) -> i + j).get() != 0)
             throw new InvalidStateException("Parenthesis count not match");
 
         return tokens;
@@ -165,14 +165,14 @@ public class DataExpressionParser {
     public void retrieveNumericExpressions(Map<String, List<DataExpression>> map, DataExpression expr) {
         if (expr.getNode().getType() == Token.Type.Comparator) {
             String var = getVariableNameFromComparison((BinaryExpression) expr);
-            var = var.substring(var.indexOf('.')+1);
-            if(!map.containsKey(var))
+            var = var.substring(var.indexOf('.') + 1);
+            if (!map.containsKey(var))
                 map.put(var, new ArrayList<>());
             map.get(var).add(expr);
         }
 
         if (expr instanceof UnaryExpression)
-            retrieveNumericExpressions(map, ((UnaryExpression)expr).getValue());
+            retrieveNumericExpressions(map, ((UnaryExpression) expr).getValue());
 
         if (expr instanceof BinaryExpression) {
             retrieveNumericExpressions(map, ((BinaryExpression) expr).getLeft());

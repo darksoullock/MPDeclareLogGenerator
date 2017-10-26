@@ -14,14 +14,13 @@ public class IntegerInterval extends Interval {
     int max;
 
     public IntegerInterval(int min, int max) {
-        ++min;
         this.min = min;
         this.max = max;
     }
 
     @Override
     public String get() {
-        return String.valueOf(rnd.nextInt(max - min) + min);
+        return String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
     }
 
     @Override
@@ -44,13 +43,5 @@ public class IntegerInterval extends Interval {
             return min == number && max == number;
 
         throw new InvalidStateException("Unknown operation: " + expr.toString());
-    }
-
-    private BinaryExpression rot(BinaryExpression expr) {   // move number to the right part of expression
-        if (expr.getRight().getNode().getType() == Token.Type.Number)
-            return expr;
-
-        Token t = expr.getNode();
-        return new BinaryExpression(new Token(t.getPosition(), t.getType(), t.getValue().replace('>', '<').replace('<', '>')), expr.getRight(), expr.getLeft());
     }
 }

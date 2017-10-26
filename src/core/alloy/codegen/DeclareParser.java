@@ -3,7 +3,7 @@ package core.alloy.codegen;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.DataFunction;
-import core.models.declare.*;
+import core.models.declare.DataConstraint;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
 import core.models.declare.data.IntegerData;
@@ -58,7 +58,7 @@ public class DeclareParser {
         return code.replace("\r\n", "\n").split("\n");
     }
 
-    public List<EnumeratedData> ParseData(List<String> dataCode, Map<String, NumericData> numericData) {
+    public List<EnumeratedData> parseData(List<String> dataCode, Map<String, NumericData> numericData) {
         ArrayList<EnumeratedData> data = new ArrayList<>();
         for (String i : dataCode) {
             String[] a = i.split(":\\s*|,?\\s+");
@@ -94,7 +94,7 @@ public class DeclareParser {
             for (int i = 1; i < lr.length; ++i) {
                 DataExpression expr = expressionParser.parse(lr[i]);
                 expressionParser.retrieveNumericExpressions(numericExpressions, expr);
-                DataFunction fn = new DataFunction(args.stream().map(x -> x[1]).collect(Collectors.toList()), expr);
+                DataFunction fn = new DataFunction(args.stream().filter(x -> x.length == 2).map(x -> x[1]).limit(i).collect(Collectors.toList()), expr);
                 fns.add(fn);
             }
 

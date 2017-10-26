@@ -21,7 +21,6 @@ fun getHTEventAtPos(givenPos : Int) : one TaskEvent{
 // declare templates
 
 pred Init(taskA: Task) { 
-	one te: TaskEvent | taskA = te.task
 	one te: TaskEvent | taskA = te.task and te.pos = TE0.pos
 }
 
@@ -29,23 +28,21 @@ pred Existence(taskA: Task) {
 	some te: TaskEvent | te.task = taskA
 }
 
+pred Existence(taskA: Task, n: Int) {
+	#{ te: TaskEvent | taskA in te.task } >= n
+}
+
 pred Absence(taskA: Task) { 
 	no te: TaskEvent | te.task = taskA
 }
 
 pred Absence(taskA: Task, n: Int) {
-	#{ te: TaskEvent | taskA in te.task} <= n
+	#{ te: TaskEvent | taskA in te.task } <= n
 }
 
-// existence(n,A)
-//fact {
-//	#{ hte: TaskEvent | \Task\ in hte.assoEl } >= n		//tested
-//}
-
-// exactly(n,A)
-//fact {
-//	#{ hte: TaskEvent | \Task\ in hte.assoEl } = n	//tested
-//}
+pred Exactly(taskA: Task, n: Int) {
+	#{ te: TaskEvent | taskA in te.task } = n
+}
 
 pred Choice(taskA, taskB: Task) { 
 	some te: TaskEvent | te.task = taskA or te.task = taskB
