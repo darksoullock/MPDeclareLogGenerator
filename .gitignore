@@ -31,3 +31,4 @@ out/
 
 *.class
 *.jar
+./data/temp.als

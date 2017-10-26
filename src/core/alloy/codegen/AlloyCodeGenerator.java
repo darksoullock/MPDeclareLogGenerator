@@ -206,7 +206,7 @@ public class AlloyCodeGenerator {
         --bitwidth;
         int offset = 1 << bitwidth;
         for (int i = 0; i < length; i++) {
-            alloy.append("one sig TE").append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
+            alloy.append("lone sig TE").append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
         }
     }
 
