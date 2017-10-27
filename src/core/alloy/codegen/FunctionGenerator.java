@@ -133,7 +133,7 @@ public class FunctionGenerator {
         Map<String, Interval> intervalsMap = map.get(field).getMapping();
         List<String> intervalsNames = new ArrayList<>();
         for (String i : intervalsMap.keySet())
-            if (intervalsMap.get(i).isCompliant(bex))
+             if (intervalsMap.get(i).isCompliant(bex))
                 intervalsNames.add(i);
 
         alloy.append(var.replace('.', '&')).append(" in ").append('(').append(String.join(" + ", intervalsNames)).append(')');

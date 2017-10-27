@@ -38,7 +38,7 @@ public class IntegerInterval extends Interval {
         if (op.equals("<="))
             return max <= number;
         if (op.equals("<"))
-            return max < number && min < number;
+            return max <= number && min < number;
         if (op.equals("="))
             return min == number && max == number;
 

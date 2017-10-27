@@ -7,16 +7,8 @@ abstract sig TaskEvent{
 	data: set Payload
 }
 
-one sig Dummy extends Task {}
-fact {all te:TaskEvent | te.task=Dummy implies #{dte:TaskEvent | (not dte.task=Dummy) and dte.pos>te.pos} = 0  }
-
 one sig DummyPayload extends Payload {}
 fact { #{te:TaskEvent | DummyPayload in te.data} <= 0 }
-
-fun getHTEventAtPos(givenPos : Int) : one TaskEvent{
-	{ e: TaskEvent | e.pos = givenPos }
-}
-
 
 // declare templates
 

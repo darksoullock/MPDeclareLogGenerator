@@ -7,16 +7,8 @@ abstract sig TaskEvent{
 	data: set Payload
 }
 
-one sig Dummy extends Task {}
-fact {all te:TaskEvent | te.task=Dummy implies #{dte:TaskEvent | (not dte.task=Dummy) and dte.pos>te.pos} = 0  }
-
 one sig DummyPayload extends Payload {}
 fact { #{te:TaskEvent | DummyPayload in te.data} <= 0 }
-
-fun getHTEventAtPos(givenPos : Int) : one TaskEvent{
-	{ e: TaskEvent | e.pos = givenPos }
-}
-
 
 // declare templates
 
@@ -106,62 +98,35 @@ pred NotChainPrecedence(taskA, taskB: Task) {
 pred example { }
 run example
 
-fact {#{te:TaskEvent | te.task=Dummy } <= 15}
-lone sig TE0 extends TaskEvent {} {pos=-16}
-lone sig TE1 extends TaskEvent {} {pos=-15}
-lone sig TE2 extends TaskEvent {} {pos=-14}
-lone sig TE3 extends TaskEvent {} {pos=-13}
-lone sig TE4 extends TaskEvent {} {pos=-12}
-lone sig TE5 extends TaskEvent {} {pos=-11}
-lone sig TE6 extends TaskEvent {} {pos=-10}
-lone sig TE7 extends TaskEvent {} {pos=-9}
-lone sig TE8 extends TaskEvent {} {pos=-8}
-lone sig TE9 extends TaskEvent {} {pos=-7}
-lone sig TE10 extends TaskEvent {} {pos=-6}
-lone sig TE11 extends TaskEvent {} {pos=-5}
-lone sig TE12 extends TaskEvent {} {pos=-4}
-lone sig TE13 extends TaskEvent {} {pos=-3}
-lone sig TE14 extends TaskEvent {} {pos=-2}
-lone sig TE15 extends TaskEvent {} {pos=-1}
-lone sig TE16 extends TaskEvent {} {pos=0}
-lone sig TE17 extends TaskEvent {} {pos=1}
-lone sig TE18 extends TaskEvent {} {pos=2}
-lone sig TE19 extends TaskEvent {} {pos=3}
+one sig TE0 extends TaskEvent {} {pos=-8}
+one sig TE1 extends TaskEvent {} {pos=-7}
+one sig TE2 extends TaskEvent {} {pos=-6}
+lone sig TE3 extends TaskEvent {} {pos=-5}
+lone sig TE4 extends TaskEvent {} {pos=-4}
+fact{
+one TE4 implies one TE3
+}
 one sig ApplyForTrip extends Task {}
-one sig ApproveApplication extends Task {}
 one sig BookMeansOfTransport extends Task {}
 one sig BookAccomodation extends Task {}
 one sig CollectTickets extends Task {}
 one sig ArchiveDocuments extends Task {}
-one sig UseTransport extends Task {}
-one sig DoSomething extends Task {}
-fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
 fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price + Speed) & te.data} = 3 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something) & te.data} = 2 }
+fact { all te: TaskEvent | te.task = BookAccomodation implies #{(Price) & te.data} = 1 }
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
 fact { all te: TaskEvent | #{Speed & te.data} = 1 implies te.task in (BookMeansOfTransport) }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport) }
+fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport + BookAccomodation) }
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-fact { all te: TaskEvent | #{Something & te.data} = 1 implies te.task in (UseTransport + DoSomething) }
+fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport) }
 fact {
 Init[ApplyForTrip]
 Response[CollectTickets, ArchiveDocuments]
-Precedence[BookMeansOfTransport, ApproveApplication]
-Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookMeansOfTransport]
-Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
 Absence[BookMeansOfTransport, 3]
-ChainResponse[UseTransport, DoSomething]
-Existence[DoSomething]
 Absence[ApplyForTrip, 1]
-Existence[CollectTickets]
 Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
-Absence[ApproveApplication, 1]
 }
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
@@ -169,30 +134,23 @@ one sig Car extends TransportType{}
 one sig Plane extends TransportType{}
 one sig Train extends TransportType{}
 one sig Bus extends TransportType{}
-abstract sig Something extends Payload {}
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-one sig One extends Something{}
-one sig None extends Something{}
-one sig Another extends Something{}
 abstract sig Price extends Payload {}
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-one sig intBetween50and200r100003 extends Price{}
-one sig intBetween0and50r100001 extends Price{}
-one sig intEqualsTo200r100004 extends Price{}
-one sig intEqualsTo50r100002 extends Price{}
-one sig intBetween200and300r100005 extends Price{}
+one sig intBetween0and100r100001 extends Price{}
+one sig intEqualsTo150r100004 extends Price{}
+one sig intBetween150and300r100005 extends Price{}
 one sig intEqualsTo300r100006 extends Price{}
+one sig intEqualsTo100r100002 extends Price{}
 one sig intEqualsTo0r100000 extends Price{}
+one sig intBetween100and150r100003 extends Price{}
 abstract sig Speed extends Payload {}
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
 one sig intEqualsTo0r100007 extends Speed{}
-one sig intBetween50and300r100010 extends Speed{}
-one sig intEqualsTo50r100009 extends Speed{}
-one sig intEqualsTo300r100011 extends Speed{}
-one sig intBetween0and50r100008 extends Speed{}
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100012[te.data] }
-pred p100012(A: set Payload) { { (A&Price in (intBetween50and200r100003 + intEqualsTo200r100004 + intBetween200and300r100005 + intEqualsTo300r100006) and A&Speed in (intBetween50and300r100010 + intEqualsTo50r100009 + intEqualsTo300r100011)) } }
-fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100013[te.data]) implies #{ ote: TaskEvent | UseTransport = ote.task and p100013c[te.data, ote.data]} > 0 }
-pred p100013(A: set Payload) { { A&Price in (intEqualsTo50r100002) } }
-pred p100013c(A, B: set Payload) { { B&Price in (intEqualsTo200r100004) } }
+one sig intBetween0and300r100008 extends Speed{}
+one sig intEqualsTo300r100009 extends Speed{}
+fact { some te: TaskEvent | te.task = BookMeansOfTransport and p100010[te.data]}
+pred p100010(A: set Payload) { { A&Price in (intBetween150and300r100005 + intEqualsTo300r100006) } }
+fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100011[te.data]) implies #{ fte: TaskEvent | fte.pos < te.pos and BookAccomodation = fte.task and p100011c[te.data, fte.data] } > 0 }
+pred p100011(A: set Payload) { { A&Price in (intEqualsTo150r100004 + intBetween150and300r100005 + intEqualsTo300r100006 + intBetween100and150r100003) } }
+pred p100011c(A, B: set Payload) { { B&Price in (intBetween0and100r100001 + intEqualsTo0r100000) } }
 

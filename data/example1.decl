@@ -1,0 +1,48 @@
+/task definition
+ApplyForTrip
+ApproveApplication
+BookMeansOfTransport
+BookAccomodation
+CollectTickets
+ArchiveDocuments
+UseTransport
+DoSomething
+
+/constraints
+Init[ApplyForTrip]
+Response[CollectTickets, ArchiveDocuments]
+Precedence[BookMeansOfTransport, ApproveApplication]
+Precedence[BookAccomodation, ApproveApplication]
+Precedence[CollectTickets, BookMeansOfTransport]
+Precedence[CollectTickets, BookAccomodation] 
+Absence[BookAccomodation, 2]
+Absence[BookMeansOfTransport, 3]
+ChainResponse[UseTransport, DoSomething]
+Existence[DoSomething]
+Absence[ApplyForTrip, 1]
+Existence[CollectTickets]
+Existence[ArchiveDocuments]
+Absence[ArchiveDocuments, 1]
+Absence[ApproveApplication, 1]
+
+/data definition
+TransportType: Car, Plane, Train, Bus
+Something: One, None, Another
+Price integer between 0 and 300
+Speed integer between 0 and 300
+
+/data binding
+bind BookMeansOfTransport: TransportType, Price, Speed
+bind UseTransport: TransportType, Something
+bind DoSomething: Something
+
+/trace attributes
+trace AlwaysSame: 42
+trace RandomNumber integer between 42 and 422
+trace RandomFloatNumber float between 42 and 422
+trace Enum: enum, values, v2, v3
+
+/data constraints
+Absence[BookMeansOfTransport A] | A.Price>50 and A.Speed>=50
+RespondedExistence[BookMeansOfTransport A, UseTransport B] | A.Price=50 | B.Price=200
+

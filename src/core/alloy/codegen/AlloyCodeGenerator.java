@@ -5,10 +5,10 @@ import core.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
-import core.models.intervals.Interval;
 import core.models.declare.DataConstraint;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
+import core.models.intervals.Interval;
 import core.models.serialization.trace.AbstractTraceAttribute;
 import sun.plugin.dom.exception.InvalidStateException;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Created by Vasiliy on 2017-10-16.
  */
 public class AlloyCodeGenerator {
-    int traceLength;
+    int maxTraceLength;
     int minTraceLength;
     int bitwidth;
 
@@ -44,16 +44,16 @@ public class AlloyCodeGenerator {
     DeclareParser parser = new DeclareParser();
     DataConstraintGenerator gen = new DataConstraintGenerator();
 
-    public AlloyCodeGenerator(int traceLength, int minTraceLength, int bitwidth) {
-        this.traceLength = traceLength;
+    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth) {
+        this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
     }
 
     public void Run(String declare) throws FileNotFoundException {
         Init();
-        SetMinTraceLength(minTraceLength, traceLength);
-        GenerateTaskEvents(traceLength, bitwidth);
+        GenerateTaskEvents(maxTraceLength, bitwidth);
+        GenerateVacuityConstraint(minTraceLength, maxTraceLength);
         SortInput(parser.SplitStatements(declare));
         ParseAndGenerateTasks();
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
@@ -101,11 +101,6 @@ public class AlloyCodeGenerator {
 
         alloy = new StringBuilder(GetBase());
     }
-
-    private void SetMinTraceLength(int minTraceLength, int traceLength) {
-        alloy.append("fact {#{te:TaskEvent | te.task=Dummy } <= ").append(traceLength - minTraceLength).append("}\n");
-    }
-
 
     private void GenerateDataConstraints(List<DataConstraint> dataConstraints) {
         for (DataConstraint i : dataConstraints) {
@@ -206,9 +201,23 @@ public class AlloyCodeGenerator {
         --bitwidth;
         int offset = 1 << bitwidth;
         for (int i = 0; i < length; i++) {
-            alloy.append("lone sig TE").append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
+            if (i<minTraceLength)
+                alloy.append("one sig TE");
+            else
+                alloy.append("lone sig TE");
+            alloy.append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
         }
     }
+
+    private void GenerateVacuityConstraint(int minTraceLength, int maxTraceLength) {
+        alloy.append("fact{\n");
+        for (int i=minTraceLength;i<maxTraceLength-1;++i){
+            alloy.append("one TE").append(i + 1).append(" implies one TE").append(i).append('\n');
+        }
+
+        alloy.append("}\n");
+    }
+
 
     private void WriteDataBinding() {
         for (String task : taskToData.keySet()) {

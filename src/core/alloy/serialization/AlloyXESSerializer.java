@@ -5,6 +5,7 @@
 
 package core.alloy.serialization;
 
+import core.StatisticsHelper;
 import core.TimestampComposer;
 import core.alloy.integration.AlloyPMSolutionBrowser;
 import core.models.intervals.Interval;
@@ -87,10 +88,11 @@ public class AlloyXESSerializer {
         oneTrace.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + ++number));
         handleTraceAttributes(oneTrace);
 
+        StatisticsHelper.add((int) orderedStateEvents.stream().filter(i -> i != null).count());
+
         for (TaskEventAdapter oneStateEvent : orderedStateEvents) {
-            if (oneStateEvent.getTaskName().equals("this/Dummy")) {
+            if (oneStateEvent == null)
                 break;
-            }
 
             XAttributeMapImpl attributes = new XAttributeMapImpl();
             attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", unqualifyLabel(oneStateEvent.getTaskName())));

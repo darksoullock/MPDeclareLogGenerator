@@ -23,10 +23,6 @@ public class TaskEventAdapter {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public String getTaskName() {
         return this.taskName;
     }

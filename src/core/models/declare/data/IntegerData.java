@@ -3,12 +3,9 @@ package core.models.declare.data;
 import core.RandomHelper;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
-import core.models.intervals.Interval;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +33,7 @@ public class IntegerData extends NumericData {
         }
 
         List<Integer> intValues = values.stream().map(Integer::parseInt).distinct().collect(Collectors.toList());
+        intValues.sort(Integer::compareTo);
 
         if (intValues.get(0) > min)
             intValues.add(0, min);

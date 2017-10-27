@@ -34,6 +34,7 @@ public class FloatData extends NumericData {
         }
 
         List<Float> floatValues = values.stream().map(Float::parseFloat).distinct().collect(Collectors.toList());
+        floatValues.sort(Float::compareTo);
 
         if (floatValues.get(0) > min)
             floatValues.add(0, min);

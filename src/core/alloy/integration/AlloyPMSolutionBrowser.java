@@ -12,12 +12,10 @@ import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Tuple;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4TupleSet;
 import edu.mit.csail.sdg.alloy4whole.Helper;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -47,21 +45,22 @@ public class AlloyPMSolutionBrowser {
     }
 
     public List<TaskEventAdapter> orderPEvents() throws Err, IOException {
-        TaskEventAdapter[] orderedPEvents = new TaskEventAdapter[length];
-        int max = (int) Math.pow(2.0D, (double) this.solution.getBitwidth()) / 2;
+        List<TaskEventAdapter> orderedPEvents = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
-            int pos = (i - max);
-            Expr taskExpr = exprFromString("getHTEventAtPos[" + pos + "].task");
+            Expr taskExpr = exprFromString("TE" + i + ".task");
             String name = retrieveAtomValue(taskExpr);
-            List<Payload> payload = retrievePayload(pos);
-            orderedPEvents[i] = new TaskEventAdapter(i, name, payload);
+            if (name == null)
+                break;
+
+            List<Payload> payload = retrievePayload(i);
+            orderedPEvents.add(new TaskEventAdapter(i, name, payload));
         }
 
-        return Arrays.asList(orderedPEvents);
+        return orderedPEvents;
     }
 
-    private List<Payload> retrievePayload(int originalEventPos) throws Err, IOException {
-        Expr payloadExpr = exprFromString("(getHTEventAtPos[" + originalEventPos + "].data)");
+    private List<Payload> retrievePayload(int pos) throws Err, IOException {
+        Expr payloadExpr = exprFromString("TE" + pos + ".data");
         ArrayList<Payload> result = new ArrayList<>();
         for (A4Tuple t : ((A4TupleSet) solution.eval(payloadExpr))) {
             String name = getParentSignature(t.atom(0)).label;
@@ -96,7 +95,8 @@ public class AlloyPMSolutionBrowser {
             return atom2Sig(t.atom(0)).label;
         }
 
-        throw new InvalidStateException("No value present for a given expression");
+        return null;
+        //throw new InvalidStateException("No value present for a given expression");
     }
 
     public Expr exprFromString(String stringExpr) throws IOException, Err {
