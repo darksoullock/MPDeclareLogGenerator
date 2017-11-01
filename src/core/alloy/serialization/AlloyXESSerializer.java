@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package core.alloy.serialization;
 
 import core.StatisticsHelper;
@@ -89,6 +84,7 @@ public class AlloyXESSerializer {
         handleTraceAttributes(oneTrace);
 
         StatisticsHelper.add((int) orderedStateEvents.stream().filter(i -> i != null).count());
+        StatisticsHelper.trace = number;
 
         for (TaskEventAdapter oneStateEvent : orderedStateEvents) {
             if (oneStateEvent == null)
@@ -118,7 +114,7 @@ public class AlloyXESSerializer {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
             if (numericMap.containsKey(dataValue)) {
-                dataValue = numericMap.get(dataValue).get();
+                dataValue = numericMap.get(dataValue).get(p.getToken())+"."+p.getToken();
             }
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));

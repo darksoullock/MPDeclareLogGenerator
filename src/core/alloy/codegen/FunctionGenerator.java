@@ -1,9 +1,11 @@
 package core.alloy.codegen;
 
+import core.RandomHelper;
 import core.alloy.codegen.fnparser.*;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
 import sun.plugin.dom.exception.InvalidStateException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,127 +18,165 @@ public class FunctionGenerator {
     StringBuilder alloy;
     Map<String, NumericData> map;
     List<String> args;
+    List<String> argTypes;
 
-    public String generateFunction(String name, DataFunction function, Map<String, NumericData> map) {
+    public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
         this.alloy = new StringBuilder();
         this.map = map;
         this.args = function.getArgs();
-        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set Payload) { { ");
-        generateExpression(function.getExpression());
+        this.argTypes = argTypes;
+        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
+        String continuation = generateExpression(function.getExpression());
         alloy.append(" } }\n");
+        alloy.append(continuation);
         return alloy.toString();
     }
 
-    private void generateExpression(DataExpression expression) {
+    private String generateExpression(DataExpression expression) {
         if (expression instanceof ValueExpression)
-            handleValueExpression((ValueExpression) expression);
+            return handleValueExpression((ValueExpression) expression);
 
         if (expression instanceof UnaryExpression)
-            handleUnaryExpression((UnaryExpression) expression);
+            return handleUnaryExpression((UnaryExpression) expression);
 
         if (expression instanceof BinaryExpression)
-            handleBinaryExpression((BinaryExpression) expression);
+            return handleBinaryExpression((BinaryExpression) expression);
+
+        throw new NotImplementedException();
     }
 
-    private void handleValueExpression(ValueExpression expression) {
+    private String handleValueExpression(ValueExpression expression) {
         Token node = expression.getNode();
         if (node.getType() == Token.Type.Set) {   // (Task1, Task2, ... TaskN)
             alloy.append(node.getValue().replace(',', '+'));
-            return;
+            return "";
         }
 
         if (node.getType() == Token.Type.Variable) { // A.Data1
-            alloy.append(node.getValue().replace('.', '&'));
-            return;
+            alloy.append(node.getValue().replace(".", ".data&"));
+            return "";
         }
 
         alloy.append(node.getValue());
+        return "";
     }
 
-    private void handleUnaryExpression(UnaryExpression uex) {
+    private String handleUnaryExpression(UnaryExpression uex) {
+        StringBuilder tc = new StringBuilder();
         if (uex.getNode().getValue().equals("same")) {
-            alloy.append('(').append(args.get(0)).append('&');
-            generateExpression(uex.getValue());
-            alloy.append('=').append(args.get(1)).append('&');
-            generateExpression(uex.getValue());
+            if (map.containsKey(getFieldType(uex.getValue().getNode().getValue()))) {
+                return handleNumericSame(uex.getValue().getNode().getValue());
+            }
+            alloy.append('(').append(args.get(0)).append(".data&");
+            tc.append(generateExpression(uex.getValue()));
+            alloy.append('=').append(args.get(1)).append(".data&");
+            tc.append(generateExpression(uex.getValue()));
             alloy.append(')');
-            return;
+            return tc.toString();
         }
 
         if (uex.getNode().getValue().equals("different")) {
-            alloy.append("not (").append(args.get(0)).append('&');
-            generateExpression(uex.getValue());
-            alloy.append('=').append(args.get(1)).append('&');
-            generateExpression(uex.getValue());
+            alloy.append("not (").append(args.get(0)).append(".data&");
+            tc.append(generateExpression(uex.getValue()));
+            alloy.append('=').append(args.get(1)).append(".data&");
+            tc.append(generateExpression(uex.getValue()));
             alloy.append(')');
-            return;
+            return tc.toString();
         }
 
 
         alloy.append(uex.getNode().getValue()).append(" (");
-        generateExpression(uex.getValue());
+        tc.append(generateExpression(uex.getValue()));
         alloy.append(')');
+        return tc.toString();
     }
 
-    private void handleBinaryExpression(BinaryExpression bex) {
+    private String handleNumericSame(String value) {
+        int token = RandomHelper.getNext();
+        String aToken = "Get" + value + token;
+        String bToken = "Set" + value + token;
+        alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
+                .append(".data&").append(value).append(" and ").append(aToken).append(" in ").append(args.get(0))
+                .append(".tokens and ").append(bToken).append(" in ").append(args.get(1)).append(".tokens)");
+
+        StringBuilder tc = new StringBuilder();
+        tc.append("one sig ").append(aToken).append(" extends Token {}\none sig ").append(bToken)
+                .append(" extends Token {}\nfact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0))
+                .append(" or not ").append(aToken).append(" in te.tokens) and (te.task = ").append(argTypes.get(1))
+                .append(" or not ").append(bToken).append(" in te.tokens )\nsome te: TaskEvent | ").append(aToken)
+                .append(" in te.tokens implies (all ote: TaskEvent| ").append(aToken).append(" in ote.tokens or ")
+                .append(bToken).append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&")
+                .append(value).append(")\n#{te: TaskEvent | ").append(aToken).append(" in te.tokens } = #{te: TaskEvent | ")
+                .append(bToken).append(" in te.tokens }\n}\n");
+        return tc.toString();
+    }
+
+    private String handleBinaryExpression(BinaryExpression bex) {
         if (bex.getNode().getType() == Token.Type.Comparator) {
             handleNumeric(bex);
-            return;
+            return "";
         }
+
+        StringBuilder tc = new StringBuilder();
 
         if (bex.getNode().getValue().equals("is")) {
             alloy.append('(');
-            generateExpression(bex.getLeft());
+            tc.append(generateExpression(bex.getLeft()));
             alloy.append('=');
-            generateExpression(bex.getRight());
+            tc.append(generateExpression(bex.getRight()));
             alloy.append(')');
-            return;
+            return tc.toString();
         }
 
         if (bex.getNode().getValue().equals("is not")) {
             alloy.append("(not ");
-            generateExpression(bex.getLeft());
+            tc.append(generateExpression(bex.getLeft()));
             alloy.append('=');
-            generateExpression(bex.getRight());
+            tc.append(generateExpression(bex.getRight()));
             alloy.append(')');
-            return;
+            return tc.toString();
         }
 
         if (bex.getNode().getValue().equals("in")) {
             alloy.append("(#{");
-            generateExpression(bex.getLeft());
+            tc.append(generateExpression(bex.getLeft()));
             alloy.append('&');
-            generateExpression(bex.getRight());
+            tc.append(generateExpression(bex.getRight()));
             alloy.append("} = 1)");
-            return;
+            return tc.toString();
         }
 
         if (bex.getNode().getValue().equals("not in")) {
             alloy.append("(#{");
-            generateExpression(bex.getLeft());
+            tc.append(generateExpression(bex.getLeft()));
             alloy.append('&');
-            generateExpression(bex.getRight());
+            tc.append(generateExpression(bex.getRight()));
             alloy.append("} = 0)");
-            return;
+            return tc.toString();
         }
 
         alloy.append('(');
-        generateExpression(bex.getLeft());
+        tc.append(generateExpression(bex.getLeft()));
         alloy.append(' ').append(bex.getNode().getValue()).append(' ');
-        generateExpression(bex.getRight());
+        tc.append(generateExpression(bex.getRight()));
         alloy.append(')');
+        return tc.toString();
     }
 
     private void handleNumeric(BinaryExpression bex) {
         String var = getVariable(bex);
-        String field = var.substring(var.indexOf('.') + 1);
+        String field = getFieldType(var);
         Map<String, Interval> intervalsMap = map.get(field).getMapping();
         List<String> intervalsNames = new ArrayList<>();
         for (String i : intervalsMap.keySet())
-             if (intervalsMap.get(i).isCompliant(bex))
+            if (intervalsMap.get(i).isCompliant(bex))
                 intervalsNames.add(i);
 
-        alloy.append(var.replace('.', '&')).append(" in ").append('(').append(String.join(" + ", intervalsNames)).append(')');
+        alloy.append(var.replace(".", ".data&")).append(" in ").append('(').append(String.join(" + ", intervalsNames)).append(')');
+    }
+
+    private String getFieldType(String var) {
+        return var.substring(var.indexOf('.') + 1);
     }
 
     private String getVariable(BinaryExpression bex) {

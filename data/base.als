@@ -4,11 +4,16 @@ abstract sig Payload {}
 abstract sig TaskEvent{
 	pos: disj Int,
 	task: one Task,
-	data: set Payload
+	data: set Payload,
+	tokens: set Token
 }
 
 one sig DummyPayload extends Payload {}
 fact { #{te:TaskEvent | DummyPayload in te.data} <= 0 }
+
+abstract sig Token {}
+lone sig DummyToken extends Token {}
+fact { #{DummyToken} <= 0 }
 
 // declare templates
 

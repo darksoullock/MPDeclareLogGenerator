@@ -17,7 +17,6 @@ Precedence[CollectTickets, BookMeansOfTransport]
 Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
 Absence[BookMeansOfTransport, 3]
-ChainResponse[UseTransport, DoSomething]
 Existence[DoSomething]
 Absence[ApplyForTrip, 1]
 Existence[CollectTickets]
@@ -33,7 +32,7 @@ Speed integer between 0 and 300
 
 /data binding
 bind BookMeansOfTransport: TransportType, Price, Speed
-bind UseTransport: TransportType, Something
+bind UseTransport: TransportType, Something, Price
 bind DoSomething: Something
 
 /trace attributes
@@ -43,6 +42,5 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Absence[BookMeansOfTransport A] | A.Price>50 and A.Speed>=50
-RespondedExistence[BookMeansOfTransport A, UseTransport B] | A.Price=50 | B.Price=200
+Response[BookMeansOfTransport A, UseTransport B] | | same Price
 

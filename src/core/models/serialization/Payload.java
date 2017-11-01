@@ -6,10 +6,12 @@ package core.models.serialization;
 public class Payload {
     String name;
     String value;
+    String token;
 
-    public Payload(String name, String value) {
+    public Payload(String name, String value, String token) {
         this.name = name;
         this.value = value;
+        this.token = token;
     }
 
     public String getName() {
@@ -18,6 +20,10 @@ public class Payload {
 
     public String getValue() {
         return value;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     @Override

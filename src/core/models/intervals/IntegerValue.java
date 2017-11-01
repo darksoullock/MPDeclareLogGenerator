@@ -9,7 +9,7 @@ public class IntegerValue extends IntegerInterval {
     }
 
     @Override
-    public String get() {
+    public String get(String a) {
         return String.valueOf(max);
     }
 }

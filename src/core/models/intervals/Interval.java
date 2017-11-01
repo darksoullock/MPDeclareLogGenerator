@@ -12,7 +12,9 @@ import java.util.Random;
 public abstract class Interval {
     protected Random rnd = new Random();
 
-    public abstract String get();
+    public abstract String get(String hash);
+
+    //public abstract void resetHashCache();
 
     public abstract boolean isCompliant(DataExpression expr);
 

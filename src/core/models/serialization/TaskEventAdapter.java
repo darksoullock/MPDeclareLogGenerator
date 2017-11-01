@@ -1,8 +1,6 @@
 package core.models.serialization;
 
 
-import core.models.serialization.Payload;
-
 import java.util.List;
 
 public class TaskEventAdapter {

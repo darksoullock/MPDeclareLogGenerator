@@ -9,7 +9,7 @@ public class FloatValue extends FloatInterval {
     }
 
     @Override
-    public String get() {
+    public String get(String a) {
         return String.valueOf(max);
     }
 }

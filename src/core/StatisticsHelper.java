@@ -14,6 +14,7 @@ public class StatisticsHelper {
     static Map<String, Integer> times = new HashMap<>();
     static int scnt = 0;
     static int st = 0;
+    public static int trace;
 
     public static void add(int a) {
         if (!lengthsMap.containsKey(a))

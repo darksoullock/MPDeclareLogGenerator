@@ -48,7 +48,7 @@ public class AlloyPMSolutionBrowser {
         List<TaskEventAdapter> orderedPEvents = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
-            String name = retrieveAtomValue(taskExpr);
+            String name = retrieveAtomLabel(taskExpr);
             if (name == null)
                 break;
 
@@ -65,13 +65,25 @@ public class AlloyPMSolutionBrowser {
         for (A4Tuple t : ((A4TupleSet) solution.eval(payloadExpr))) {
             String name = getParentSignature(t.atom(0)).label;
             String value = atom2Sig(t.atom(0)).label;
-            result.add(new Payload(name, value));
+            String token = getTokenFor(pos, name);
+            result.add(new Payload(name, value, token));
         }
 
         if (result.stream().map(i -> i.getName()).distinct().count() != result.size())
             throw new AssertionError("Two payloads with the same name present in activity. Check alloy model");
 
         return result;
+    }
+
+    private String getTokenFor(int pos, String type) throws Err, IOException {
+        Expr expr = exprFromString("(TE" + pos + ".tokens)");
+        for (A4Tuple t : (A4TupleSet) solution.eval(expr)) {
+            String label = atom2Sig(t.atom(0)).label;
+            if (label.substring(8).startsWith(type.substring(5)))   //TODO: review
+                return label;
+        }
+
+        return null;
     }
 
     private Sig getParentSignature(String atom) {
@@ -90,9 +102,18 @@ public class AlloyPMSolutionBrowser {
         throw new Error();  // fail here; return null would cause other error later;
     }
 
-    private String retrieveAtomValue(Expr exprToTupleSet) throws Err {
+    private String retrieveAtomLabel(Expr exprToTupleSet) throws Err {
         for (A4Tuple t : (A4TupleSet) solution.eval(exprToTupleSet)) {
             return atom2Sig(t.atom(0)).label;
+        }
+
+        return null;
+        //throw new InvalidStateException("No value present for a given expression");
+    }
+
+    private String retrieveAtom(Expr exprToTupleSet) throws Err {
+        for (A4Tuple t : (A4TupleSet) solution.eval(exprToTupleSet)) {
+            return t.atom(0);
         }
 
         return null;
