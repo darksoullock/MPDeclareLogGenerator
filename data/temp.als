@@ -155,6 +155,8 @@ Existence[CollectTickets]
 Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
+Exactly[BookMeansOfTransport, 2]
+Absence[UseTransport, 2]
 }
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
@@ -170,8 +172,6 @@ one sig Another extends Something{}
 abstract sig Price extends Payload {}
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
 one sig intBetween0and300r100001 extends Price{}
-one sig intEqualsTo0r100000 extends Price{}
-one sig intEqualsTo300r100002 extends Price{}
 abstract sig Speed extends Payload {}
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
 one sig intBetween0and300r100004 extends Speed{}
@@ -179,12 +179,39 @@ one sig intEqualsTo300r100005 extends Speed{}
 one sig intEqualsTo0r100003 extends Speed{}
 fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100006[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100006c[te, fte] } > 0 }
 pred p100006(A: set TaskEvent) { { 1=1 } }
-pred p100006c(A, B: set TaskEvent) { { (A.data&Price=B.data&Price and GetPrice100007 in A.tokens and SetPrice100007 in B.tokens) } }
-one sig GetPrice100007 extends Token {}
-one sig SetPrice100007 extends Token {}
+pred p100006c(A, B: set TaskEvent) { { (A.data&Price=B.data&Price and one (GetPrice100007 & A.tokens) and one (SetPrice100007 & B.tokens) and (GetPrice100007 & A.tokens).id = (SetPrice100007 & B.tokens).id) } }
+abstract sig GetPrice100007 extends Token {
+id: disj Int
+}
+abstract sig SetPrice100007 extends Token {
+id: disj Int
+}
+one sig GetPrice100007i0 extends GetPrice100007 {} {id=-8}
+one sig SetPrice100007i0 extends SetPrice100007 {} {id=-8}
 fact {
-all te: TaskEvent | (te.task = BookMeansOfTransport or not GetPrice100007 in te.tokens) and (te.task = UseTransport or not SetPrice100007 in te.tokens )
+#{te: TaskEvent | GetPrice100007i0 in te.tokens}<=1
+#{te: TaskEvent | GetPrice100007i0 in te.tokens } = #{te: TaskEvent | SetPrice100007i0 in te.tokens }
+}
+one sig GetPrice100007i1 extends GetPrice100007 {} {id=-7}
+one sig SetPrice100007i1 extends SetPrice100007 {} {id=-7}
+fact {
+#{te: TaskEvent | GetPrice100007i1 in te.tokens}<=1
+#{te: TaskEvent | GetPrice100007i1 in te.tokens } = #{te: TaskEvent | SetPrice100007i1 in te.tokens }
+}
+one sig GetPrice100007i2 extends GetPrice100007 {} {id=-6}
+one sig SetPrice100007i2 extends SetPrice100007 {} {id=-6}
+fact {
+#{te: TaskEvent | GetPrice100007i2 in te.tokens}<=1
+#{te: TaskEvent | GetPrice100007i2 in te.tokens } = #{te: TaskEvent | SetPrice100007i2 in te.tokens }
+}
+one sig GetPrice100007i3 extends GetPrice100007 {} {id=-5}
+one sig SetPrice100007i3 extends SetPrice100007 {} {id=-5}
+fact {
+#{te: TaskEvent | GetPrice100007i3 in te.tokens}<=1
+#{te: TaskEvent | GetPrice100007i3 in te.tokens } = #{te: TaskEvent | SetPrice100007i3 in te.tokens }
+}
+fact {
+all te: TaskEvent | (te.task = BookMeansOfTransport or #{GetPrice100007 & te.tokens}<=0) and (te.task = UseTransport or #{SetPrice100007 & te.tokens}<=0)
 some te: TaskEvent | GetPrice100007 in te.tokens implies (all ote: TaskEvent| GetPrice100007 in ote.tokens or SetPrice100007 in ote.tokens implies ote.data&Price = te.data&Price)
-#{te: TaskEvent | GetPrice100007 in te.tokens } = #{te: TaskEvent | SetPrice100007 in te.tokens }
 }
 

@@ -14,7 +14,7 @@ import java.util.Arrays;
  * Created by Vasiliy on 2017-10-26.
  */
 public class FunctionGeneratorTest {
-    FunctionGenerator gen = new FunctionGenerator();
+    FunctionGenerator gen = new FunctionGenerator(2, 4);
 
     @Test
     public void testTask() {

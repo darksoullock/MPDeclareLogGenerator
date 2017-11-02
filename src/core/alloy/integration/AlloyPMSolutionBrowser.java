@@ -80,7 +80,7 @@ public class AlloyPMSolutionBrowser {
         for (A4Tuple t : (A4TupleSet) solution.eval(expr)) {
             String label = atom2Sig(t.atom(0)).label;
             if (label.substring(8).startsWith(type.substring(5)))   //TODO: review
-                return label;
+                return label+retrieveAtom(exprFromString("(TE" + pos + ".tokens&"+label+").id"));
         }
 
         return null;

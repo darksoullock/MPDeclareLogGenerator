@@ -12,7 +12,11 @@ public class DataConstraintGenerator {
 
     Map<String, NumericData> map;
     StringBuilder alloy;
-    FunctionGenerator fnGen = new FunctionGenerator();
+    FunctionGenerator fnGen;
+
+    public DataConstraintGenerator(int maxSameInstances, int bitwidth) {
+        this.fnGen = new FunctionGenerator(maxSameInstances, bitwidth);
+    }
 
     public String Generate(DataConstraint c, String name, Map<String, NumericData> map) {
         this.map = map;

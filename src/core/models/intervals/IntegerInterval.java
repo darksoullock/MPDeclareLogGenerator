@@ -33,22 +33,25 @@ public class IntegerInterval extends Interval {
     }
 
     private String getOppositeOrCreate(String hash, String alt1, String alt2) {
-        if (hash.startsWith(alt1)) {
-            String op = alt2 + hash.substring(8);
-            if (hashCache.containsKey(op) && !hashCache.get(op).isEmpty()) {
-                List<String> values = hashCache.get(op);
-                String value = values.get(values.size() - 1);
-                values.remove(values.size() - 1);
-                return value;
-            } else {
-                if (!hashCache.containsKey(hash))
-                    hashCache.put(hash, new ArrayList<>());
-                List<String> values = hashCache.get(hash);
-                String value = String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
-                values.add(value);
-                return value;
-            }
-        } else return getOppositeOrCreate(hash, alt2, alt1);
+        String op;
+        if (hash.startsWith(alt1))
+            op = alt2 + hash.substring(8);
+        else
+            op = alt1 + hash.substring(8);
+        if (hashCache.containsKey(op) && !hashCache.get(op).isEmpty()) {
+            List<String> values = hashCache.get(op);
+            String value = values.get(values.size() - 1);
+            values.remove(values.size() - 1);
+            return value;
+        } else {
+            if (!hashCache.containsKey(hash))
+                hashCache.put(hash, new ArrayList<>());
+            List<String> values = hashCache.get(hash);
+            String value = String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
+            values.add(value);
+            return value;
+        }
+
     }
 
     @Override

@@ -37,11 +37,11 @@ public class Evaluator {
 
         int bitwidth = Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
         String declare = GetDeclare(inFilename);
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, 4);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
 
-        IOHelper.writeAllText(alsFilename, alloyCode);
+        //IOHelper.writeAllText(alsFilename, alloyCode);
 
         AlloyComponent alloy = new AlloyComponent();
         Module world = alloy.parse(alsFilename);

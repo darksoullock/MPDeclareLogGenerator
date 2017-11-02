@@ -19,6 +19,13 @@ public class FunctionGenerator {
     Map<String, NumericData> map;
     List<String> args;
     List<String> argTypes;
+    int maxSameInstances;
+    int minInt;
+
+    public FunctionGenerator(int maxSameInstances, int bitwidth) {
+        this.maxSameInstances = maxSameInstances;
+        this.minInt = -(int) Math.pow(2, bitwidth - 1);
+    }
 
     public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
         this.alloy = new StringBuilder();
@@ -96,18 +103,31 @@ public class FunctionGenerator {
         String aToken = "Get" + value + token;
         String bToken = "Set" + value + token;
         alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
-                .append(".data&").append(value).append(" and ").append(aToken).append(" in ").append(args.get(0))
-                .append(".tokens and ").append(bToken).append(" in ").append(args.get(1)).append(".tokens)");
+                .append(".data&").append(value).append(" and one (").append(aToken).append(" & ").append(args.get(0))
+                .append(".tokens) and one (").append(bToken).append(" & ").append(args.get(1)).append(".tokens) and (")
+                .append(aToken).append(" & ").append(args.get(0)).append(".tokens).id = (").append(bToken).append(" & ")
+                .append(args.get(1)).append(".tokens).id)");
 
         StringBuilder tc = new StringBuilder();
-        tc.append("one sig ").append(aToken).append(" extends Token {}\none sig ").append(bToken)
-                .append(" extends Token {}\nfact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0))
-                .append(" or not ").append(aToken).append(" in te.tokens) and (te.task = ").append(argTypes.get(1))
-                .append(" or not ").append(bToken).append(" in te.tokens )\nsome te: TaskEvent | ").append(aToken)
+        tc.append("abstract sig ").append(aToken).append(" extends Token {\nid: disj Int\n}\nabstract sig ")
+                .append(bToken).append(" extends Token {\nid: disj Int\n}\n");
+
+        for (int i = 0; i < maxSameInstances; ++i) {
+            String ast = aToken + 'i' + i;
+            String bst = bToken + 'i' + i;
+            tc.append("one sig ").append(ast).append(" extends ").append(aToken).append(" {} {id=")
+                    .append(minInt + i).append("}\n").append("one sig ").append(bst).append(" extends ").append(bToken)
+                    .append(" {} {id=").append(minInt + i).append("}\n").append("fact {\n#{te: TaskEvent | ").append(ast)
+                    .append(" in te.tokens}<=1\n#{te: TaskEvent | ").append(ast).append(" in te.tokens } = #{te: TaskEvent | ")
+                    .append(bst).append(" in te.tokens }\n}\n");
+        }
+
+        tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0))
+                .append(" or #{").append(aToken).append(" & te.tokens}<=0) and (te.task = ").append(argTypes.get(1))
+                .append(" or #{").append(bToken).append(" & te.tokens}<=0)\nsome te: TaskEvent | ").append(aToken)
                 .append(" in te.tokens implies (all ote: TaskEvent| ").append(aToken).append(" in ote.tokens or ")
                 .append(bToken).append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&")
-                .append(value).append(")\n#{te: TaskEvent | ").append(aToken).append(" in te.tokens } = #{te: TaskEvent | ")
-                .append(bToken).append(" in te.tokens }\n}\n");
+                .append(value).append(")\n}\n");
         return tc.toString();
     }
 

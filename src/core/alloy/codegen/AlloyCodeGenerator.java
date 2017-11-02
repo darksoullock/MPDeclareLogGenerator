@@ -42,12 +42,14 @@ public class AlloyCodeGenerator {
     Map<String, List<String>> dataToTask;
 
     DeclareParser parser = new DeclareParser();
-    DataConstraintGenerator gen = new DataConstraintGenerator();
+    DataConstraintGenerator gen;
 
-    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth) {
+    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
+        // TODO: maxSameInstances < 2^bitwidth
+        this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth);
     }
 
     public void Run(String declare) throws FileNotFoundException {
