@@ -2,6 +2,8 @@ package core.models.intervals;
 
 import sun.plugin.dom.exception.InvalidStateException;
 
+import java.util.List;
+
 /**
  * Created by Vasiliy on 2017-10-26.
  */
@@ -16,12 +18,12 @@ public class FloatValue extends FloatInterval {
     }
 
     @Override
-    public String getSame(String key) {
+    public String getSame(List<String> key) {
         return get();
     }
 
     @Override
-    public String getDifferent(String hash) {
+    public String getDifferent(List<String> k) {
         throw  new InvalidStateException("Impossible to get different value for this interval");
     }
 

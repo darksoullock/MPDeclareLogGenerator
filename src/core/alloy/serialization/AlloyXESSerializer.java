@@ -16,12 +16,14 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.*;
 import org.deckfour.xes.out.XesXmlSerializer;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AlloyXESSerializer {
     private XesXmlSerializer xesXmlSerializer;
@@ -58,7 +60,7 @@ public class AlloyXESSerializer {
     }
 
     private void resetIntervalCaches() {
-        for (Interval i: numericMap.values()){
+        for (Interval i : numericMap.values()) {
             i.resetCaches();
         }
     }
@@ -122,12 +124,16 @@ public class AlloyXESSerializer {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
             if (numericMap.containsKey(dataValue)) {
-                if (p.getToken()==null)
+                if (p.getTokens().isEmpty())
                     dataValue = numericMap.get(dataValue).get();
-                else if (p.getToken().getType() == NumericToken.Type.Same)
-                    dataValue = numericMap.get(dataValue).getSame(p.getToken().getValue());
-                else if (p.getToken().getType() == NumericToken.Type.Different)
-                    dataValue = numericMap.get(dataValue).getDifferent(p.getToken().getValue())+p.getToken().getValue();
+                else {
+                    if (p.getTokens().stream().allMatch(i -> i.getType() == NumericToken.Type.Same))
+                        dataValue = numericMap.get(dataValue).getSame(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
+                    else if (p.getTokens().stream().allMatch(i -> i.getType() == NumericToken.Type.Different))
+                        dataValue = numericMap.get(dataValue).getDifferent(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
+                    else throw new InvalidStateException("Different token types within one variables (" +
+                                String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList())) + ");");
+                }
             }
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));

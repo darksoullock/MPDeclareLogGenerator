@@ -67,8 +67,7 @@ public class AlloyPMSolutionBrowser {
         for (A4Tuple t : ((A4TupleSet) solution.eval(payloadExpr))) {
             String name = getParentSignature(t.atom(0)).label;
             String value = atom2Sig(t.atom(0)).label;
-            NumericToken token = getTokenFor(pos, name);
-            result.add(new Payload(name, value, token));
+            result.add(new Payload(name, value, getTokensFor(pos, name)));
         }
 
         if (result.stream().map(i -> i.getName()).distinct().count() != result.size())
@@ -77,18 +76,18 @@ public class AlloyPMSolutionBrowser {
         return result;
     }
 
-    private NumericToken getTokenFor(int pos, String type) throws Err, IOException {
+    private List<NumericToken> getTokensFor(int pos, String type) throws Err, IOException {
         Expr expr = exprFromString("(TE" + pos + ".tokens)");
+        List<NumericToken> tokens = new ArrayList<>();
         for (A4Tuple t : (A4TupleSet) solution.eval(expr)) {
             String label = atom2Sig(t.atom(0)).label;
             if (label.substring(5 + Global.constants.getSamePrefix().length()).startsWith(type.substring(5))) {  // 5 -- "this/".length
-                String val = label;
-                NumericToken.Type ttype = getNumericTokenType(val);
-                return new NumericToken(ttype, val);
+                NumericToken.Type ttype = getNumericTokenType(label);
+                tokens.add(new NumericToken(ttype, label));
             }
         }
 
-        return null;
+        return tokens;
     }
 
     public NumericToken.Type getNumericTokenType(String val) {

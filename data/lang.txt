@@ -107,7 +107,6 @@ binary:
 	in
 	not in
 	or
-	xor?
 	and
 
 unary:

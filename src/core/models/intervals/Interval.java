@@ -1,12 +1,13 @@
 package core.models.intervals;
 
-import core.Global;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
-import sun.plugin.dom.exception.InvalidStateException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Vasiliy on 2017-10-24.
@@ -18,21 +19,26 @@ public abstract class Interval {
 
     Map<String, String> sameCache;
 
-    public String getSame(String key) {
-        if (sameCache.containsKey(key)) {
-            return sameCache.get(key);
-        } else {
-            String value = get();
+    public String getSame(List<String> keys) {
+        String value = null;
+        for (String key : keys)
+            if (sameCache.containsKey(key))
+                value = sameCache.get(key);
+
+        if (value == null)
+            value = get();
+
+        for (String key : keys)
             sameCache.put(key, value);
-            return value;
-        }
+
+        return value;
     }
 
-    public void resetCaches(){
+    public void resetCaches() {
         sameCache = new HashMap<>();
     }
 
-    public abstract String getDifferent(String hash);
+    public abstract String getDifferent(List<String> tokens);
 
     public abstract boolean isCompliant(DataExpression expr);
 

@@ -5,10 +5,7 @@ import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
 import sun.plugin.dom.exception.InvalidStateException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Vasiliy on 2017-10-24.
@@ -31,35 +28,36 @@ public class IntegerInterval extends Interval {
     Map<String, Set<Integer>> differentCache;
 
     @Override
-    public String getDifferent(String key) {
-        if (differentCache.containsKey(key)) {
-            Set<Integer> values = differentCache.get(key);
-            int value = rnd.nextInt(max - min - 1) + min + 1;
+    public String getDifferent(List<String> keys) {
+        Set<Integer> values = new HashSet<>();
 
-            int iters = 0;
-            while (values.contains(value)){
-                if(++iters>10000)   //TODO: constant
-                    break;
-
-                value = ++value;
-                if (value == max)
-                    value = min+1;
-            }
-
-            if (iters>10000) {    //TODO: constant
-                System.out.println("different values exhausted; trace is invalid");
-                return "No value";
-            }
-
-            return String.valueOf(value);
-        } else {
-            int value = rnd.nextInt(max - min - 1) + min + 1;
-            if (!differentCache.containsKey(key))
+        for (String key : keys)
+            if (differentCache.containsKey(key))
+                values.addAll(differentCache.get(key));
+            else
                 differentCache.put(key, new HashSet<>());
-            Set<Integer> values = differentCache.get(key);
-            values.add(value);
-            return String.valueOf(value);
+
+        int value = rnd.nextInt(max - min - 1) + min + 1;
+
+        int iters = 0;
+        while (values.contains(value)) {
+            if (++iters > 10000)   //TODO: constant
+                break;
+
+            value = ++value;
+            if (value == max)
+                value = min + 1;
         }
+
+        for (String key : keys)
+            differentCache.get(key).add(value);
+
+        if (iters > 10000) {    //TODO: constant
+            System.out.println("different values exhausted; trace is invalid");
+            return "No value";
+        }
+
+        return String.valueOf(value);
     }
 
     @Override

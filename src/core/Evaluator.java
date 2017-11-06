@@ -17,8 +17,8 @@ public class Evaluator {
     public static void main(String[] args) throws Exception {
         long start = System.nanoTime();
 
-        int minLength = 15;
-        int maxLength = 20;
+        int minLength = 10;
+        int maxLength = 13;
         int nTraces = 30;
         String inFilename = "./data/example.decl";
         String alsFilename = "./data/temp.als";

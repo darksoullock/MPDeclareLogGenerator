@@ -34,10 +34,61 @@ public class FunctionGenerator {
         this.args = function.getArgs();
         this.argTypes = argTypes;
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
-        String continuation = generateExpression(function.getExpression());
+        String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
         alloy.append(" } }\n");
         alloy.append(continuation);
         return alloy.toString();
+    }
+
+    private DataExpression handleNegativeNumericComparison(DataExpression expression) { // TODO: definitely require testing
+        if (expression instanceof BinaryExpression) {
+            DataExpression l = ((BinaryExpression) expression).getLeft();
+            if (isNot(l))
+                l = not((UnaryExpression) l);
+            DataExpression r = ((BinaryExpression) expression).getRight();
+            if (isNot(r))
+                r = not((UnaryExpression) l);
+            l = handleNegativeNumericComparison(l);
+            r = handleNegativeNumericComparison(r);
+            return new BinaryExpression(expression.getNode(), l, r);
+        }
+
+        if (isNot(expression)) {
+            DataExpression negated = not((UnaryExpression) expression);
+            if (isNot(negated))
+                return negated;
+            return handleNegativeNumericComparison(negated);
+        }
+
+        return expression;
+    }
+
+    private DataExpression not(UnaryExpression expression) {
+        DataExpression sub = expression.getValue();
+        if (sub instanceof BinaryExpression) {
+            if (sub.getNode().getValue().equals("and") || sub.getNode().getValue().equals("or")) {
+                Token token = new Token(sub.getNode().getPosition(), sub.getNode().getType(), sub.getNode().getValue().equals("and") ? "or" : "and");
+                Token notToken = new Token(-1, Token.Type.Operator, "not");
+                return new BinaryExpression(token,
+                        new UnaryExpression(notToken, ((BinaryExpression) sub).getLeft()),
+                        new UnaryExpression(notToken, ((BinaryExpression) sub).getRight()));
+            }
+        }
+
+        if (sub instanceof UnaryExpression) {
+            if (sub.getNode().getValue().equals("same") ||
+                    sub.getNode().getValue().equals("different")) {
+                return new UnaryExpression(
+                        new Token(0, Token.Type.Operator, sub.getNode().getValue().equals("same") ? "different" : "same"),
+                        ((UnaryExpression) sub).getValue());
+            }
+        }
+
+        return expression;
+    }
+
+    private boolean isNot(DataExpression expression) {
+        return expression.getNode().getValue().equals("not");
     }
 
     private String generateExpression(DataExpression expression) {
@@ -112,7 +163,7 @@ public class FunctionGenerator {
                 .append(".tokens)) ");
 
         StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(token).append(" extends Token {}\n").append("fact { all te:TaskEvent | #{")
+        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | #{")
                 .append(token).append(" & te.tokens}>0 implies #{").append(value).append("&te.data}>0 and not Single[")
                 .append(value).append("&te.data] }\n");
 
@@ -142,7 +193,7 @@ public class FunctionGenerator {
                 "))");
 
         StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(token).append(" extends Token {}\n");
+        tc.append("abstract sig ").append(token).append(" extends SameToken {}\n");
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;

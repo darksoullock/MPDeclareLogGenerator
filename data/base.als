@@ -12,8 +12,15 @@ one sig DummyPayload extends Payload {}
 fact { #{te:TaskEvent | DummyPayload in te.data} <= 0 }
 
 abstract sig Token {}
-lone sig DummyToken extends Token {}
-fact { #{DummyToken} <= 0 }
+abstract sig SameToken extends Token {}
+abstract sig DiffToken extends Token {}
+lone sig DummySToken extends SameToken{}
+lone sig DummyDToken extends DiffToken{}
+fact { 
+	#{DummySToken} <= 0 
+	#{DummyDToken} <= 0 
+	all te:TaskEvent| #{te.tokens & SameToken}=0 or #{te.tokens & DiffToken}=0
+}
 
 // declare templates
 

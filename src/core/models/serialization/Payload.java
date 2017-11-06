@@ -2,18 +2,20 @@ package core.models.serialization;
 
 import core.models.declare.data.NumericToken;
 
+import java.util.List;
+
 /**
  * Created by Vasiliy on 2017-09-27.
  */
 public class Payload {
     String name;
     String value;
-    NumericToken token;
+    List<NumericToken> tokens;
 
-    public Payload(String name, String value, NumericToken token) {
+    public Payload(String name, String value, List<NumericToken> tokens) {
         this.name = name;
         this.value = value;
-        this.token = token;
+        this.tokens = tokens;
     }
 
     public String getName() {
@@ -24,8 +26,8 @@ public class Payload {
         return value;
     }
 
-    public NumericToken getToken() {
-        return token;
+    public List<NumericToken> getTokens() {
+        return tokens;
     }
 
     @Override

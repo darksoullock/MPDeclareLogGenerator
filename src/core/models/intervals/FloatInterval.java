@@ -31,7 +31,7 @@ public class FloatInterval extends Interval {
     }
 
     @Override
-    public String getDifferent(String hash) {
+    public String getDifferent(List<String> keys) {
         throw new NotImplementedException();
     }
 

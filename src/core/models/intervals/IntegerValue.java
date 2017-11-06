@@ -2,6 +2,8 @@ package core.models.intervals;
 
 import sun.plugin.dom.exception.InvalidStateException;
 
+import java.util.List;
+
 /**
  * Created by Vasiliy on 2017-10-24.
  */
@@ -16,12 +18,12 @@ public class IntegerValue extends IntegerInterval {
     }
 
     @Override
-    public String getSame(String key) {
+    public String getSame(List<String> key) {
         return get();
     }
 
     @Override
-    public String getDifferent(String key) {
+    public String getDifferent(List<String> key) {
         throw new InvalidStateException("Impossible to get different value from " + get());
     }
 
