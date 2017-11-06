@@ -161,11 +161,26 @@ public class AlloyCodeGenerator {
 
     private void GenerateData(List<EnumeratedData> data) {
         for (EnumeratedData item : data) {
+            if (item instanceof NumericData){
+                GenerateNumericDataItem((NumericData) item);
+                continue;
+            }
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
             alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
             for (String value : item.getValues()) {
                 alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}\n");
             }
+        }
+    }
+
+    private void GenerateNumericDataItem(NumericData item) {
+        alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
+        alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
+        alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
+        int limit = (int)Math.pow(2,bitwidth-1);
+        for (String value : item.getValues()) {
+            alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{amount=")
+            .append(item.getMapping().get(value).getValueCount(limit)).append("}\n");
         }
     }
 

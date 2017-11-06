@@ -3,6 +3,7 @@ package core.alloy.serialization;
 import core.StatisticsHelper;
 import core.TimestampComposer;
 import core.alloy.integration.AlloyPMSolutionBrowser;
+import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.Payload;
 import core.models.serialization.TaskEventAdapter;
@@ -41,6 +42,7 @@ public class AlloyXESSerializer {
         XLog plog = this.initLog();
         int t;
         for (t = 0; t < nTraces && alloySolution.satisfiable(); ++t) {
+            resetIntervalCaches();
             AlloyPMSolutionBrowser browser = new AlloyPMSolutionBrowser(alloySolution, module, l);
             plog.add(composeTrace(browser, t));
             alloySolution = alloySolution.next();
@@ -53,6 +55,12 @@ public class AlloyXESSerializer {
         System.out.println("Writing XES for: " + fileName + t + ".xes");
         FileOutputStream fileOS = new FileOutputStream(fileName + t + ".xes");
         xesXmlSerializer.serialize(plog, fileOS);
+    }
+
+    private void resetIntervalCaches() {
+        for (Interval i: numericMap.values()){
+            i.resetCaches();
+        }
     }
 
     private XLog initLog() {
@@ -114,7 +122,12 @@ public class AlloyXESSerializer {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
             if (numericMap.containsKey(dataValue)) {
-                dataValue = numericMap.get(dataValue).get(p.getToken())+"."+p.getToken();
+                if (p.getToken()==null)
+                    dataValue = numericMap.get(dataValue).get();
+                else if (p.getToken().getType() == NumericToken.Type.Same)
+                    dataValue = numericMap.get(dataValue).getSame(p.getToken().getValue());
+                else if (p.getToken().getType() == NumericToken.Type.Different)
+                    dataValue = numericMap.get(dataValue).getDifferent(p.getToken().getValue())+p.getToken().getValue();
             }
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));

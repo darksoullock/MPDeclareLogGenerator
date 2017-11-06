@@ -1,14 +1,16 @@
 package core.models.serialization;
 
+import core.models.declare.data.NumericToken;
+
 /**
  * Created by Vasiliy on 2017-09-27.
  */
 public class Payload {
     String name;
     String value;
-    String token;
+    NumericToken token;
 
-    public Payload(String name, String value, String token) {
+    public Payload(String name, String value, NumericToken token) {
         this.name = name;
         this.value = value;
         this.token = token;
@@ -22,7 +24,7 @@ public class Payload {
         return value;
     }
 
-    public String getToken() {
+    public NumericToken getToken() {
         return token;
     }
 

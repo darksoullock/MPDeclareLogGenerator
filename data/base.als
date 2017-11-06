@@ -99,7 +99,6 @@ pred NotChainPrecedence(taskA, taskB: Task) {
 }
 //-
 
-
 pred example { }
 run example
 

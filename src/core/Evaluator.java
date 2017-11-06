@@ -17,14 +17,14 @@ public class Evaluator {
     public static void main(String[] args) throws Exception {
         long start = System.nanoTime();
 
-        int minLength = 7;
-        int maxLength = 12;
+        int minLength = 15;
+        int maxLength = 20;
         int nTraces = 30;
         String inFilename = "./data/example.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
-        doStuff(maxLength, minLength, nTraces, inFilename, alsFilename, outFilename);
+        doStuff(maxLength, minLength, nTraces, 6, inFilename, alsFilename, outFilename);
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000);
@@ -32,16 +32,16 @@ public class Evaluator {
         StatisticsHelper.print();
     }
 
-    private static void doStuff(int maxTraceLength, int minTraceLength, int numberOfTraces, String inFilename, String alsFilename, String outFilename) throws Err, IOException, IllegalAccessException {
+    private static void doStuff(int maxTraceLength, int minTraceLength, int numberOfTraces, int maxSameInstances, String inFilename, String alsFilename, String outFilename) throws Err, IOException, IllegalAccessException {
         System.out.println("Maximum no of traces: " + numberOfTraces);
 
         int bitwidth = Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
         String declare = GetDeclare(inFilename);
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, 4);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
 
-        //IOHelper.writeAllText(alsFilename, alloyCode);
+        IOHelper.writeAllText(alsFilename, alloyCode);
 
         AlloyComponent alloy = new AlloyComponent();
         Module world = alloy.parse(alsFilename);

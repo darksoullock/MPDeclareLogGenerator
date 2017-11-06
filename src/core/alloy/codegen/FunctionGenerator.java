@@ -1,5 +1,6 @@
 package core.alloy.codegen;
 
+import core.Global;
 import core.RandomHelper;
 import core.alloy.codegen.fnparser.*;
 import core.models.declare.data.NumericData;
@@ -83,6 +84,9 @@ public class FunctionGenerator {
         }
 
         if (uex.getNode().getValue().equals("different")) {
+            if (map.containsKey(getFieldType(uex.getValue().getNode().getValue()))) {
+                return handleNumericDifferent(uex.getValue().getNode().getValue());
+            }
             alloy.append("not (").append(args.get(0)).append(".data&");
             tc.append(generateExpression(uex.getValue()));
             alloy.append('=').append(args.get(1)).append(".data&");
@@ -98,15 +102,47 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
+    private String handleNumericDifferent(String value) {
+        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
+        alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
+                .append(".data&").append(value).append(") or (").append(args.get(0)).append(".data&").append(value)
+                .append('=').append(args.get(1)).append(".data&").append(value).append(" and one (").append(token)
+                .append(" & ").append(args.get(1)).append(".tokens) and (").append(token).append(" & ")
+                .append(args.get(0)).append(".tokens) = (").append(token).append(" & ").append(args.get(1))
+                .append(".tokens)) ");
+
+        StringBuilder tc = new StringBuilder();
+        tc.append("abstract sig ").append(token).append(" extends Token {}\n").append("fact { all te:TaskEvent | #{")
+                .append(token).append(" & te.tokens}>0 implies #{").append(value).append("&te.data}>0 and not Single[")
+                .append(value).append("&te.data] }\n");
+
+        for (int i = 0; i < maxSameInstances; ++i) {
+            String ast = token + 'i' + i;
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
+                    .append("fact { #{te: TaskEvent | ").append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens } = 2}\n");
+        }
+
+        return tc.toString();
+    }
+
     private String handleNumericSame(String value) {
         int token = RandomHelper.getNext();
-        String aToken = "Get" + value + token;
-        String bToken = "Set" + value + token;
+        String aToken = Global.constants.getSamePrefix1() + value + token;
+        String bToken = Global.constants.getSamePrefix2() + value + token;
         alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
-                .append(".data&").append(value).append(" and one (").append(aToken).append(" & ").append(args.get(0))
+                .append(".data&").append(value).append(" and ((one (").append(aToken).append(" & ").append(args.get(0))
                 .append(".tokens) and one (").append(bToken).append(" & ").append(args.get(1)).append(".tokens) and (")
                 .append(aToken).append(" & ").append(args.get(0)).append(".tokens).id = (").append(bToken).append(" & ")
-                .append(args.get(1)).append(".tokens).id)");
+                .append(args.get(1)).append(".tokens).id) " +
+                //"or Single[").append(args.get(0)).append(".data&").append(value).append("]" + //TODO: as a parameter
+                /*
+                uncomment previous line to make it work faster,
+                but then 'same' for numbers will prefer numbers
+                from the intervals 'EqualToN' in most cases.
+                not recommended for short logs.
+                 */
+                "))");
 
         StringBuilder tc = new StringBuilder();
         tc.append("abstract sig ").append(aToken).append(" extends Token {\nid: disj Int\n}\nabstract sig ")
@@ -133,7 +169,7 @@ public class FunctionGenerator {
 
     private String handleBinaryExpression(BinaryExpression bex) {
         if (bex.getNode().getType() == Token.Type.Comparator) {
-            handleNumeric(bex);
+            handleNumericComparison(bex);
             return "";
         }
 
@@ -183,7 +219,7 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
-    private void handleNumeric(BinaryExpression bex) {
+    private void handleNumericComparison(BinaryExpression bex) {
         String var = getVariable(bex);
         String field = getFieldType(var);
         Map<String, Interval> intervalsMap = map.get(field).getMapping();

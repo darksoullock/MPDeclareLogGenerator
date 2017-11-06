@@ -16,7 +16,6 @@ Precedence[BookAccomodation, ApproveApplication]
 Precedence[CollectTickets, BookMeansOfTransport]
 Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
-Absence[BookMeansOfTransport, 3]
 Existence[DoSomething]
 Absence[ApplyForTrip, 1]
 Existence[CollectTickets]
@@ -27,7 +26,7 @@ Absence[ApproveApplication, 1]
 /data definition
 TransportType: Car, Plane, Train, Bus
 Something: One, None, Another
-Price integer between 0 and 300
+Price integer between 0 and 3
 Speed integer between 0 and 300
 
 /data binding
@@ -42,7 +41,9 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Exactly[BookMeansOfTransport, 2]
-Absence[UseTransport, 2]
-Response[BookMeansOfTransport A, UseTransport B] | | same Price
+Existence[BookMeansOfTransport, 5]
+Absence[BookMeansOfTransport, 5]
+Absence[BookMeansOfTransport B]|B.Price=	3 or B.Price=0
+Absence[UseTransport B]|B.Price=	3 or B.Price=0
+ChainResponse[BookMeansOfTransport A, UseTransport B] | | different Price
 

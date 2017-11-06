@@ -5,10 +5,10 @@ import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
 import sun.plugin.dom.exception.InvalidStateException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Vasiliy on 2017-10-24.
@@ -17,7 +17,6 @@ public class IntegerInterval extends Interval {
 
     int min;
     int max;
-    Map<String, List<String>> hashCache = new HashMap<>();
 
     public IntegerInterval(int min, int max) {
         this.min = min;
@@ -25,33 +24,48 @@ public class IntegerInterval extends Interval {
     }
 
     @Override
-    public String get(String hash) {
-        if (hash != null)
-            return getOppositeOrCreate(hash, "this/Get", "this/Set");
-
+    public String get() {
         return String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
     }
 
-    private String getOppositeOrCreate(String hash, String alt1, String alt2) {
-        String op;
-        if (hash.startsWith(alt1))
-            op = alt2 + hash.substring(8);
-        else
-            op = alt1 + hash.substring(8);
-        if (hashCache.containsKey(op) && !hashCache.get(op).isEmpty()) {
-            List<String> values = hashCache.get(op);
-            String value = values.get(values.size() - 1);
-            values.remove(values.size() - 1);
-            return value;
-        } else {
-            if (!hashCache.containsKey(hash))
-                hashCache.put(hash, new ArrayList<>());
-            List<String> values = hashCache.get(hash);
-            String value = String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
-            values.add(value);
-            return value;
-        }
+    Map<String, Set<Integer>> differentCache;
 
+    @Override
+    public String getDifferent(String key) {
+        if (differentCache.containsKey(key)) {
+            Set<Integer> values = differentCache.get(key);
+            int value = rnd.nextInt(max - min - 1) + min + 1;
+
+            int iters = 0;
+            while (values.contains(value)){
+                if(++iters>10000)   //TODO: constant
+                    break;
+
+                value = ++value;
+                if (value == max)
+                    value = min+1;
+            }
+
+            if (iters>10000) {    //TODO: constant
+                System.out.println("different values exhausted; trace is invalid");
+                return "No value";
+            }
+
+            return String.valueOf(value);
+        } else {
+            int value = rnd.nextInt(max - min - 1) + min + 1;
+            if (!differentCache.containsKey(key))
+                differentCache.put(key, new HashSet<>());
+            Set<Integer> values = differentCache.get(key);
+            values.add(value);
+            return String.valueOf(value);
+        }
+    }
+
+    @Override
+    public void resetCaches() {
+        super.resetCaches();
+        differentCache = new HashMap<>();
     }
 
     @Override
@@ -74,5 +88,11 @@ public class IntegerInterval extends Interval {
             return min == number && max == number;
 
         throw new InvalidStateException("Unknown operation: " + expr.toString());
+    }
+
+    @Override
+    public int getValueCount(int limit) {
+        int values = max - min - 1;
+        return values < limit ? values : -1;
     }
 }
