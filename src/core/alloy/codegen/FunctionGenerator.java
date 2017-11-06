@@ -127,14 +127,11 @@ public class FunctionGenerator {
     }
 
     private String handleNumericSame(String value) {
-        int token = RandomHelper.getNext();
-        String aToken = Global.constants.getSamePrefix1() + value + token;
-        String bToken = Global.constants.getSamePrefix2() + value + token;
+        String token = Global.constants.getSamePrefix() + value + RandomHelper.getNext();
         alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
-                .append(".data&").append(value).append(" and ((one (").append(aToken).append(" & ").append(args.get(0))
-                .append(".tokens) and one (").append(bToken).append(" & ").append(args.get(1)).append(".tokens) and (")
-                .append(aToken).append(" & ").append(args.get(0)).append(".tokens).id = (").append(bToken).append(" & ")
-                .append(args.get(1)).append(".tokens).id) " +
+                .append(".data&").append(value).append(" and ((one (").append(token).append(" & ").append(args.get(0))
+                .append(".tokens)  and (").append(token).append(" & ").append(args.get(0)).append(".tokens) = (")
+                .append(token).append(" & ").append(args.get(1)).append(".tokens)) " +
                 //"or Single[").append(args.get(0)).append(".data&").append(value).append("]" + //TODO: as a parameter
                 /*
                 uncomment previous line to make it work faster,
@@ -145,25 +142,19 @@ public class FunctionGenerator {
                 "))");
 
         StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(aToken).append(" extends Token {\nid: disj Int\n}\nabstract sig ")
-                .append(bToken).append(" extends Token {\nid: disj Int\n}\n");
+        tc.append("abstract sig ").append(token).append(" extends Token {}\n");
 
         for (int i = 0; i < maxSameInstances; ++i) {
-            String ast = aToken + 'i' + i;
-            String bst = bToken + 'i' + i;
-            tc.append("one sig ").append(ast).append(" extends ").append(aToken).append(" {} {id=")
-                    .append(minInt + i).append("}\n").append("one sig ").append(bst).append(" extends ").append(bToken)
-                    .append(" {} {id=").append(minInt + i).append("}\n").append("fact {\n#{te: TaskEvent | ").append(ast)
-                    .append(" in te.tokens}<=1\n#{te: TaskEvent | ").append(ast).append(" in te.tokens } = #{te: TaskEvent | ")
-                    .append(bst).append(" in te.tokens }\n}\n");
+            String ast = token + 'i' + i;
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\n#{te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ").append(ast).append(" in te.tokens } = 2 }\n");
         }
 
-        tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0))
-                .append(" or #{").append(aToken).append(" & te.tokens}<=0) and (te.task = ").append(argTypes.get(1))
-                .append(" or #{").append(bToken).append(" & te.tokens}<=0)\nsome te: TaskEvent | ").append(aToken)
-                .append(" in te.tokens implies (all ote: TaskEvent| ").append(aToken).append(" in ote.tokens or ")
-                .append(bToken).append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&")
-                .append(value).append(")\n}\n");
+        tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0)).append(" or te.task = ")
+                .append(argTypes.get(1)).append(" or #{").append(token).append(" & te.tokens}<=0)\nsome te: TaskEvent | ")
+                .append(token).append(" in te.tokens implies (all ote: TaskEvent| ").append(token)
+                .append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&").append(value).append(")\n}\n");
+
         return tc.toString();
     }
 

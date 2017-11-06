@@ -30,7 +30,7 @@ Price integer between 0 and 3
 Speed integer between 0 and 300
 
 /data binding
-bind BookMeansOfTransport: TransportType, Price, Speed
+bind BookMeansOfTransport: TransportType, Price
 bind UseTransport: TransportType, Something, Price
 bind DoSomething: Something
 
@@ -42,8 +42,8 @@ trace Enum: enum, values, v2, v3
 
 /data constraints
 Existence[BookMeansOfTransport, 5]
-Absence[BookMeansOfTransport, 5]
+Absence[UseTransport, 5]
 Absence[BookMeansOfTransport B]|B.Price=	3 or B.Price=0
 Absence[UseTransport B]|B.Price=	3 or B.Price=0
-ChainResponse[BookMeansOfTransport A, UseTransport B] | | different Price
+ChainResponse[BookMeansOfTransport A, UseTransport B] | | same Price
 

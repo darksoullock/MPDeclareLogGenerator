@@ -5,17 +5,12 @@ package core;
  */
 public class DebugConstants implements  Constants {
     @Override
-    public String getSamePrefix1() {
-        return "Get";
-    }
-
-    @Override
-    public String getSamePrefix2() {
-        return "Set";
+    public String getSamePrefix() {
+        return "Same";
     }
 
     @Override
     public String getDifferentPrefix() {
-        return "Dif";
+        return "Diff";
     }
 }

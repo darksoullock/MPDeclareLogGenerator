@@ -81,11 +81,9 @@ public class AlloyPMSolutionBrowser {
         Expr expr = exprFromString("(TE" + pos + ".tokens)");
         for (A4Tuple t : (A4TupleSet) solution.eval(expr)) {
             String label = atom2Sig(t.atom(0)).label;
-            if (label.substring(5 + Global.constants.getSamePrefix1().length()).startsWith(type.substring(5))) {  // 5 -- "this/".length
+            if (label.substring(5 + Global.constants.getSamePrefix().length()).startsWith(type.substring(5))) {  // 5 -- "this/".length
                 String val = label;
                 NumericToken.Type ttype = getNumericTokenType(val);
-                if (ttype == NumericToken.Type.Same)
-                    val = val + retrieveAtom(exprFromString("(TE" + pos + ".tokens&" + label + ").id"));
                 return new NumericToken(ttype, val);
             }
         }
@@ -95,8 +93,7 @@ public class AlloyPMSolutionBrowser {
 
     public NumericToken.Type getNumericTokenType(String val) {
         NumericToken.Type ttype = null;
-        if (val.startsWith("this/"+Global.constants.getSamePrefix1())||
-                val.startsWith("this/"+Global.constants.getSamePrefix2()))
+        if (val.startsWith("this/"+Global.constants.getSamePrefix()))
             ttype = NumericToken.Type.Same;
         else if (val.startsWith("this/"+Global.constants.getDifferentPrefix()))
             ttype = NumericToken.Type.Different;

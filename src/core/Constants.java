@@ -5,8 +5,7 @@ package core;
  */
 public interface Constants {
     // should be of the same length
-    String getSamePrefix1();
-    String getSamePrefix2();
+    String getSamePrefix();
     String getDifferentPrefix();
 
 

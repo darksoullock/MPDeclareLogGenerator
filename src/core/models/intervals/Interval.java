@@ -4,6 +4,7 @@ import core.Global;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 
@@ -15,27 +16,14 @@ public abstract class Interval {
 
     public abstract String get();
 
-    Map<String, List<String>> sameCache;
+    Map<String, String> sameCache;
 
     public String getSame(String key) {
-        String alt1 = "this/" + Global.constants.getSamePrefix1();
-        String alt2 = "this/" + Global.constants.getSamePrefix2();
-        String op;
-        if (key.startsWith(alt1))
-            op = alt2 + key.substring(alt1.length());
-        else
-            op = alt1 + key.substring(alt2.length());
-        if (sameCache.containsKey(op) && !sameCache.get(op).isEmpty()) {
-            List<String> values = sameCache.get(op);
-            String value = values.get(values.size() - 1);
-            values.remove(values.size() - 1);
-            return value;
+        if (sameCache.containsKey(key)) {
+            return sameCache.get(key);
         } else {
-            if (!sameCache.containsKey(key))
-                sameCache.put(key, new ArrayList<>());
-            List<String> values = sameCache.get(key);
             String value = get();
-            values.add(value);
+            sameCache.put(key, value);
             return value;
         }
     }
