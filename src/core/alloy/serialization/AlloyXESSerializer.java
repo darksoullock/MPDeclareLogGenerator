@@ -96,6 +96,7 @@ public class AlloyXESSerializer {
         StatisticsHelper.add((int) orderedStateEvents.stream().filter(i -> i != null).count());
         StatisticsHelper.trace = number;
 
+        equalizeSameTokens(orderedStateEvents);
         for (TaskEventAdapter oneStateEvent : orderedStateEvents) {
             if (oneStateEvent == null)
                 break;
@@ -111,6 +112,38 @@ public class AlloyXESSerializer {
         }
 
         return oneTrace;
+    }
+
+    /*
+     * this function goes over all tasks and fill missing 'same' tokens
+     * if we have A==B and B==C and C==D then
+     * this function will also add A==C and A==D and B==D (in terms of matching pairs of tokens)
+     */
+    private void equalizeSameTokens(List<TaskEventAdapter> orderedStateEvents) {
+        for (TaskEventAdapter oneStateEvent : orderedStateEvents) { // each task
+            for (Payload p : oneStateEvent.getPayload()) {          // payloads
+                if (numericMap.containsKey(unqualifyLabel(p.getValue()))) { // if it is numeric
+                    if (p.getTokens().size() > 1 && p.getTokens().get(0).getType() == NumericToken.Type.Same) {   // and has more than one 'same' token
+                        for (TaskEventAdapter ite : orderedStateEvents) {   // from here spreading matching tokens everywhere. Tasks
+                            for (Payload ip : ite.getPayload()) {           // match payload
+                                if (ip.getName().equals(p.getName())){      // --
+                                    for (NumericToken t: p.getTokens()) {   // if there is maching token here
+                                        if (ip.getTokens().contains(t)){    // --
+                                            for (NumericToken i:p.getTokens()) {    // add to ip.tokens all from p.tokens without repeating
+                                                if (!ip.getTokens().contains(i)){   // --
+                                                    ip.getTokens().add(i);
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void handleTraceAttributes(XTraceImpl oneTrace) {
@@ -133,6 +166,7 @@ public class AlloyXESSerializer {
                         dataValue = numericMap.get(dataValue).getDifferent(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                     else throw new InvalidStateException("Different token types within one variables (" +
                                 String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList())) + ");");
+                    dataValue = dataValue + String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                 }
             }
 

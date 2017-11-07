@@ -157,8 +157,9 @@ Existence[CollectTickets]
 Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
-Exactly[BookMeansOfTransport, 1]
+Exactly[BookMeansOfTransport, 2]
 Absence[UseTransport, 2]
+ChainResponse[BookMeansOfTransport, UseTransport]
 }
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
@@ -176,6 +177,7 @@ amount: Int
 }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
 pred Single(pl: Price) {{pl.amount=1}}
+fun Amount(pl: Price): one Int {{pl.amount}}
 one sig intEqualsTo0r100000 extends Price{}{amount=1}
 one sig intBetween0and3r100001 extends Price{}{amount=2}
 one sig intEqualsTo3r100002 extends Price{}{amount=1}
@@ -184,52 +186,38 @@ amount: Int
 }
 fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
 pred Single(pl: Speed) {{pl.amount=1}}
-one sig intBetween0and300r100004 extends Speed{}{amount=-1}
+fun Amount(pl: Speed): one Int {{pl.amount}}
+one sig intBetween0and300r100004 extends Speed{}{amount=7}
 one sig intEqualsTo300r100005 extends Speed{}{amount=1}
 one sig intEqualsTo0r100003 extends Speed{}{amount=1}
 fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100006[te] }
 pred p100006(B: set TaskEvent) { { (B.data&Price in (intEqualsTo3r100002) or B.data&Price in (intEqualsTo0r100000)) } }
-fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100007[te]) implies #{ fte: TaskEvent | fte.pos = int[te.pos + 1] and UseTransport = fte.task and p100007c[te, fte] } > 0 }
-pred p100007(A: set TaskEvent) { { 1=1 } }
-pred p100007c(A, B: set TaskEvent) { { (A.data&Price=B.data&Price and ((one (SamePrice100008 & A.tokens)  and (SamePrice100008 & A.tokens) = (SamePrice100008 & B.tokens)) )) } }
-abstract sig SamePrice100008 extends SameToken {}
-one sig SamePrice100008i0 extends SamePrice100008 {}
+fact { no te: TaskEvent | te.task = UseTransport and p100007[te] }
+pred p100007(B: set TaskEvent) { { (B.data&Price in (intEqualsTo3r100002) or B.data&Price in (intEqualsTo0r100000)) } }
+fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100008[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100008c[te, fte] } = 0 }
+pred p100008(A: set TaskEvent) { { 1=1 } }
+pred p100008c(A, B: set TaskEvent) { { (not A.data&Price=B.data&Price) or ((not (#{ (SamePrice100009 & B.tokens)}>=1 and one (SamePrice100009 & A.tokens & SamePrice100009 & B.tokens))))  } }
+abstract sig SamePrice100009 extends SameToken {}
+one sig SamePrice100009i0 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i0 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i0 in te.tokens } = 2 }
-one sig SamePrice100008i1 extends SamePrice100008 {}
+#{te: TaskEvent | SamePrice100009i0 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i0 in te.tokens } = 2 }
+one sig SamePrice100009i1 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i1 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i1 in te.tokens } = 2 }
-one sig SamePrice100008i2 extends SamePrice100008 {}
+#{te: TaskEvent | SamePrice100009i1 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i1 in te.tokens } = 2 }
+one sig SamePrice100009i2 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i2 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i2 in te.tokens } = 2 }
-one sig SamePrice100008i3 extends SamePrice100008 {}
+#{te: TaskEvent | SamePrice100009i2 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i2 in te.tokens } = 2 }
+one sig SamePrice100009i3 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i3 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i3 in te.tokens } = 2 }
-one sig SamePrice100008i4 extends SamePrice100008 {}
+#{te: TaskEvent | SamePrice100009i3 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i3 in te.tokens } = 2 }
+one sig SamePrice100009i4 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i4 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i4 in te.tokens } = 2 }
-one sig SamePrice100008i5 extends SamePrice100008 {}
+#{te: TaskEvent | SamePrice100009i4 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i4 in te.tokens } = 2 }
+one sig SamePrice100009i5 extends SamePrice100009 {}
 fact {
-#{te: TaskEvent | SamePrice100008i5 in te.tokens}=0 or #{te: TaskEvent | SamePrice100008i5 in te.tokens } = 2 }
+#{te: TaskEvent | SamePrice100009i5 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i5 in te.tokens } = 2 }
 fact {
-all te: TaskEvent | (te.task = BookMeansOfTransport or te.task = UseTransport or #{SamePrice100008 & te.tokens}<=0)
-some te: TaskEvent | SamePrice100008 in te.tokens implies (all ote: TaskEvent| SamePrice100008 in ote.tokens implies ote.data&Price = te.data&Price)
+all te: TaskEvent | (te.task = BookMeansOfTransport or te.task = UseTransport or #{SamePrice100009 & te.tokens}<=0)
+some te: TaskEvent | SamePrice100009 in te.tokens implies (all ote: TaskEvent| SamePrice100009 in ote.tokens implies ote.data&Price = te.data&Price)
 }
-fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100009[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100009c[te, fte] } > 0 }
-pred p100009(A: set TaskEvent) { { 1=1 } }
-pred p100009c(A, B: set TaskEvent) { { (not A.data&Price=B.data&Price) or (A.data&Price=B.data&Price and one (DiffPrice100010 & B.tokens) and (DiffPrice100010 & A.tokens) = (DiffPrice100010 & B.tokens))  } }
-abstract sig DiffPrice100010 extends DiffToken {}
-fact { all te:TaskEvent | #{DiffPrice100010 & te.tokens}>0 implies #{Price&te.data}>0 and not Single[Price&te.data] }
-one sig DiffPrice100010i0 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i0 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i0 in te.tokens } = 2}
-one sig DiffPrice100010i1 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i1 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i1 in te.tokens } = 2}
-one sig DiffPrice100010i2 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i2 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i2 in te.tokens } = 2}
-one sig DiffPrice100010i3 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i3 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i3 in te.tokens } = 2}
-one sig DiffPrice100010i4 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i4 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i4 in te.tokens } = 2}
-one sig DiffPrice100010i5 extends DiffPrice100010 {}
-fact { #{te: TaskEvent | DiffPrice100010i5 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100010i5 in te.tokens } = 2}
 

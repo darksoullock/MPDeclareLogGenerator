@@ -8,7 +8,9 @@ import core.models.intervals.Interval;
 import sun.plugin.dom.exception.InvalidStateException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ public class FunctionGenerator {
     List<String> argTypes;
     int maxSameInstances;
     int minInt;
+    String constraint;
 
     public FunctionGenerator(int maxSameInstances, int bitwidth) {
         this.maxSameInstances = maxSameInstances;
@@ -29,10 +32,7 @@ public class FunctionGenerator {
     }
 
     public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
-        this.alloy = new StringBuilder();
-        this.map = map;
-        this.args = function.getArgs();
-        this.argTypes = argTypes;
+        init(function, map, argTypes);
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
         String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
         alloy.append(" } }\n");
@@ -40,7 +40,49 @@ public class FunctionGenerator {
         return alloy.toString();
     }
 
-    private DataExpression handleNegativeNumericComparison(DataExpression expression) { // TODO: definitely require testing
+    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes, String constraint) {
+        init(function, map, argTypes);
+        this.constraint = constraint;
+        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
+        DataExpression expr = handleNegativeNumericComparison(function.getExpression());
+        expr = inverseNotConstraintNumericComparison(expr);
+        String continuation = generateExpression(expr);
+        alloy.append(" } }\n");
+        alloy.append(continuation);
+        return alloy.toString();
+    }
+
+    private DataExpression inverseNotConstraintNumericComparison(DataExpression expression) {
+        if (expression.getNode().getValue().equals("same"))
+            return new UnaryExpression(
+                    new Token(0, Token.Type.Operator, "nsame"),
+                    ((UnaryExpression) expression).getValue());
+
+        if (expression.getNode().getValue().equals("different"))
+            return new UnaryExpression(
+                    new Token(0, Token.Type.Operator, "ndifferent"),
+                    ((UnaryExpression) expression).getValue());
+
+        if (expression instanceof BinaryExpression)
+            return new BinaryExpression(expression.getNode(),
+                    inverseNotConstraintNumericComparison(((BinaryExpression) expression).getLeft()),
+                    inverseNotConstraintNumericComparison(((BinaryExpression) expression).getRight()));
+
+        if (expression instanceof UnaryExpression)
+            return new UnaryExpression(expression.getNode(),
+                    inverseNotConstraintNumericComparison(((UnaryExpression) expression).getValue()));
+
+        return expression;
+    }
+
+    private void init(DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
+        this.alloy = new StringBuilder();
+        this.map = map;
+        this.args = function.getArgs();
+        this.argTypes = argTypes;
+    }
+
+    private DataExpression handleNegativeNumericComparison(DataExpression expression) { // TODO: testing
         if (expression instanceof BinaryExpression) {
             DataExpression l = ((BinaryExpression) expression).getLeft();
             if (isNot(l))
@@ -146,34 +188,18 @@ public class FunctionGenerator {
             return tc.toString();
         }
 
-
-        alloy.append(uex.getNode().getValue()).append(" (");
-        tc.append(generateExpression(uex.getValue()));
-        alloy.append(')');
-        return tc.toString();
-    }
-
-    private String handleNumericDifferent(String value) {
-        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
-        alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
-                .append(".data&").append(value).append(") or (").append(args.get(0)).append(".data&").append(value)
-                .append('=').append(args.get(1)).append(".data&").append(value).append(" and one (").append(token)
-                .append(" & ").append(args.get(1)).append(".tokens) and (").append(token).append(" & ")
-                .append(args.get(0)).append(".tokens) = (").append(token).append(" & ").append(args.get(1))
-                .append(".tokens)) ");
-
-        StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | #{")
-                .append(token).append(" & te.tokens}>0 implies #{").append(value).append("&te.data}>0 and not Single[")
-                .append(value).append("&te.data] }\n");
-
-        for (int i = 0; i < maxSameInstances; ++i) {
-            String ast = token + 'i' + i;
-            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
-                    .append("fact { #{te: TaskEvent | ").append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens } = 2}\n");
+        if (uex.getNode().getValue().equals("nsame")) {
+            return handleInverseNumericSame(uex.getValue().getNode().getValue());
         }
 
+        if (uex.getNode().getValue().equals("ndifferent")) {
+            return handleInverseNumericDifferent(uex.getValue().getNode().getValue());
+        }
+
+
+            alloy.append(uex.getNode().getValue()).append(" (");
+        tc.append(generateExpression(uex.getValue()));
+        alloy.append(')');
         return tc.toString();
     }
 
@@ -192,6 +218,44 @@ public class FunctionGenerator {
                  */
                 "))");
 
+        return generateSameTokens(value, token);
+    }
+
+    private String handleNumericDifferent(String value) {
+        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
+        alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
+                .append(".data&").append(value).append(") or (").append(args.get(0)).append(".data&").append(value)
+                .append('=').append(args.get(1)).append(".data&").append(value).append(" and one (").append(token)
+                .append(" & ").append(args.get(1)).append(".tokens) and (").append(token).append(" & ")
+                .append(args.get(0)).append(".tokens) = (").append(token).append(" & ").append(args.get(1))
+                .append(".tokens)) ");
+
+        return generateDifferentTokens(value, token);
+    }
+
+    private String handleInverseNumericSame(String value) {
+        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
+        alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
+                .append(".data&").append(value).append(" and (not ( one (").append(token).append(" & ").append(args.get(0))
+                .append(".tokens & ").append(args.get(1)).append(".tokens))))");
+
+        return generateDifferentTokens(value, token);
+    }
+
+    private String handleInverseNumericDifferent(String value) {
+        String token = Global.constants.getSamePrefix() + value + RandomHelper.getNext();
+        alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
+                .append(".data&").append(value).append(") or ((not ")
+                //.append(" Single[").append(args.get(0)).append(".data&").append(value).append("] and not ") // TODO: parameter
+                .append("(#{ (").append(token)
+                .append(" & ").append(args.get(1)).append(".tokens)}>=1 and one (").append(token).append(" & ")
+                .append(args.get(0)).append(".tokens & ").append(token).append(" & ").append(args.get(1))
+                .append(".tokens)))) ");
+
+        return generateSameTokens(value, token);
+    }
+
+    private String generateSameTokens(String value, String token) {
         StringBuilder tc = new StringBuilder();
         tc.append("abstract sig ").append(token).append(" extends SameToken {}\n");
 
@@ -205,6 +269,25 @@ public class FunctionGenerator {
                 .append(argTypes.get(1)).append(" or #{").append(token).append(" & te.tokens}<=0)\nsome te: TaskEvent | ")
                 .append(token).append(" in te.tokens implies (all ote: TaskEvent| ").append(token)
                 .append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&").append(value).append(")\n}\n");
+
+        return tc.toString();
+    }
+
+    private String generateDifferentTokens(String value, String token) {
+        StringBuilder tc = new StringBuilder();
+        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | #{")
+                .append(token).append(" & te.tokens}>0 implies #{").append(value).append("&te.data}>0 and not Single[")
+                .append(value).append("&te.data] }\n");
+
+        tc.append("fact { all te:TaskEvent| some (te.data&").append(value).append(") implies #{te.tokens&").append(token)
+                .append("}<Amount[te.data&").append(value).append("]}\n");
+
+        for (int i = 0; i < maxSameInstances; ++i) {
+            String ast = token + 'i' + i;
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
+                    .append("fact { #{te: TaskEvent | ").append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens } = 2}\n");
+        }
 
         return tc.toString();
     }

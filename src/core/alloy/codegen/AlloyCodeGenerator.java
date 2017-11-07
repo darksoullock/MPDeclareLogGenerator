@@ -177,10 +177,14 @@ public class AlloyCodeGenerator {
         alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
         alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
         alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
+        alloy.append("fun Amount(pl: ").append(item.getType()).append("): one Int {{pl.amount}}\n");
         int limit = (int)Math.pow(2,bitwidth-1);
         for (String value : item.getValues()) {
+            int cnt = item.getMapping().get(value).getValueCount(limit);
+            if (cnt<0)
+                cnt = (int)Math.pow(2,bitwidth-1)-1;
             alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{amount=")
-            .append(item.getMapping().get(value).getValueCount(limit)).append("}\n");
+            .append(cnt).append("}\n");
         }
     }
 

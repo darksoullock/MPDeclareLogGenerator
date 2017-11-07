@@ -41,12 +41,12 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Exactly[BookMeansOfTransport, 1]
+Exactly[BookMeansOfTransport, 2]
 Absence[UseTransport, 2]
 Absence[BookMeansOfTransport B]|B.Price=	3 or B.Price=0
-/Absence[UseTransport B]|B.Price=	3 or B.Price=0
-ChainResponse[BookMeansOfTransport A, UseTransport B] | | same Price
-Response[BookMeansOfTransport A, UseTransport B] | | not same Price
+Absence[UseTransport B]|B.Price=	3 or B.Price=0
+ChainResponse[BookMeansOfTransport, UseTransport]
+NotResponse[BookMeansOfTransport A, UseTransport B] | | different Price
 
 
 
