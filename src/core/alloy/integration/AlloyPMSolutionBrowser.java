@@ -17,9 +17,7 @@ import edu.mit.csail.sdg.alloy4whole.Helper;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,12 +74,12 @@ public class AlloyPMSolutionBrowser {
         return result;
     }
 
-    private List<NumericToken> getTokensFor(int pos, String type) throws Err, IOException {
+    private Set<NumericToken> getTokensFor(int pos, String type) throws Err, IOException {
         Expr expr = exprFromString("(TE" + pos + ".tokens)");
-        List<NumericToken> tokens = new ArrayList<>();
+        Set<NumericToken> tokens = new HashSet<>();
         for (A4Tuple t : (A4TupleSet) solution.eval(expr)) {
             String label = atom2Sig(t.atom(0)).label;
-            if (label.substring(5 + Global.constants.getSamePrefix().length()).startsWith(type.substring(5))) {  // 5 -- "this/".length
+            if (label.substring(5 + Global.samePrefix.length()).startsWith(type.substring(5))) {  // 5 -- "this/".length
                 NumericToken.Type ttype = getNumericTokenType(label);
                 tokens.add(new NumericToken(ttype, label));
             }
@@ -92,9 +90,9 @@ public class AlloyPMSolutionBrowser {
 
     public NumericToken.Type getNumericTokenType(String val) {
         NumericToken.Type ttype = null;
-        if (val.startsWith("this/"+Global.constants.getSamePrefix()))
+        if (val.startsWith("this/" + Global.samePrefix))
             ttype = NumericToken.Type.Same;
-        else if (val.startsWith("this/"+Global.constants.getDifferentPrefix()))
+        else if (val.startsWith("this/" + Global.differentPrefix))
             ttype = NumericToken.Type.Different;
 
         return ttype;

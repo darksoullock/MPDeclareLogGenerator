@@ -7,7 +7,7 @@ import java.io.*;
  */
 public class IOHelper { // TODO: review
     public static String readAllText(InputStream is) {
-        StringBuilder sb = new StringBuilder(512);
+        StringBuilder sb = new StringBuilder(2048);
         try {
             Reader r = new InputStreamReader(is, "UTF-8");
             int c = 0;

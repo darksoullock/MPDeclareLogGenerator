@@ -8,9 +8,7 @@ import core.models.intervals.Interval;
 import sun.plugin.dom.exception.InvalidStateException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +80,7 @@ public class FunctionGenerator {
         this.argTypes = argTypes;
     }
 
-    private DataExpression handleNegativeNumericComparison(DataExpression expression) { // TODO: testing
+    private DataExpression handleNegativeNumericComparison(DataExpression expression) {
         if (expression instanceof BinaryExpression) {
             DataExpression l = ((BinaryExpression) expression).getLeft();
             if (isNot(l))
@@ -197,32 +195,27 @@ public class FunctionGenerator {
         }
 
 
-            alloy.append(uex.getNode().getValue()).append(" (");
+        alloy.append(uex.getNode().getValue()).append(" (");
         tc.append(generateExpression(uex.getValue()));
         alloy.append(')');
         return tc.toString();
     }
 
     private String handleNumericSame(String value) {
-        String token = Global.constants.getSamePrefix() + value + RandomHelper.getNext();
+        String token = Global.samePrefix + value + RandomHelper.getNext();
         alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
                 .append(".data&").append(value).append(" and ((one (").append(token).append(" & ").append(args.get(0))
                 .append(".tokens)  and (").append(token).append(" & ").append(args.get(0)).append(".tokens) = (")
-                .append(token).append(" & ").append(args.get(1)).append(".tokens)) " +
-                //"or Single[").append(args.get(0)).append(".data&").append(value).append("]" + //TODO: as a parameter
-                /*
-                uncomment previous line to make it work faster,
-                but then 'same' for numbers will prefer numbers
-                from the intervals 'EqualToN' in most cases.
-                not recommended for short logs.
-                 */
-                "))");
+                .append(token).append(" & ").append(args.get(1)).append(".tokens)) ");
+        if (Global.singleFirstForSame)
+            alloy.append("or Single[").append(args.get(0)).append(".data&").append(value).append("]");
+        alloy.append("))");
 
         return generateSameTokens(value, token);
     }
 
     private String handleNumericDifferent(String value) {
-        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
+        String token = Global.differentPrefix + value + RandomHelper.getNext();
         alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
                 .append(".data&").append(value).append(") or (").append(args.get(0)).append(".data&").append(value)
                 .append('=').append(args.get(1)).append(".data&").append(value).append(" and one (").append(token)
@@ -234,7 +227,7 @@ public class FunctionGenerator {
     }
 
     private String handleInverseNumericSame(String value) {
-        String token = Global.constants.getDifferentPrefix() + value + RandomHelper.getNext();
+        String token = Global.differentPrefix + value + RandomHelper.getNext();
         alloy.append('(').append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
                 .append(".data&").append(value).append(" and (not ( one (").append(token).append(" & ").append(args.get(0))
                 .append(".tokens & ").append(args.get(1)).append(".tokens))))");
@@ -243,11 +236,12 @@ public class FunctionGenerator {
     }
 
     private String handleInverseNumericDifferent(String value) {
-        String token = Global.constants.getSamePrefix() + value + RandomHelper.getNext();
+        String token = Global.samePrefix + value + RandomHelper.getNext();
         alloy.append("(not ").append(args.get(0)).append(".data&").append(value).append('=').append(args.get(1))
-                .append(".data&").append(value).append(") or ((not ")
-                //.append(" Single[").append(args.get(0)).append(".data&").append(value).append("] and not ") // TODO: parameter
-                .append("(#{ (").append(token)
+                .append(".data&").append(value).append(") or ((not ");
+        if (Global.singleFirstForSame)
+            alloy.append(" Single[").append(args.get(0)).append(".data&").append(value).append("] and not ");
+        alloy.append("(#{ (").append(token)
                 .append(" & ").append(args.get(1)).append(".tokens)}>=1 and one (").append(token).append(" & ")
                 .append(args.get(0)).append(".tokens & ").append(token).append(" & ").append(args.get(1))
                 .append(".tokens)))) ");

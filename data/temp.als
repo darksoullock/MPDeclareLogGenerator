@@ -128,27 +128,27 @@ one TE12 implies one TE11
 }
 one sig ApplyForTrip extends Task {}
 one sig ApproveApplication extends Task {}
-one sig BookMeansOfTransport extends Task {}
+one sig BookTransport extends Task {}
 one sig BookAccomodation extends Task {}
 one sig CollectTickets extends Task {}
 one sig ArchiveDocuments extends Task {}
 one sig UseTransport extends Task {}
 one sig DoSomething extends Task {}
 fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price) & te.data} = 2 }
 fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
+fact { all te: TaskEvent | te.task = BookTransport implies #{(TransportType + Price) & te.data} = 2 }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
+fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookTransport + UseTransport) }
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookMeansOfTransport + UseTransport) }
+fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookTransport + UseTransport) }
 fact { all te: TaskEvent | #{Something & te.data} <= 1 }
 fact { all te: TaskEvent | #{Something & te.data} = 1 implies te.task in (UseTransport + DoSomething) }
 fact {
 Init[ApplyForTrip]
 Response[CollectTickets, ArchiveDocuments]
-Precedence[BookMeansOfTransport, ApproveApplication]
+Precedence[BookTransport, ApproveApplication]
 Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookMeansOfTransport]
+Precedence[CollectTickets, BookTransport]
 Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
 Existence[DoSomething]
@@ -157,30 +157,30 @@ Existence[CollectTickets]
 Existence[ArchiveDocuments]
 Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
-Exactly[BookMeansOfTransport, 2]
+Exactly[BookTransport, 2]
 Absence[UseTransport, 2]
-ChainResponse[BookMeansOfTransport, UseTransport]
+ChainResponse[BookTransport, UseTransport]
 }
+abstract sig Something extends Payload {}
+fact { all te: TaskEvent | #{Something & te.data} <= 1 }
+one sig One extends Something{}
+one sig None extends Something{}
+one sig Another extends Something{}
 abstract sig TransportType extends Payload {}
 fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
 one sig Car extends TransportType{}
 one sig Plane extends TransportType{}
 one sig Train extends TransportType{}
 one sig Bus extends TransportType{}
-abstract sig Something extends Payload {}
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-one sig One extends Something{}
-one sig None extends Something{}
-one sig Another extends Something{}
 abstract sig Price extends Payload {
 amount: Int
 }
 fact { all te: TaskEvent | #{Price & te.data} <= 1 }
 pred Single(pl: Price) {{pl.amount=1}}
 fun Amount(pl: Price): one Int {{pl.amount}}
-one sig intEqualsTo0r100000 extends Price{}{amount=1}
-one sig intBetween0and3r100001 extends Price{}{amount=2}
-one sig intEqualsTo3r100002 extends Price{}{amount=1}
+one sig floatEqualsTo0p0r100000 extends Price{}{amount=1}
+one sig floatBetween0p0and3p0r100001 extends Price{}{amount=7}
+one sig floatEqualsTo3p0r100002 extends Price{}{amount=1}
 abstract sig Speed extends Payload {
 amount: Int
 }
@@ -190,11 +190,11 @@ fun Amount(pl: Speed): one Int {{pl.amount}}
 one sig intBetween0and300r100004 extends Speed{}{amount=7}
 one sig intEqualsTo300r100005 extends Speed{}{amount=1}
 one sig intEqualsTo0r100003 extends Speed{}{amount=1}
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100006[te] }
-pred p100006(B: set TaskEvent) { { (B.data&Price in (intEqualsTo3r100002) or B.data&Price in (intEqualsTo0r100000)) } }
+fact { no te: TaskEvent | te.task = BookTransport and p100006[te] }
+pred p100006(B: set TaskEvent) { { (B.data&Price in (floatEqualsTo3p0r100002) or B.data&Price in (floatEqualsTo0p0r100000)) } }
 fact { no te: TaskEvent | te.task = UseTransport and p100007[te] }
-pred p100007(B: set TaskEvent) { { (B.data&Price in (intEqualsTo3r100002) or B.data&Price in (intEqualsTo0r100000)) } }
-fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100008[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100008c[te, fte] } = 0 }
+pred p100007(B: set TaskEvent) { { (B.data&Price in (floatEqualsTo3p0r100002) or B.data&Price in (floatEqualsTo0p0r100000)) } }
+fact { all te: TaskEvent | (BookTransport = te.task and p100008[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100008c[te, fte] } = 0 }
 pred p100008(A: set TaskEvent) { { 1=1 } }
 pred p100008c(A, B: set TaskEvent) { { (not A.data&Price=B.data&Price) or ((not (#{ (SamePrice100009 & B.tokens)}>=1 and one (SamePrice100009 & A.tokens & SamePrice100009 & B.tokens))))  } }
 abstract sig SamePrice100009 extends SameToken {}
@@ -217,7 +217,7 @@ one sig SamePrice100009i5 extends SamePrice100009 {}
 fact {
 #{te: TaskEvent | SamePrice100009i5 in te.tokens}=0 or #{te: TaskEvent | SamePrice100009i5 in te.tokens } = 2 }
 fact {
-all te: TaskEvent | (te.task = BookMeansOfTransport or te.task = UseTransport or #{SamePrice100009 & te.tokens}<=0)
+all te: TaskEvent | (te.task = BookTransport or te.task = UseTransport or #{SamePrice100009 & te.tokens}<=0)
 some te: TaskEvent | SamePrice100009 in te.tokens implies (all ote: TaskEvent| SamePrice100009 in ote.tokens implies ote.data&Price = te.data&Price)
 }
 

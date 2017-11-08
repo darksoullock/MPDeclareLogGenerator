@@ -40,8 +40,9 @@ public class IntegerInterval extends Interval {
         int value = rnd.nextInt(max - min - 1) + min + 1;
 
         int iters = 0;
+        int maxIter = getValueCount(max - min);
         while (values.contains(value)) {
-            if (++iters > 10000)   //TODO: constant
+            if (++iters > maxIter)
                 break;
 
             value = ++value;
@@ -52,7 +53,7 @@ public class IntegerInterval extends Interval {
         for (String key : keys)
             differentCache.get(key).add(value);
 
-        if (iters > 10000) {    //TODO: constant
+        if (iters > maxIter) {
             System.out.println("different values exhausted; trace is invalid");
             return "No value";
         }

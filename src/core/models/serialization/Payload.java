@@ -2,7 +2,7 @@ package core.models.serialization;
 
 import core.models.declare.data.NumericToken;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Vasiliy on 2017-09-27.
@@ -10,9 +10,9 @@ import java.util.List;
 public class Payload {
     String name;
     String value;
-    List<NumericToken> tokens;
+    Set<NumericToken> tokens;
 
-    public Payload(String name, String value, List<NumericToken> tokens) {
+    public Payload(String name, String value, Set<NumericToken> tokens) {
         this.name = name;
         this.value = value;
         this.tokens = tokens;
@@ -26,7 +26,7 @@ public class Payload {
         return value;
     }
 
-    public List<NumericToken> getTokens() {
+    public Set<NumericToken> getTokens() {
         return tokens;
     }
 

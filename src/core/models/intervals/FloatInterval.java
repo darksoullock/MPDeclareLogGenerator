@@ -7,10 +7,7 @@ import core.alloy.codegen.fnparser.Token;
 import sun.plugin.dom.exception.InvalidStateException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vasiliy on 2017-10-24.
@@ -30,9 +27,34 @@ public class FloatInterval extends Interval {
         return String.valueOf(rnd.nextFloat() * (max - min) + min);
     }
 
+    Map<String, Set<String>> differentCache;
+
     @Override
     public String getDifferent(List<String> keys) {
-        throw new NotImplementedException();
+        Set<String> values = new HashSet<>();
+
+        for (String key : keys)
+            if (differentCache.containsKey(key))
+                values.addAll(differentCache.get(key));
+            else
+                differentCache.put(key, new HashSet<>());
+
+        String value = get();
+
+        while (values.contains(value)) {
+            value = get();
+        }
+
+        for (String key : keys)
+            differentCache.get(key).add(value);
+
+        return String.valueOf(value);
+    }
+
+    @Override
+    public void resetCaches() {
+        super.resetCaches();
+        differentCache = new HashMap<>();
     }
 
     @Override

@@ -24,6 +24,7 @@ public class Evaluator {
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
+
         doStuff(maxLength, minLength, nTraces, 6, inFilename, alsFilename, outFilename);
 
         long end = System.nanoTime();

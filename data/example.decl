@@ -1,7 +1,7 @@
 /task definition
 ApplyForTrip
 ApproveApplication
-BookMeansOfTransport
+BookTransport
 BookAccomodation
 CollectTickets
 ArchiveDocuments
@@ -11,9 +11,9 @@ DoSomething
 /constraints
 Init[ApplyForTrip]
 Response[CollectTickets, ArchiveDocuments]
-Precedence[BookMeansOfTransport, ApproveApplication]
+Precedence[BookTransport, ApproveApplication]
 Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookMeansOfTransport]
+Precedence[CollectTickets, BookTransport]
 Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
 Existence[DoSomething]
@@ -24,13 +24,13 @@ Absence[ArchiveDocuments, 1]
 Absence[ApproveApplication, 1]
 
 /data definition
-TransportType: Car, Plane, Train, Bus
 Something: One, None, Another
-Price integer between 0 and 3
+TransportType: Car, Plane, Train, Bus
+Price float between 0 and 3
 Speed integer between 0 and 300
 
 /data binding
-bind BookMeansOfTransport: TransportType, Price
+bind BookTransport: TransportType, Price
 bind UseTransport: TransportType, Something, Price
 bind DoSomething: Something
 
@@ -41,12 +41,12 @@ trace RandomFloatNumber float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Exactly[BookMeansOfTransport, 2]
+Exactly[BookTransport, 2]
 Absence[UseTransport, 2]
-Absence[BookMeansOfTransport B]|B.Price=	3 or B.Price=0
+Absence[BookTransport B]|B.Price=	3 or B.Price=0
 Absence[UseTransport B]|B.Price=	3 or B.Price=0
-ChainResponse[BookMeansOfTransport, UseTransport]
-NotResponse[BookMeansOfTransport A, UseTransport B] | | different Price
+ChainResponse[BookTransport, UseTransport]
+NotResponse[BookTransport A, UseTransport B] | | different Price
 
 
 

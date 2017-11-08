@@ -120,30 +120,24 @@ public class AlloyXESSerializer {
      * this function will also add A==C and A==D and B==D (in terms of matching pairs of tokens)
      */
     private void equalizeSameTokens(List<TaskEventAdapter> orderedStateEvents) {
-        for (TaskEventAdapter oneStateEvent : orderedStateEvents) { // each task
-            for (Payload p : oneStateEvent.getPayload()) {          // payloads
-                if (numericMap.containsKey(unqualifyLabel(p.getValue()))) { // if it is numeric
-                    if (p.getTokens().size() > 1 && p.getTokens().get(0).getType() == NumericToken.Type.Same) {   // and has more than one 'same' token
-                        for (TaskEventAdapter ite : orderedStateEvents) {   // from here spreading matching tokens everywhere. Tasks
-                            for (Payload ip : ite.getPayload()) {           // match payload
-                                if (ip.getName().equals(p.getName())){      // --
-                                    for (NumericToken t: p.getTokens()) {   // if there is maching token here
-                                        if (ip.getTokens().contains(t)){    // --
-                                            for (NumericToken i:p.getTokens()) {    // add to ip.tokens all from p.tokens without repeating
-                                                if (!ip.getTokens().contains(i)){   // --
-                                                    ip.getTokens().add(i);
-                                                }
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        for (TaskEventAdapter oneStateEvent : orderedStateEvents)
+            for (Payload p : oneStateEvent.getPayload())
+                if (numericMap.containsKey(unqualifyLabel(p.getValue())) &&
+                        p.getTokens().stream().filter(i -> i.getType() == NumericToken.Type.Same).count() > 1)
+                    addSameSame(orderedStateEvents, p);
+    }
+
+    private void addSameSame(List<TaskEventAdapter> orderedStateEvents, Payload p) {
+        for (TaskEventAdapter ite : orderedStateEvents)
+            for (Payload ip : ite.getPayload())
+                if (ip.getName().equals(p.getName()))
+                    addIfMatch(p, ip);
+    }
+
+    private void addIfMatch(Payload from, Payload to) {
+        if (from.getTokens().stream().anyMatch(t -> to.getTokens().contains(t)))
+            for (NumericToken i : from.getTokens())
+                to.getTokens().add(i);
     }
 
     private void handleTraceAttributes(XTraceImpl oneTrace) {
@@ -166,7 +160,7 @@ public class AlloyXESSerializer {
                         dataValue = numericMap.get(dataValue).getDifferent(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                     else throw new InvalidStateException("Different token types within one variables (" +
                                 String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList())) + ");");
-                    dataValue = dataValue + String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
+                    //dataValue = dataValue + String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                 }
             }
 

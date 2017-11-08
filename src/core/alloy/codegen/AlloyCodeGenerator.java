@@ -48,7 +48,7 @@ public class AlloyCodeGenerator {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
-        // TODO: maxSameInstances < 2^bitwidth
+        maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth);
     }
 
@@ -161,7 +161,7 @@ public class AlloyCodeGenerator {
 
     private void GenerateData(List<EnumeratedData> data) {
         for (EnumeratedData item : data) {
-            if (item instanceof NumericData){
+            if (item instanceof NumericData) {
                 GenerateNumericDataItem((NumericData) item);
                 continue;
             }
@@ -178,13 +178,13 @@ public class AlloyCodeGenerator {
         alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
         alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
         alloy.append("fun Amount(pl: ").append(item.getType()).append("): one Int {{pl.amount}}\n");
-        int limit = (int)Math.pow(2,bitwidth-1);
+        int limit = (int) Math.pow(2, bitwidth - 1);
         for (String value : item.getValues()) {
             int cnt = item.getMapping().get(value).getValueCount(limit);
-            if (cnt<0)
-                cnt = (int)Math.pow(2,bitwidth-1)-1;
+            if (cnt < 0)
+                cnt = (int) Math.pow(2, bitwidth - 1) - 1;
             alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{amount=")
-            .append(cnt).append("}\n");
+                    .append(cnt).append("}\n");
         }
     }
 
@@ -222,7 +222,7 @@ public class AlloyCodeGenerator {
         --bitwidth;
         int offset = 1 << bitwidth;
         for (int i = 0; i < length; i++) {
-            if (i<minTraceLength)
+            if (i < minTraceLength)
                 alloy.append("one sig TE");
             else
                 alloy.append("lone sig TE");
@@ -232,7 +232,7 @@ public class AlloyCodeGenerator {
 
     private void GenerateVacuityConstraint(int minTraceLength, int maxTraceLength) {
         alloy.append("fact{\n");
-        for (int i=minTraceLength;i<maxTraceLength-1;++i){
+        for (int i = minTraceLength; i < maxTraceLength - 1; ++i) {
             alloy.append("one TE").append(i + 1).append(" implies one TE").append(i).append('\n');
         }
 
