@@ -74,13 +74,13 @@ public class IntegerInterval extends Interval {
 
         BinaryExpression bex = rot((BinaryExpression) expr);
         int number = Integer.parseInt(bex.getRight().getNode().getValue());
-        String op = expr.getNode().getValue();
+        String op = bex.getNode().getValue();
         if (op.equals(">="))
-            return min >= number;
+            return min + 1 >= number;
         if (op.equals(">"))
             return min >= number && max > number;
         if (op.equals("<="))
-            return max <= number;
+            return max - 1 <= number;
         if (op.equals("<"))
             return max <= number && min < number;
         if (op.equals("="))

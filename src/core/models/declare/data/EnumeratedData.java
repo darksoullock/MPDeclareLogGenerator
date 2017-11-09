@@ -16,7 +16,7 @@ public class EnumeratedData {
 
     public EnumeratedData(String type, List<String> values) {
         this.type = type;
-        this.values = values;
+        this.values = new ArrayList<>(values);
     }
 
     public String getType() {

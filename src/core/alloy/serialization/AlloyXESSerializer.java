@@ -119,7 +119,7 @@ public class AlloyXESSerializer {
      * if we have A==B and B==C and C==D then
      * this function will also add A==C and A==D and B==D (in terms of matching pairs of tokens)
      */
-    private void equalizeSameTokens(List<TaskEventAdapter> orderedStateEvents) {
+    public void equalizeSameTokens(List<TaskEventAdapter> orderedStateEvents) {
         for (TaskEventAdapter oneStateEvent : orderedStateEvents)
             for (Payload p : oneStateEvent.getPayload())
                 if (numericMap.containsKey(unqualifyLabel(p.getValue())) &&

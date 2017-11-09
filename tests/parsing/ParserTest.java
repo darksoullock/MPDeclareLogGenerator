@@ -43,11 +43,11 @@ public class ParserTest {
 
         Assert.assertTrue(d2 instanceof IntegerData);
         Assert.assertEquals(d2.getType(), "Price");
-        Assert.assertEquals(d2.getValues().size(), 3);
+        Assert.assertEquals(d2.getValues().size(), 1);
 
         Assert.assertTrue(d3 instanceof FloatData);
         Assert.assertEquals(d3.getType(), "Angle");
-        Assert.assertEquals(d3.getValues().size(), 3);
+        Assert.assertEquals(d3.getValues().size(), 1);
 
         Assert.assertTrue(map.containsKey(d2.getType()));
         Assert.assertTrue(map.containsKey(d3.getType()));
@@ -58,8 +58,8 @@ public class ParserTest {
         Assert.assertEquals(nd1, d2);
         Assert.assertEquals(nd2, d3);
 
-        Assert.assertEquals(nd1.getMapping().size(), 3);
-        Assert.assertEquals(nd2.getMapping().size(), 3);
+        Assert.assertEquals(nd1.getMapping().size(), 1);
+        Assert.assertEquals(nd2.getMapping().size(), 1);
     }
 
     @Test

@@ -22,7 +22,6 @@ public class FunctionGenerator {
     List<String> argTypes;
     int maxSameInstances;
     int minInt;
-    String constraint;
 
     public FunctionGenerator(int maxSameInstances, int bitwidth) {
         this.maxSameInstances = maxSameInstances;
@@ -38,9 +37,8 @@ public class FunctionGenerator {
         return alloy.toString();
     }
 
-    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes, String constraint) {
+    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
         init(function, map, argTypes);
-        this.constraint = constraint;
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
         DataExpression expr = handleNegativeNumericComparison(function.getExpression());
         expr = inverseNotConstraintNumericComparison(expr);
@@ -87,7 +85,7 @@ public class FunctionGenerator {
                 l = not((UnaryExpression) l);
             DataExpression r = ((BinaryExpression) expression).getRight();
             if (isNot(r))
-                r = not((UnaryExpression) l);
+                r = not((UnaryExpression) r);
             l = handleNegativeNumericComparison(l);
             r = handleNegativeNumericComparison(r);
             return new BinaryExpression(expression.getNode(), l, r);

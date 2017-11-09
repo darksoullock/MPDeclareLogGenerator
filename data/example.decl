@@ -43,10 +43,9 @@ trace Enum: enum, values, v2, v3
 /data constraints
 Exactly[BookTransport, 2]
 Absence[UseTransport, 2]
-Absence[BookTransport B]|B.Price=	3 or B.Price=0
-Absence[UseTransport B]|B.Price=	3 or B.Price=0
 ChainResponse[BookTransport, UseTransport]
-NotResponse[BookTransport A, UseTransport B] | | different Price
+NotResponse[BookTransport A, UseTransport B] | | same Price
+Existence[UseTransport U]| U.Price=3
 
 
 

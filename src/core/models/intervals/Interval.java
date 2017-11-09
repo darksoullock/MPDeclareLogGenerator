@@ -47,7 +47,8 @@ public abstract class Interval {
             return expr;
 
         Token t = expr.getNode();
-        return new BinaryExpression(new Token(t.getPosition(), t.getType(), t.getValue().replace('>', '<').replace('<', '>')), expr.getRight(), expr.getLeft());
+        String newOp = t.getValue().contains(">") ? t.getValue().replace('>', '<') : t.getValue().replace('<', '>');
+        return new BinaryExpression(new Token(t.getPosition(), t.getType(), newOp), expr.getRight(), expr.getLeft());
     }
 
     public abstract int getValueCount(int limit);
