@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by Vasiliy on 2017-10-19.
@@ -65,7 +66,8 @@ public class DataExpressionParser {
         }
 
         if (tokens.size() > 1)
-            throw new InvalidStateException("tokens: " + tokens.size());
+            throw new InvalidStateException("tokens: " + tokens.size() + "\n" +
+                    String.join(" ", tokens.stream().map(i -> i.getValue()).collect(Collectors.toList())));
 
         for (Token i : tokens) {    //values
             if (i.getType() == Token.Type.Set

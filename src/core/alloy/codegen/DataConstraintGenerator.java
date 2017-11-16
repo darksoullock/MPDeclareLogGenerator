@@ -43,40 +43,46 @@ public class DataConstraintGenerator {
             addExactlyDataConstraint(c, name, Integer.parseInt(c.taskB()));
 
         if (c.getName().equals("RespondedExistence"))
-            addRespondedExistenceDataConstraint(c, name, name+"c");
+            addRespondedExistenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("Response"))
-            addResponseDataConstraint(c, name, name+"c");
+            addResponseDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("AlternateResponse"))
-            addAlternateResponseDataConstraint(c, name, name+"c");
+            addAlternateResponseDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("ChainResponse"))
-            addChainResponseDataConstraint(c, name, name+"c");
+            addChainResponseDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("Precedence"))
-            addPrecedenceDataConstraint(c, name, name+"c");
+            addPrecedenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("AlternatePrecedence"))
-            addAlternatePrecedenceDataConstraint(c, name, name+"c");
+            addAlternatePrecedenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("ChainPrecedence"))
-            addChainPrecedenceDataConstraint(c, name, name+"c");
+            addChainPrecedenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("NotRespondedExistence"))
-            addNotRespondedExistenceDataConstraint(c, name, name+"c");
+            addNotRespondedExistenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("NotResponse"))
-            addNotResponseDataConstraint(c, name, name+"c");
+            addNotResponseDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("NotPrecedence"))
-            addNotPrecedenceDataConstraint(c, name, name+"c");
+            addNotPrecedenceDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("NotChainResponse"))
-            addNotChainResponseDataConstraint(c, name, name+"c");
+            addNotChainResponseDataConstraint(c, name, name + "c");
 
         if (c.getName().equals("NotChainPrecedence"))
-            addNotChainPrecedenceDataConstraint(c, name, name+"c");
+            addNotChainPrecedenceDataConstraint(c, name, name + "c");
+
+        if (c.getName().equals("Choice"))
+            addChoiceDataConstraint(c, name, name + "a");
+
+        if (c.getName().equals("ExclusiveChoice"))
+            addExclusiveChoiceDataConstraint(c, name, name + "a");
 
         return alloy.toString();
     }
@@ -193,6 +199,23 @@ public class DataConstraintGenerator {
         alloy.append("#{ fte: TaskEvent | int[fte.pos + 1] = te.pos and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte] } = 0 }\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateNotFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
+    }
+
+    private void addChoiceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
+        alloy.append("fact { some te: TaskEvent | te.task = ").append(one.taskA()).append(" and ").append(fFnName)
+                .append("[te] or te.task = ").append(one.taskB()).append(" and ").append(sFnName).append("[te, te]}\n");
+        alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
+        alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
+    }
+
+    private void addExclusiveChoiceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
+        alloy.append("fact { \nsome te: TaskEvent | te.task = ").append(one.taskA()).append(" and ").append(fFnName)
+                .append("[te] or te.task = ").append(one.taskB()).append(" and ").append(sFnName).append("[te, te]\n")
+                .append("#{ te: TaskEvent | ").append(one.taskA()).append(" = te.task and ").append(fFnName)
+                .append("[te]} = 0 or #{ te: TaskEvent | ").append(one.taskB()).append(" = te.task and ")
+                .append(sFnName).append("[te, te]} = 0\n").append("}\n");
+        alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
+        alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addActivation(DataConstraint one, String fFnName) {

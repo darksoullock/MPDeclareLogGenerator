@@ -1,0 +1,42 @@
+administratieftariefeerstepol
+vervolgconsultpoliklinisch
+aannamelaboratoriumonderzoek
+ordertarief
+albumine
+alkalischefosfatasekinetisch
+telefonischconsult
+bacteriologisconderzoekmetkweeknie
+cytologischonderzoekectocervix
+histologischonderzoekbioptennno
+
+ProducerCode: SIOG, SGAL, SGNA
+Group: MedicalMicrobiology, Pathology, GeneralLabClinicalChemistry
+SpecialismCode: c86, scDEF
+DiagnosisCode: c106, dcDEF
+Section: Section4, sDEF
+
+bind administratieftariefeerstepol: ProducerCode
+bind bacteriologisconderzoekmetkweeknie: Group
+bind cytologischonderzoekectocervix: Group
+bind histologischonderzoekbioptennno: Group
+bind aannamelaboratoriumonderzoek: Group
+bind aannamelaboratoriumonderzoek: SpecialismCode
+bind administratieftariefeerstepol: DiagnosisCode
+bind aannamelaboratoriumonderzoek: Section
+
+Response[aannamelaboratoriumonderzoek, ordertarief]
+RespondedExistence[administratieftariefeerstepol, aannamelaboratoriumonderzoek]
+NotResponse[aannamelaboratoriumonderzoek, vervolgconsultpoliklinisch]
+AlternatePrecedence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
+RespondedExistence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
+Response[administratieftariefeerstepol A, albumine T]|( A.ProducerCode is SIOG ) or ( A.DiagnosisCode is c106 )| 
+Absence[bacteriologisconderzoekmetkweeknie A]|(A.Group is not MedicalMicrobiology)
+Absence[cytologischonderzoekectocervix A]|(A.Group is not Pathology)
+Absence[histologischonderzoekbioptennno A]|(A.Group is not Pathology)
+NotRespondedExistence[telefonischconsult A, alkalischefosfatasekinetisch T]|((A.ProducerCode is SGAL ) or ( A.ProducerCode is SGNA ))| 
+Absence[aannamelaboratoriumonderzoek A]|(A.Section is Section4 ) and (A.SpecialismCode is c86) and (A.Group is not GeneralLabClinicalChemistry)
+ 
+
+
+
+

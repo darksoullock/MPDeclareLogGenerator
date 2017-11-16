@@ -26,7 +26,7 @@ Absence[ApproveApplication, 1]
 /data definition
 Something: One, None, Another
 TransportType: Car, Plane, Train, Bus
-Price float between 0 and 3
+Price integer between 0 and 100
 Speed integer between 0 and 300
 
 /data binding
@@ -42,10 +42,10 @@ trace Enum: enum, values, v2, v3
 
 /data constraints
 Exactly[BookTransport, 2]
-Absence[UseTransport, 2]
-ChainResponse[BookTransport, UseTransport]
-NotResponse[BookTransport A, UseTransport B] | | same Price
-Existence[UseTransport U]| U.Price=3
+Exactly[UseTransport, 2]
+ChainResponse[BookTransport A, UseTransport B] || same Price
+NotResponse[BookTransport A, BookTransport B] || same Price
+
 
 
 

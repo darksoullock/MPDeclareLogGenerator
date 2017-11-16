@@ -38,7 +38,7 @@ public class AlloyXESSerializer {
         this.traceAttributes = traceAttributes;
     }
 
-    public void serialize(A4Solution alloySolution, int nTraces, String fileName, int l) throws IOException, Err, IllegalAccessException {
+    public int serialize(A4Solution alloySolution, int nTraces, String fileName, int l) throws IOException, Err, IllegalAccessException {
         System.out.println("Serialization..");
 
         XLog plog = this.initLog();
@@ -57,6 +57,7 @@ public class AlloyXESSerializer {
         System.out.println("Writing XES for: " + fileName + t + ".xes");
         FileOutputStream fileOS = new FileOutputStream(fileName + t + ".xes");
         xesXmlSerializer.serialize(plog, fileOS);
+        return t;
     }
 
     private void resetIntervalCaches() {

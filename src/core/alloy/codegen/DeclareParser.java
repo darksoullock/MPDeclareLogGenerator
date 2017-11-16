@@ -28,7 +28,12 @@ public class DeclareParser {
     Pattern task = Pattern.compile("^\\s*\\w+\\s*$");
     Pattern inRectBrackets = Pattern.compile(".*\\[\\s*(.+?)\\s*].*");
 
+    int intervalSplits;
     DataExpressionParser expressionParser = new DataExpressionParser();
+
+    public DeclareParser(int intervalSplits) {
+        this.intervalSplits = intervalSplits;
+    }
 
     public boolean isTask(String line) {
         return task.matcher(line).matches();
@@ -67,13 +72,13 @@ public class DeclareParser {
                 data.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList())));
 
             if (a[1].equals("integer")) {
-                IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]));
+                IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]), intervalSplits);
                 data.add(b);
                 numericData.put(b.getType(), b);
             }
 
             if (a[1].equals("float")) {
-                FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]));
+                FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]), intervalSplits);
                 data.add(b);
                 numericData.put(b.getType(), b);
             }
@@ -82,7 +87,7 @@ public class DeclareParser {
         return data;
     }
 
-    public List<DataConstraint> ParseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) {
+    public List<DataConstraint> parseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) {
         List<DataConstraint> dataConstraints = new ArrayList<>();
         for (String line : dataConstraintsCode) {
             String[] lr = line.split("\\|");

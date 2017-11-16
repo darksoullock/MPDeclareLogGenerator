@@ -17,15 +17,22 @@ public class Evaluator {
     public static void main(String[] args) throws Exception {
         long start = System.nanoTime();
 
+        /*
+        should be 1 if 'same' or 'different' constraints
+        not used or used at most once for any task.
+        should be <=N if 'same'/'different' constraint
+        used more than once and solution not found (or found few)
+         */
+        int intervalSplits = 2;
         int minLength = 10;
         int maxLength = 13;
         int nTraces = 30;
-        String inFilename = "./data/example.decl";
+        String inFilename = "./data/hospital.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
 
-        doStuff(maxLength, minLength, nTraces, 6, inFilename, alsFilename, outFilename);
+        doStuff(maxLength, minLength, nTraces, 6, inFilename, alsFilename, outFilename, intervalSplits);
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000);
@@ -33,12 +40,21 @@ public class Evaluator {
         StatisticsHelper.print();
     }
 
-    private static void doStuff(int maxTraceLength, int minTraceLength, int numberOfTraces, int maxSameInstances, String inFilename, String alsFilename, String outFilename) throws Err, IOException, IllegalAccessException {
+    private static void doStuff(int maxTraceLength,
+                                int minTraceLength,
+                                int numberOfTraces,
+                                int maxSameInstances,
+                                String inFilename,
+                                String alsFilename,
+                                String outFilename,
+                                int intervalSplits)
+            throws Err, IOException, IllegalAccessException {
+
         System.out.println("Maximum no of traces: " + numberOfTraces);
 
         int bitwidth = Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
         String declare = GetDeclare(inFilename);
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
 

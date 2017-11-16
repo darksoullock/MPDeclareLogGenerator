@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Vasiliy on 2017-10-19.
  */
 public class StatementIdTest {
-    DeclareParser parser = new DeclareParser();
+    DeclareParser parser = new DeclareParser(1);
 
     List<String> tasks = Arrays.asList(
             "ApplyForTrip",

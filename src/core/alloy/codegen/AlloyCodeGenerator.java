@@ -41,13 +41,14 @@ public class AlloyCodeGenerator {
     Map<String, List<String>> taskToData;
     Map<String, List<String>> dataToTask;
 
-    DeclareParser parser = new DeclareParser();
+    DeclareParser parser;
     DataConstraintGenerator gen;
 
-    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances) {
+    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances, int intervalSplits) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
+        this.parser = new DeclareParser(intervalSplits);
         maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth);
     }
@@ -61,7 +62,7 @@ public class AlloyCodeGenerator {
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
         ParseAndGenerateConstraints();
-        List<DataConstraint> dataConstraints = parser.ParseDataConstraints(dataConstraintsCode, numericExpressions);
+        List<DataConstraint> dataConstraints = parser.parseDataConstraints(dataConstraintsCode, numericExpressions);
         ExtendNumericData();
         GenerateData(data);
         GenerateDataConstraints(dataConstraints);
@@ -142,8 +143,8 @@ public class AlloyCodeGenerator {
     }
 
 
-    private void ExtendNumericData() {
-        for (EnumeratedData d : numericData.values())
+    private void ExtendNumericData() {  // adds split values to the numeric range
+        for (NumericData d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
                     d.addValue(getNumberFromComparison((BinaryExpression) i));

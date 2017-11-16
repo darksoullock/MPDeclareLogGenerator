@@ -126,85 +126,72 @@ fact{
 one TE11 implies one TE10
 one TE12 implies one TE11
 }
-one sig ApplyForTrip extends Task {}
-one sig ApproveApplication extends Task {}
-one sig BookTransport extends Task {}
-one sig BookAccomodation extends Task {}
-one sig CollectTickets extends Task {}
-one sig ArchiveDocuments extends Task {}
-one sig UseTransport extends Task {}
-one sig DoSomething extends Task {}
-fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
-fact { all te: TaskEvent | te.task = BookTransport implies #{(TransportType + Price) & te.data} = 2 }
-fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-fact { all te: TaskEvent | #{Price & te.data} = 1 implies te.task in (BookTransport + UseTransport) }
-fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-fact { all te: TaskEvent | #{TransportType & te.data} = 1 implies te.task in (BookTransport + UseTransport) }
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-fact { all te: TaskEvent | #{Something & te.data} = 1 implies te.task in (UseTransport + DoSomething) }
+one sig administratieftariefeerstepol extends Task {}
+one sig vervolgconsultpoliklinisch extends Task {}
+one sig aannamelaboratoriumonderzoek extends Task {}
+one sig ordertarief extends Task {}
+one sig albumine extends Task {}
+one sig alkalischefosfatasekinetisch extends Task {}
+one sig telefonischconsult extends Task {}
+one sig bacteriologisconderzoekmetkweeknie extends Task {}
+one sig cytologischonderzoekectocervix extends Task {}
+one sig histologischonderzoekbioptennno extends Task {}
+fact { all te: TaskEvent | te.task = histologischonderzoekbioptennno implies #{(Group) & te.data} = 1 }
+fact { all te: TaskEvent | te.task = bacteriologisconderzoekmetkweeknie implies #{(Group) & te.data} = 1 }
+fact { all te: TaskEvent | te.task = aannamelaboratoriumonderzoek implies #{(Group + SpecialismCode + Section) & te.data} = 3 }
+fact { all te: TaskEvent | te.task = administratieftariefeerstepol implies #{(ProducerCode + DiagnosisCode) & te.data} = 2 }
+fact { all te: TaskEvent | te.task = cytologischonderzoekectocervix implies #{(Group) & te.data} = 1 }
+fact { all te: TaskEvent | #{Group & te.data} <= 1 }
+fact { all te: TaskEvent | #{Group & te.data} = 1 implies te.task in (bacteriologisconderzoekmetkweeknie + cytologischonderzoekectocervix + histologischonderzoekbioptennno + aannamelaboratoriumonderzoek) }
+fact { all te: TaskEvent | #{DiagnosisCode & te.data} <= 1 }
+fact { all te: TaskEvent | #{DiagnosisCode & te.data} = 1 implies te.task in (administratieftariefeerstepol) }
+fact { all te: TaskEvent | #{SpecialismCode & te.data} <= 1 }
+fact { all te: TaskEvent | #{SpecialismCode & te.data} = 1 implies te.task in (aannamelaboratoriumonderzoek) }
+fact { all te: TaskEvent | #{Section & te.data} <= 1 }
+fact { all te: TaskEvent | #{Section & te.data} = 1 implies te.task in (aannamelaboratoriumonderzoek) }
+fact { all te: TaskEvent | #{ProducerCode & te.data} <= 1 }
+fact { all te: TaskEvent | #{ProducerCode & te.data} = 1 implies te.task in (administratieftariefeerstepol) }
 fact {
-Init[ApplyForTrip]
-Response[CollectTickets, ArchiveDocuments]
-Precedence[BookTransport, ApproveApplication]
-Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookTransport]
-Precedence[CollectTickets, BookAccomodation] 
-Absence[BookAccomodation, 2]
-Existence[DoSomething]
-Absence[ApplyForTrip, 1]
-Existence[CollectTickets]
-Existence[ArchiveDocuments]
-Absence[ArchiveDocuments, 1]
-Absence[ApproveApplication, 1]
-Exactly[BookTransport, 2]
-Absence[UseTransport, 2]
-ChainResponse[BookTransport, UseTransport]
+Response[aannamelaboratoriumonderzoek, ordertarief]
+RespondedExistence[administratieftariefeerstepol, aannamelaboratoriumonderzoek]
+NotResponse[aannamelaboratoriumonderzoek, vervolgconsultpoliklinisch]
+AlternatePrecedence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
+RespondedExistence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
 }
-abstract sig Something extends Payload {}
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-one sig One extends Something{}
-one sig None extends Something{}
-one sig Another extends Something{}
-abstract sig TransportType extends Payload {}
-fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-one sig Car extends TransportType{}
-one sig Plane extends TransportType{}
-one sig Train extends TransportType{}
-one sig Bus extends TransportType{}
-abstract sig Price extends Payload {
-amount: Int
-}
-fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-pred Single(pl: Price) {{pl.amount=1}}
-fun Amount(pl: Price): one Int {{pl.amount}}
-one sig floatBetween0p0and3p0r100000 extends Price{}{amount=7}
-one sig floatEqualsTo3p0r100001 extends Price{}{amount=1}
-abstract sig Speed extends Payload {
-amount: Int
-}
-fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
-pred Single(pl: Speed) {{pl.amount=1}}
-fun Amount(pl: Speed): one Int {{pl.amount}}
-one sig intBetweenm1and301r100002 extends Speed{}{amount=7}
-fact { all te: TaskEvent | (BookTransport = te.task and p100003[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and UseTransport = fte.task and p100003c[te, fte] } = 0 }
-pred p100003(A: set TaskEvent) { { 1=1 } }
-pred p100003c(A, B: set TaskEvent) { { (A.data&Price=B.data&Price and (not ( one (DiffPrice100004 & A.tokens & B.tokens)))) } }
-abstract sig DiffPrice100004 extends DiffToken {}
-fact { all te:TaskEvent | #{DiffPrice100004 & te.tokens}>0 implies #{Price&te.data}>0 and not Single[Price&te.data] }
-fact { all te:TaskEvent| some (te.data&Price) implies #{te.tokens&DiffPrice100004}<Amount[te.data&Price]}
-one sig DiffPrice100004i0 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i0 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i0 in te.tokens } = 2}
-one sig DiffPrice100004i1 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i1 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i1 in te.tokens } = 2}
-one sig DiffPrice100004i2 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i2 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i2 in te.tokens } = 2}
-one sig DiffPrice100004i3 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i3 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i3 in te.tokens } = 2}
-one sig DiffPrice100004i4 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i4 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i4 in te.tokens } = 2}
-one sig DiffPrice100004i5 extends DiffPrice100004 {}
-fact { #{te: TaskEvent | DiffPrice100004i5 in te.tokens}=0 or #{te: TaskEvent | DiffPrice100004i5 in te.tokens } = 2}
-fact { some te: TaskEvent | te.task = UseTransport and p100005[te]}
-pred p100005(U: set TaskEvent) { { U.data&Price in (floatEqualsTo3p0r100001) } }
+abstract sig ProducerCode extends Payload {}
+fact { all te: TaskEvent | #{ProducerCode & te.data} <= 1 }
+one sig SIOG extends ProducerCode{}
+one sig SGAL extends ProducerCode{}
+one sig SGNA extends ProducerCode{}
+abstract sig Group extends Payload {}
+fact { all te: TaskEvent | #{Group & te.data} <= 1 }
+one sig MedicalMicrobiology extends Group{}
+one sig Pathology extends Group{}
+one sig GeneralLabClinicalChemistry extends Group{}
+abstract sig SpecialismCode extends Payload {}
+fact { all te: TaskEvent | #{SpecialismCode & te.data} <= 1 }
+one sig c86 extends SpecialismCode{}
+one sig scDEF extends SpecialismCode{}
+abstract sig DiagnosisCode extends Payload {}
+fact { all te: TaskEvent | #{DiagnosisCode & te.data} <= 1 }
+one sig c106 extends DiagnosisCode{}
+one sig dcDEF extends DiagnosisCode{}
+abstract sig Section extends Payload {}
+fact { all te: TaskEvent | #{Section & te.data} <= 1 }
+one sig Section4 extends Section{}
+one sig sDEF extends Section{}
+fact { all te: TaskEvent | (administratieftariefeerstepol = te.task and p100000[te]) implies #{ fte: TaskEvent | fte.pos > te.pos and albumine = fte.task and p100000c[te, fte] } > 0 }
+pred p100000(A: set TaskEvent) { { ((A.data&ProducerCode=SIOG) or (A.data&DiagnosisCode=c106)) } }
+pred p100000c(A, T: set TaskEvent) { { 1=1 } }
+fact { no te: TaskEvent | te.task = bacteriologisconderzoekmetkweeknie and p100001[te] }
+pred p100001(A: set TaskEvent) { { (not A.data&Group=MedicalMicrobiology) } }
+fact { no te: TaskEvent | te.task = cytologischonderzoekectocervix and p100002[te] }
+pred p100002(A: set TaskEvent) { { (not A.data&Group=Pathology) } }
+fact { no te: TaskEvent | te.task = histologischonderzoekbioptennno and p100003[te] }
+pred p100003(A: set TaskEvent) { { (not A.data&Group=Pathology) } }
+fact { all te: TaskEvent | (telefonischconsult = te.task and p100004[te]) implies #{ ote: TaskEvent | alkalischefosfatasekinetisch = ote.task and p100004c[te, ote]} = 0 }
+pred p100004(A: set TaskEvent) { { ((A.data&ProducerCode=SGAL) or (A.data&ProducerCode=SGNA)) } }
+pred p100004c(A, T: set TaskEvent) { { 1=1 } }
+fact { no te: TaskEvent | te.task = aannamelaboratoriumonderzoek and p100005[te] }
+pred p100005(A: set TaskEvent) { { ((A.data&Section=Section4) and ((A.data&SpecialismCode=c86) and (not A.data&Group=GeneralLabClinicalChemistry))) } }
 

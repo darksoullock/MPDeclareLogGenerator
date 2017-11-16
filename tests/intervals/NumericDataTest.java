@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class NumericDataTest {
     @Test
-    public void EnumeratedDataTest(){
+    public void EnumeratedDataTest() {
         EnumeratedData data = new EnumeratedData("data", Arrays.asList("v1", "v2"));
         data.addValue("v3");
         Assert.assertEquals(data.getType(), "data");
@@ -26,8 +26,8 @@ public class NumericDataTest {
     }
 
     @Test
-    public void IntegerDataNoValuesTest(){
-        NumericData data = new IntegerData("idata", 0,100);
+    public void IntegerDataNoValuesTest() {
+        NumericData data = new IntegerData("idata", 0, 100, 1);
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 1);
         Assert.assertTrue(data.getMapping().containsKey(data.getValues().get(0)));
@@ -35,19 +35,19 @@ public class NumericDataTest {
     }
 
     @Test
-    public void IntegerDataTest(){
-        NumericData data = new IntegerData("idata", 0,100);
+    public void IntegerDataTest() {
+        NumericData data = new IntegerData("idata", 0, 100, 1);
         data.addValue("30");
         data.addValue("60");
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 5);
-        Assert.assertTrue(data.getValues().stream().anyMatch(i->data.getMapping().get(i) instanceof IntegerValue));
-        Assert.assertTrue(data.getValues().stream().anyMatch(i->data.getMapping().get(i) instanceof IntegerInterval));
+        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerValue));
+        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerInterval));
     }
 
     @Test
-    public void FloatDataNoValuesTest(){
-        NumericData data = new FloatData("idata", 0,100);
+    public void FloatDataNoValuesTest() {
+        NumericData data = new FloatData("idata", 0, 100, 1);
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 1);
         Assert.assertTrue(data.getMapping().containsKey(data.getValues().get(0)));
@@ -55,13 +55,13 @@ public class NumericDataTest {
     }
 
     @Test
-    public void FloatDataTest(){
-        NumericData data = new FloatData("idata", 0,100);
+    public void FloatDataTest() {
+        NumericData data = new FloatData("idata", 0, 100, 1);
         data.addValue("30");
         data.addValue("60");
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 5);
-        Assert.assertTrue(data.getValues().stream().anyMatch(i->data.getMapping().get(i) instanceof FloatValue));
-        Assert.assertTrue(data.getValues().stream().anyMatch(i->data.getMapping().get(i) instanceof FloatInterval));
+        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof FloatValue));
+        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof FloatInterval));
     }
 }

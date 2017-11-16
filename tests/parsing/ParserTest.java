@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Vasiliy on 2017-10-25.
  */
 public class ParserTest {
-    DeclareParser parser = new DeclareParser();
+    DeclareParser parser = new DeclareParser(1);
 
     @Test
     public void testData() {

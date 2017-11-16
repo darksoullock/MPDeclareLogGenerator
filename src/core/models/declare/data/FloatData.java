@@ -1,5 +1,6 @@
 package core.models.declare.data;
 
+import core.Global;
 import core.RandomHelper;
 import core.models.intervals.FloatInterval;
 import core.models.intervals.FloatValue;
@@ -17,11 +18,13 @@ public class FloatData extends NumericData {
     float max;
     boolean includeMin;
     boolean includeMax;
+    int intervalSplits;
 
-    public FloatData(String type, float min, float max) {
+    public FloatData(String type, float min, float max, int intervalSplits) {
         this.min = min;
         this.max = max;
         this.type = type;
+        this.intervalSplits = intervalSplits;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class FloatData extends NumericData {
         intervals = new HashMap<>();
 
         if (values.size() == 0) {
-            intervals.put(formatBetween(min, max), new FloatInterval(min, max));
+            addBetweenInterval(min, max);
             return;
         }
 
@@ -47,9 +50,19 @@ public class FloatData extends NumericData {
         for (int i = 1; i < floatValues.size(); ++i) {
             float a = floatValues.get(i - 1);
             float b = floatValues.get(i);
-            intervals.put(formatBetween(a, b), new FloatInterval(a, b));
+            addBetweenInterval(a, b);
+
             if (i != floatValues.size() - 1 || includeMax)
                 intervals.put(formatEquals(b), new FloatValue(b));
+        }
+    }
+
+    private void addBetweenInterval(float a, float b) {
+        float step = (b - a) / intervalSplits;
+        for (int j = 0; j < intervalSplits; ++j) {
+            float start = a + step * j;
+            float end = a + step * (j + 1);
+            intervals.put(formatBetween(start, end), new FloatInterval(start, end));
         }
     }
 
@@ -58,18 +71,18 @@ public class FloatData extends NumericData {
         float val = Float.parseFloat(value);
         if (val < min || val > max)
             throw new InvalidStateException(val + " is out of defined interval of " + type);
-        if (val==min)
+        if (val == min)
             includeMin = true;
-        if (val==max)
+        if (val == max)
             includeMax = true;
         this.values.add(value);
     }
 
     private String formatBetween(float a, float b) {
-        return ("floatBetween" + String.valueOf(a).replace('.', 'p') + "and" + String.valueOf(b).replace('.', 'p') + 'r' + RandomHelper.getNext()).replace('-','m');
+        return ("floatBetween" + String.valueOf(a).replace('.', 'p') + "and" + String.valueOf(b).replace('.', 'p') + 'r' + RandomHelper.getNext()).replace('-', 'm');
     }
 
     private String formatEquals(float a) {
-        return ("floatEqualsTo" + String.valueOf(a).replace('.', 'p') + 'r' + RandomHelper.getNext()).replace('-','m');
+        return ("floatEqualsTo" + String.valueOf(a).replace('.', 'p') + 'r' + RandomHelper.getNext()).replace('-', 'm');
     }
 }
