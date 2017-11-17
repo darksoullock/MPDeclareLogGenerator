@@ -1,40 +1,651 @@
-administratieftariefeerstepol
-vervolgconsultpoliklinisch
-aannamelaboratoriumonderzoek
-ordertarief
-albumine
-alkalischefosfatasekinetisch
-telefonischconsult
-bacteriologisconderzoekmetkweeknie
-cytologischonderzoekectocervix
-histologischonderzoekbioptennno
+activity cytologisch_onderzoek___ectocervix__
+activity igm anticardiolipine mbv elisa
+activity perif.vaten - inbrengen port-a-cath syst
+activity ro-gel. als ass. bij drainage nier-nefro
+activity betasubunit bep. mbv. ria hcg
+activity haptoglobine
+activity hart        - resuscitatie
+activity cea - tumormarker mbv meia
+activity para-influenza-1-virus mbv pcr
+activity leucocyten tellen -electronisch- spoed
+activity doorlichting bij niersteenvergruizing
+activity echo bovenbeen
+activity alfa amylase - spoed
+activity ijzer
+activity inbrengen voedings- of lavagesonde duode
+activity ovarium     - excisie cyste via laparosc
+activity prostaatspecifiek antigeen -psa- mbv imm
+activity fenytoine kwantitatief
+activity interc.consult vervolg klinisch  interne
+activity pyelografie antegraad via drain
+activity mri orbita
+activity vervolgconsult_poliklinisch
+activity bekken
+activity cortisol
+activity darm        - katheteriseren stoma
+activity kruisproef volledig -drie methoden-
+activity lithium - spoed
+activity ligase chain reaction -lcr-
+activity longfunctie - co2 - capnografie
+activity interc.consult klinisch  chirurgie
+activity cytologisch onderzoek - urine niercyste
+activity albumine
+activity blaas       - uretrocystoscopie nno
+activity natrium vlamfotometrisch - spoed
+activity t3-uptake latente bindingscap. geb. tbg
+activity interc.consult klinisch  anesthesie
+activity squamous cell carcinoma mbv eia
+activity legionella antigeen sneltest
+activity haemoglobine foto-electrisch - spoed
+activity antigeendetectie - direct preparaat - vz
+activity ureum - spoed
+activity echogeleide als ass.bij punctie-biopsie
+activity ph-meting
+activity bloedgroepbep. anders dan abo per bloedg
+activity creatinine
+activity echo arteriae carotis sinistra
+activity echografie-doppler vena cava inferior en
+activity bloedstollingsfactor xii - activiteit
+activity echo en rontgen als ass. bij drainage ab
+activity bilirubine kwantitatief totaal of direct
+activity ammoniak
+activity uterus      - excisie-destructie path.af
+activity cde fenotypering
+activity mri wervelkolom - cervicaal
+activity punctie cyste tumor ed. door radioloog o
+activity rituximab
+activity vulva       - therapeutische punctie aan
+activity paclitaxel
+activity vancomycine kwn - immuno-assay
+activity onderzoek dunne darm m-z duodenum
+activity glucose
+activity hemoglobinen -abnormaal incl. hba2
+activity vrw.gesl.org- plastische operatie van vu
+activity heup
+activity tuba uterina- excisie parovariale cyste
+activity eiwitspectrum -elektroforese kwn. bep. f
+activity huid        - transcutane po2 en pco2 me
+activity albumine - spoed
+activity bilirubine - totaal
+activity ct wervelkolom - lumbaal
+activity buik        - proeflaparotomie
+activity huidplastiek- z-plastiek huid hoofd en h
+activity hemoglobine a1
+activity sacrum-os coccygis-s.i.gewrichten
+activity gemcitabine
+activity ligdagen - alle spec.beh.kinderg.-reval.
+activity dikke darm  - colonoscopie met biopsie
+activity vagina      - vaginotomie
+activity niet declarabele dagverpleging-bv klin.p
+activity 17-hydroxyprogesteron mbv ria
+activity stollingsfactor - viii - activiteit
+activity buikoverzicht - op zaal
+activity alfa-1-foetoproteine
+activity cvvhd       --continue veno-veneuze hemo
+activity fosfaat - spoed
+activity lithium
+activity natrium vlamfotometrisch
+activity vitamine d3
+activity echo bovenbuik
+activity cytologisch onderzoek - pleuravocht -
+activity cholesterol totaal
+activity microscopisch onderzoek  - elektronenmic
+activity eiwit -colorimetrisch- totaal
+activity sediment - spoed
+activity triglyceriden - enzymatisch
+activity vitamine b12 mbv chemieluminescentie
+activity onderz. naar aanwezigheid van koude anti
+activity peritoneum  - omentectomie
+activity resistentiebepalingen - 5 bepalingen
+activity zwachtelverband sling - aanleggen
+activity ureum
+activity ovarium     - adnex-extirpatie dmv lapar
+activity erytrocyten
+activity igg anticardiolipine mbv elisa
+activity dhea-sulfaat met extractie mbv ria
+activity partus      - klin.of poliklin.met voorb
+activity ammoniak - spoed
+activity complementdeficientie ond.bij afwezigh.a
+activity protrombinetijd
+activity echo buikwand
+activity melkzuurdehydrogenase -ldh- kinetisch
+activity glucose - spoed
+activity igg antistoffen tegen heparine-pf4-compl
+activity vrw.gesl.org- adhesiolysis ovarium plus
+activity zwangerschapsreactie
+activity uterus      - extirpatie abdominaal tota
+activity ca-125 mbv meia
+activity immunoglobuline m                    igm
+activity echo hals --waaronder schildklier--
+activity tympanometrie - standaard - audiologisch
+activity immuno-elektroforese liquor na concentra
+activity kalium vlamfotometrisch
+activity enkel
+activity klinische kaart - inwendige geneeskunde
+activity wervelkolom - cervicaal
+activity natrium - vlamfotometrisch - spoed
+activity wervelkolom - thoracolumbale overgang
+activity vitamine b3
+activity vitamine b2
+activity factor v leiden -r506q- mbv dna-test
+activity brachytherapie - interstitieel - bijzond
+activity chloride - spoed
+activity cytologisch onderzoek - diversen -
+activity patient niet verschenen ngiv- no show -
+activity rib-sternum
+activity kreatinine fosfokinase - spoed
+activity duodenum    - oesofagogastroduodenoscopi
+activity onderzoek via percutane veneuze katheter
+activity bekken - staand
+activity creatinine - spoed
+activity vrw.gesl.org- curettage gefractioneerd
+activity lymf.syst.  - stageringslymfadenectomie
+activity ca 15.3 - tumormarker mbv meia
+activity arterie     - punctie tbv.verblijfsnaald
+activity bloedgroep abo en rhesusfactor
+activity cito histologisch onderzoek
+activity lymfeklier - scint sentinel node met pro
+activity vitamine b6
+activity echografie a vue ivm zwangerschap - rout
+activity behandeltijd - eenheid t1 - megavolt
+activity obductie
+activity antitrombine iii mbv chromogeen-n-substr
+activity cytologisch onderzoek - endocervix -
+activity ct knie
+activity progesteron mbv radioisotopen
+activity echo arteriae carotis dextra
+activity crp c-reactief proteine
+activity uterus      - tot. laparoscopische hyste
+activity mec-a-bepaling voor mrsa mbv pcr
+activity ct art. en ven.pulmonales
+activity nieren - renografie lasix
+activity ct nier
+activity buik        - second-look-oper.ovariumca
+activity gefiltreerd erytrocytenconcentraat
+activity vrw.gesl.org- biopsie-punctie-cytologie
+activity nucleair onderzoek van elders
+activity echogeleide als ass. bij drainage intrap
+activity mri heup
+activity zink
+activity uitsluiten irregulaire a.s. tegen erys d
+activity reticulocyten tellen mbv facscan
+activity uterus      - curettage - diagnostisch
+activity ct bekken
+activity melkzuur dehydrogenase - spoed
+activity cortisol immunofluorimetrisch
+activity sgot - asat kinetisch
+activity complementcomponent c3 kwn.
+activity voet
+activity buik        - punctie ascites ontlastend
+activity duplexscan - venen been
+activity vulva       - vulvectomie - liesblok
+activity hemoglobine foto-elektrisch
+activity differentiele telling automatisch
+activity vrw.gesl.org- exc.destruct.path.afwijkin
+activity hyperthermie behandeling - h-1 -
+activity cytologisch onderzoek - lymfeklierpuncti
+activity itraconazol mbv hplc
+activity rontgenonderzoek onvolledig
+activity mri tractus urogenitalis
+activity sgot asat kinetisch - spoed
+activity cytologisch onderzoek - vagina -
+activity direct ondz. naar rs-virus antigeen mbv
+activity anti-chlamydia iga mbv elisa
+activity humaan metapneumovirus kwl. mbv dna-rna-
+activity bot - densitometrie femurhals
+activity lipase
+activity vagina      - toucher onder anesthesie
+activity blaas       - voorste en achterste exent
+activity longfunctie - spirometrie
+activity antist. specifiek mbv elisa histonen of
+activity heparine anti-xa
+activity afereseplasma gesplitst fq1 en fq2
+activity echografie-doppler v.jugularis
+activity interc.consult klinisch  neurologie
+activity thorax      - zuigdrainage behandeling a
+activity uterus      - extirp.abd.rad. - lymfaden
+activity interc.consult klinisch  longziekten
+activity infuus      - inbrengen
+activity trombocyten tellen - elektronisch
+activity dunne darm  - mech.ileus-adhes.streng.-i
+activity erytrocyten tellen - elektronisch
+activity brachytherapie - interstitieel - intensi
+activity dikke darm  - resectie sigmoid met prima
+activity eiwit beperkt - mineralen beperkt
+activity buik        - stageringslaparotom.-oment
+activity o2-saturatie
+activity proteine-s-antigeen -totaal
+activity echo mamma
+activity ethanol -enzymatisch of gaschromatografi
+activity vagina      - overige excisie pathologis
+activity aluminium
+activity international normalised ratio mbv tromb
+activity verlosk.-gynaec.  aanv.kaart kosten-out
+activity brain natriuretic peptide -bnp- mbv immu
+activity ct thorax
+activity chloride -ionselectief-
+activity ct a.pulmonalis
+activity melkzuur enzymatisch
+activity alfa-amylase
+activity dna - farr-assay mbv ria
+activity geb. antistoffen tegen erys - dir.coombs
+activity creatine fosfokinase isoenzym ckmb
+activity schoudergewricht
+activity echo thorax
+activity co-hb kwn.
+activity anti-epstein-barr na igg mbv elisa
+activity gamma glutamyltranspeptidase - spoed
+activity cytologisch onderzoek - pancreaspunctie
+activity duodenum    - inbrengen voedingssonde in
+activity chloride
+activity vulva       - rad.vulvectomie - opp.en d
+activity bepaling hepatitis-be-antigeen
+activity behandelen  - in hyperpressietank
+activity hyperthermie
+activity ordertarief
+activity blaas       - cystoscopie met biopsie
+activity administratief_tarief___eerste_pol
+activity trombocyten - leuko verwijderd - 5 donor
+activity sediment
+activity dikke darm  - appendectomie acuut via me
+activity uterus      - extirpatie vaginaal totaal
+activity kalium vlamfotometrisch - spoed
+activity antist. tegen hiv-e of hiv-c
+activity ven. d.s.a. vena cava inferior
+activity buffy coat
+activity uterus      - hysteroscopie
+activity anti-rubella igm -elisa
+activity microalbumine immunonefelometrisch
+activity high sensitive crp -hscrp- nefelometrisc
+activity maag - ontledig.-scint vast-vloeib.voeds
+activity totale gebitsstatus
+activity vagina      - operatie vesicovaginale fi
+activity anti-hiv mbv elisa
+activity anti-epstein-barr vca igg mbv elisa
+activity echogeleide als ass. bij punctie abdomen
+activity behandeltijd - eenheid t2 - megavolt
+activity morfometrie
+activity urinewegen  - urodynamisch onderzoek-vij
+activity bloedgroepbepaling anders dan abo  kidd
+activity oestron mbv radioisotopen
+activity mri bijnier
+activity amylase
+activity echo nieren-urinewegen
+activity mammografie thoraxwand
+activity bloedgroepantigenen andere dan abo-rhesu
+activity interc.consult klinisch  urologie
+activity onderbeen
+activity methemoglobine - sulfhemoglobine elk
+activity urinezuur met uricase u.v. spectrofotome
+activity cbr -coxsackie-b-900-virus
+activity cervix      - portio - lasercoagulatie
+activity buikoverzicht - staand
+activity blaas       - suprapubische katheter inb
+activity buik        - excisie patholog.afwijking
+activity ct-gel. als ass. bij punctie - biopsie i
+activity hepatitis-c-virus roche -hcvr- mbv pcr
+activity uterus      - extirpatie - abdominaal me
+activity cholesterol hdl
+activity vagina      - scopie excl.weefselwegname
+activity bekken - liggend
+activity widal agglutinatie - yersinia 3
+activity bepaling antist. hepatitis-be-antigeen
+activity gentamycine kwn - immuno-assay
+activity widal agglutinatie - yersinia 9
+activity klinische kaart - anesthesie
+activity buik        - second-look-oper.stagering
+activity 190021 klinische opname a002
+activity echografie  - blaas - extern
+activity uterus      - extirpatie abdominaal radi
+activity urine onderzoek - kwalitatief
+activity dagverpleging - alle spec.beh.kind.-rev.
+activity urethra     - dilatatie meatus
+activity eiwitfractionering mbv ief
+activity vrw.gesl.org- adhesiolysis ovaria-tubae
+activity 1e consult      bezoek
+activity homocystine chromatografisch
+activity dikke darm  - appendectomie nno
+activity erytrocyten leukocyten verwijderd bestra
+activity mri wervelkolom - thoracaal
+activity cefalinetijd - coagulatie
+activity antigeendetectie - direct preparaat - hs
+activity differentiatie leukocyten - handmatig
+activity magnesium  -aas - spoed
+activity gammaglutamyltranspeptidase
+activity immunoglobuline g                    igg
+activity thorax
+activity kleurproef sabin-feldman - leishmania
+activity vrw.gesl.org- adnex-extirpatie dmv lapar
+activity darm - colonpassage scint.comp.statisch
+activity blaas       - catheter a demeure - inbre
+activity proteine-c-activiteit
+activity 190034 afwezigheidsdag  a006
+activity totaal eiwit
+activity cytologisch onderzoek - schildklier  pun
+activity igg-index
+activity mycobacterium mbv pcr
+activity mri wervelkolom - lumbaal
+activity leukocyten tellen elektronisch
+activity von willebrand profiel mbv protease
+activity paraproteine typering mbv monospecifieke
+activity blaas       - cystoscopie
+activity uterus      - carc. cervix vlgs. werthei
+activity echo pleura
+activity determinatie en orient. typering -dmv ce
+activity perif.vaten - verwijderen port-a-cath
+activity anti-cytomegalovirus ig of igg -elisa
+activity cytologisch onderzoek - leverpunctie -
+activity doxorubicine liposomal --caelyx--
+activity melkzuur enzymatisch - spoed
+activity titratie directe antiglobulinetest - coo
+activity lymf.syst.  - sentinel node procedure li
+activity 190101 bovenreg.toesl.  a101
+activity alkalische_fosfatase__kinetisch_
+activity erythrocyten tellen -electronisch- spoed
+activity ovarium     - debulking ovariumcarcinoom
+activity intensive care ligdag - 6e tot en met 14
+activity cervix      - curettage
+activity echografie a vue ivw zwangerschap - met
+activity buik        - omentumplastiek
+activity echogeleide als ass. bij punctie-biopsie
+activity fosfaat
+activity factor ii mutatie mbv pcr
+activity hematocriet mbv centrifuge
+activity echografie  - genitalia interna
+activity 190204 klasse 3a        a204
+activity endoretrograde cholangiografie
+activity vulva       - radicale vulvect. znd ingu
+activity buik        - stag.lap-tumorred.-omentec
+activity coupe ter inzage
+activity acth mbv radioisotopen
+activity pyelografie antegraad via punctie
+activity lymf.syst.  - lymfekliertoilet diep - li
+activity inwend.geneesk.   aanv.kaart kosten-out
+activity 339849d toegangschir- c.v.d.-catheter v.
+activity vulva       - hechten van vulva
+activity ct hals
+activity heparinebepaling - kaoline - cefalinetij
+activity geb. antistoffen tegen erys - dir. coomb
+activity drainageprocedure onder rontgencontrole
+activity 1-25-oh2-vitamine d mbv hplc
+activity eerste hulp - niet seh afdeling - elders
+activity ovarium     - redebulking ovarium carcin
+activity creatine fosfokinase mb - spoed
+activity cytologisch onderzoek - liquor cerebrosp
+activity calcium - spoed
+activity klinisch tarief
+activity abortus     - overige technieken
+activity wervelkolom - thoracaal
+activity digoxine
+activity albumineratio
+activity vulva       - partiele vulvectomie
+activity troponine-t mbv elisa
+activity trombocyten tellen - spoed
+activity ct abdomen
+activity interc.consult vervolg klinisch  anesthe
+activity complementcomponent c4 kwn .
+activity vagina      - colpocleisis lefort
+activity vrw.gesl.org- aspiratie of microcurett.-
+activity lymf.syst.  - regionale lymfeklierdissec
+activity tuba uterina- aanbrengen clips tijdens l
+activity clostridium elisa-test
+activity mri grote hersenen
+activity cytologisch onderzoek - buiktumorpunctie
+activity fsh enzym-immunologisch
+activity buik        - laparoscopie - diagnostisc
+activity foliumzuur mbv radioisotopen
+activity crp c-reactief proteine - spoed
+activity hematologie - ontstek.scint.tot.lichaam
+activity onderzoek van elders niet beoordeeld
+activity anesthesie  - epiduraal met bloedpatch
+activity hoogfrequente audiometrie - audiologisch
+activity antistoffen tegen erys - specificiteit -
+activity hart        - doppler echocardiografie 2
+activity spraakaudiometrie  -  standaard - audiol
+activity tsh enzym-immunologisch
+activity verlosk.-gynaec.   jaarkaart kosten-out
+activity creatinefosfokinase -kinetisch-
+activity elutie van auto-antistoffen tegen erytro
+activity vulva       - biopsie-punctie-cytologie
+activity osmolaliteit
+activity echo been
+activity standaard materiaal n.n.o.
+activity celkweek en isolatie
+activity blaas       - bladder wash-out
+activity lymfeklier - scint sentinel node vervolg
+activity verwisselen van nefrostomie drain
+activity 190035 dagverpleging    a007
+activity cervix      - lisexcisie portio - diathe
+activity screening antistoffen erytrocyten
+activity vitamine e -hplc-methode
+activity antigeendetectie mbv ift -influenza-b
+activity lymf.syst.  - lymfadenectomie dmv laparo
+activity dikke darm  - sigmoidoscopie met flexibe
+activity antigeendetectie mbv ift -influenza-a
+activity oestradiol mbv radioisotopen -ria
+activity klinische kaart - verloskunde en gynaeco
+activity wervelkolom - lumbaal
+activity bovenbeen
+activity histologisch onderzoek - grote resectiep
+activity antist. tegen acetylcholinereceptoren
+activity echo pancreas en milt
+activity analgesie   - epiduraal door anesthesist
+activity darm - colonpassage scint.comp.vervolg
+activity cytostatica - infuustherapie
+activity calcium
+activity lever       - excisie tumor of metastase
+activity pijnbestrijd- aanleggen patient controll
+activity simulator - gebruik voor aanvang megavol
+activity prolactine mbv eia
+activity partiele gebitsstatus
+activity bacteriologisch_onderzoek_met_kweek__nie
+activity totaal t3 - trijoodthyronine mbv radiois
+activity mandibula-kaakgewricht
+activity echografie-doppler venen been
+activity ct bovenbuik
+activity antist.tegen hepatitis-b surface antigee
+activity tuba uterina- reanastomose na sterilisat
+activity echo tractus urogenitalis-bekken
+activity beademing - anesthesie - eerste dag
+activity anti-hav ig of igg-elisa of ria- in een
+activity telefonisch_consult
+activity hele bovenbeen met onderbeen en voet
+activity fdp - dimeer - immunologisch
+activity beademing - anesthesie - tweede t-m vijf
+activity anticoagulans lupus mbv elisa
+activity huid        - verwijderen retentie cyste
+activity lh mbv radioisotopen
+activity uterus      - intra-uterine device inbre
+activity echo schouder - m-z bovenarm
+activity sect.caesar.- met voorbehandeling en kra
+activity neuronspecifiek enolase
+activity echografie  - transuretraal prostaat
+activity cytologisch onderzoek - hersenen -
+activity ferritine kwn mbv chemieluminescentie
+activity oesofagografie - oraal
+activity directe antiglobulinetest - coombs
+activity lymfeklier - scint sentinel node dynamis
+activity fibrinogeen
+activity testosteron mbv radioisotopen
+activity ident. irregulaire a.s. tegen erys na po
+activity behandeltijd - eenheid t3 - megavolt
+activity pyelografie --wo niertransplantaat--
+activity kalium potentiometrisch
+activity skelet - scintigrafie totale lichaam
+activity punctie tbv cytologisch onderzoek door p
+activity anti-parvovirus igm mbv ind.ift
+activity vitamine a
+activity cytologisch onderzoek - nierpunctie -
+activity thorax - op zaal
+activity anesthesie  - bij spec.onderz.en verr.ge
+activity pyelografie retrograad
+activity protrombinetijd -quick owren of modif.-
+activity sgpt - alat kinetisch
+activity buikoverzicht
+activity vagina      - biopsie-punctie-cytologie
+activity cystografie retrograad
+activity vagina      - scopie incl.evt.vulvabiops
+activity anesthesie  - bij vervoer beademde patie
+activity vagina      - tension-free vaginal tape
+activity hepatitis-b-anti-core igm
+activity vulva       - vulvectomie zonder lieskli
+activity anti-epstein-barr vca igm mbv elisa
+activity diagnostische punctie onder echocontrole
+activity intensive care ligdag - 1e tot en met 5e
+activity toonaudiometrie - audiologisch centrum
+activity inwend.geneesk.    jaarkaart kosten-out
+activity anti-rubella igg -elisa - in een monster
+activity histologisch onderzoek - kleine resectie
+activity cytologisch onderzoek - vulva -
+activity echo nier
+activity anti-parvovirus -ig of igg antist. ind.
+activity transferrine mbv ics
+activity longfunctie - stroomvolume curve
+activity ct pancreas en milt
+activity perif.vaten - duplexonderzoek - veneus
+activity actuele ph - pco2 - stand.bicarbonaat
+activity vulva       - ruime lokale excisie van a
+activity proteine-s-antigeen -vrij
+activity mri art. en ven.abdomen
+activity bloedstollingsfactor v - kwantitatief -
+activity e.m.g.      - elektromyografisch onderzo
+activity unknown
+activity colon inloop
+activity ureter - splintografie cq opspuiten uret
+activity buik        - stag.laparotom.-omentect.-
+activity vagina      - extirpatie van vagina met
+activity immunopathologisch onderzoek
+activity hart - functie gated bloodpool rust
+activity mri abdomen
+activity bilirubine -geconjugeerd
+activity ro-gel. als ass. bij punctie - biopsie l
+activity immunoglobuline a                    iga
+activity lymf.syst.  - lymfeklierextirpatie para-
+activity toxoplasmose mbv eia toxo-igg
+activity sikkelcel
+activity bloedstollingsfactor vii - coagulatie
+activity cervix      - conisatie
+activity buik        - adhesiolyse en biopsie dmv
+activity igm-as. tegen cmv virus
+activity vrw.gesl.org- second-look-oper.ovariumca
+activity sex-hormone-binding globuline mbv ria
+activity opname volgens barsonie
+activity immunoforese na concentratie
+activity infuus      - bloed
+activity ct retroperitoneum
+activity alkalische fosfatase - kinetisch - spoed
+activity wormeieren - uitgebreid -vervolg-
+activity interc.consult klinisch  radiotherapie
+activity histologisch_onderzoek___biopten_nno
+activity occult bloed - kwalitatief-
+activity zwangerschapsreactie - spoed
+activity anti-hepatitis-c-virus mbv elisa
+activity interc.consult klinisch  interne ziekten
+activity toegangschir- c.v.d.-katheter perifeer b
+activity ct hersenen
+activity parathormoon mbv radioisotopen
+activity gipskamer-ok - gebruik
+activity uterus      - extirpatie abdom.totaal me
+activity cytologisch onderzoek - ascites -
+activity tumor - petscan totale lichaam
+activity osmolaliteit - spoed
+activity buik        - primaire stageringsoperati
+activity patienten kontakt audiologie korter dan
+activity dieet nno
+activity totaal t4 - thyroxine immunofluorimetris
+activity glucosebepaling -kwantitatief -
+activity vrw.gesl.org- operatie van clitoris nno
+activity magnesium  -aas
+activity aanname_laboratoriumonderzoek
+activity uterus      - extirp.abd.vag.rad.- lymfa
+activity doorlichting zonder opname buik
+activity echo onderbuik
+activity 1e consult poliklinisch
+activity perif.vaten - doppler-onderz.oppervl.ven
+activity perif.vaten - duplexscan arterieel cruro
+activity anesthesie  - bij behandeling met radium
+activity verlosk.-gynaec. korte kaart kosten-out
+activity opspuiten hickman-katheter
+activity toxoplasmose mbv eia toxo-igm
+activity ro-gel. als ass. bij punktie - biopsie t
+activity bloedstollingsfactor ix - coagulatie
+activity vrij t4 mbv ria -ft 4
+activity behandeltijd - eenheid t4 - megavolt
+activity vulva       - incisie - overige
+activity bot - densitometrie lwk
+activity buik        - littekenbreuk - plastische
+activity cytologisch onderzoek tbv bevolkingsonde
+activity pleura      - punctie - diagnostisch
+activity totaal eiwit colorimetrisch - spoed
+activity echo abdomen
+activity aspect supernatant
+activity rhesusfactor d - centrifugeermethode - e
+activity sgpt alat kinetisch - spoed
+activity ro-gel. als ass. bij inbrengen endoproth
+activity hepatitis-b surface antigeen confirmatie
+activity hematocriet - spoed
+activity mictie-cysto-uretrografie
+activity 190055 zware dagverpleging a009
+activity doorlichting zonder opname thorax
+activity bronchus    - bronch.toilet door verpl.-
+activity bezinkingssnelheid foto-elektrisch
+activity ct totale lichaam
+activity interc.consult klinisch  reumatologie
+activity delta-4-androsteendion
+activity trombotest
+activity bovenarm
+activity echo bekken inhoud muv anatomiecode 83 t
+activity ct arterien hersenen
+activity wisselen drain onder rontgencontrole
+activity e.c.g.      - elektrocardiografie
+activity orthopantomogram &apos;panoramixopname&apos; gebit
+activity antinucleaire factor -anf-
+activity mri bekken
+activity interc.consult poliklinisch
+activity ca-19.9 tumormarker
+activity plaatsen van v.cava filter
+activity vaten       - venapunctie
+activity anti-chlamydia igg mbv ind.ift
+activity 190205 klasse 3b        a205
+activity ct lever en galwegen
+activity bicarbonaat
+activity trombinetijd
+activity interc.consult vervolg klinisch  chirurg
+activity vriescoupe
+activity ovarium     - ovariopexie -excl.torsie-
+activity patient niet verschenen radiologie
+activity teletherapie - megavolt fotonen bestrali
+activity knie - m-z onderbeen
+activity microscopisch onderzoek - gekleurd en on
+activity sinus
+activity inwend.geneesk.  korte kaart kosten-out
+activity vitamine b1 - thiamine
+activity bloedstollingsfactor xi - activiteit
+activity immunofixatie
 
-ProducerCode: SIOG, SGAL, SGNA
-Group: MedicalMicrobiology, Pathology, GeneralLabClinicalChemistry
-SpecialismCode: c86, scDEF
-DiagnosisCode: c106, dcDEF
-Section: Section4, sDEF
+activity bacteriologisc_ onderzoek_met_kweek__nie
+activity cytologisch_onderzoek__ectocervix__
 
-bind administratieftariefeerstepol: ProducerCode
-bind bacteriologisconderzoekmetkweeknie: Group
-bind cytologischonderzoekectocervix: Group
-bind histologischonderzoekbioptennno: Group
-bind aannamelaboratoriumonderzoek: Group
-bind aannamelaboratoriumonderzoek: SpecialismCode
-bind administratieftariefeerstepol: DiagnosisCode
-bind aannamelaboratoriumonderzoek: Section
 
-Response[aannamelaboratoriumonderzoek, ordertarief]
-RespondedExistence[administratieftariefeerstepol, aannamelaboratoriumonderzoek]
-NotResponse[aannamelaboratoriumonderzoek, vervolgconsultpoliklinisch]
-AlternatePrecedence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
-RespondedExistence[vervolgconsultpoliklinisch, administratieftariefeerstepol]
-Response[administratieftariefeerstepol A, albumine T]|( A.ProducerCode is SIOG ) or ( A.DiagnosisCode is c106 )| 
-Absence[bacteriologisconderzoekmetkweeknie A]|(A.Group is not MedicalMicrobiology)
-Absence[cytologischonderzoekectocervix A]|(A.Group is not Pathology)
-Absence[histologischonderzoekbioptennno A]|(A.Group is not Pathology)
-NotRespondedExistence[telefonischconsult A, alkalischefosfatasekinetisch T]|((A.ProducerCode is SGAL ) or ( A.ProducerCode is SGNA ))| 
-Absence[aannamelaboratoriumonderzoek A]|(A.Section is Section4 ) and (A.SpecialismCode is c86) and (A.Group is not GeneralLabClinicalChemistry)
+Producer code: SIOG, SGAL, SGNA, CRLA, CHE2
+org::group: Medical_Microbiology, Pathology, General_Lab_Clinical_Chemistry, Obstetrics & Gynaecology clinic
+SpecialismCode: 86, 7, 61, 62
+Diagnosis_code: 106, M13
+Section: Section_4, Section_2
+
+bind administratief_tarief___eerste_pol: Producer code, Diagnosis_code
+bind bacteriologisc_ onderzoek_met_kweek__nie: org::group
+bind cytologisch_onderzoek__ectocervix__: org::group
+bind histologisch_onderzoek___biopten_nno: org::group
+bind aanname_laboratoriumonderzoek: org::group, SpecialismCode, Section
+
+
+Response[administratief_tarief___eerste_pol A, albumine T]|( A.Producer code is SIOG ) or ( A.Diagnosis_code is 106 )| 
+Absence[bacteriologisc_ onderzoek_met_kweek__nie A]|(A.org::group is not Medical_Microbiology)
+Absence[cytologisch_onderzoek__ectocervix__ A]|(A.org::group is not Pathology)
+Absence[histologisch_onderzoek___biopten_nno A]|(A.org::group is not Pathology)
+NotRespondedExistence[telefonisch_consult A, alkalische_fosfatase__kinetisch_ T]|((A.Producer code is SGAL ) or ( A.Producer code is SGNA ))| 
+Absence[aanname_laboratoriumonderzoek A]|(A.Section is Section_4 ) and (A.SpecialismCode is 86) and (A.org::group is not General_Lab_Clinical_Chemistry)
  
 
 

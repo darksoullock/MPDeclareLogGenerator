@@ -116,7 +116,7 @@ public class Serializer {
         TaskEventAdapter d = new TaskEventAdapter(0, "", Arrays.asList(pd));
         Map<String, Interval> map = new HashMap<>();
         map.put("b", null);
-        AlloyXESSerializer ser = new AlloyXESSerializer(new ModuleStub(), map, new ArrayList<>());
+        AlloyXESSerializer ser = new AlloyXESSerializer(new ModuleStub(), map, new ArrayList<>(), new HashMap<>());
         orderedStateEvents.add(a);
         orderedStateEvents.add(b);
         orderedStateEvents.add(c);

@@ -7,7 +7,6 @@ import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ public class Evaluator {
         int minLength = 10;
         int maxLength = 13;
         int nTraces = 30;
-        String inFilename = "./data/hospital.decl";
+        String inFilename = "./data/example1.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -66,11 +65,11 @@ public class Evaluator {
 
         System.out.println("Found Solution: " + (solution != null && solution.satisfiable()));
 
-        AlloyXESSerializer serializer = new AlloyXESSerializer(world, gen.generateNumericMap(), gen.getTraceAttr());
+        AlloyXESSerializer serializer = new AlloyXESSerializer(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding());
         serializer.serialize(solution, numberOfTraces, outFilename, maxTraceLength);
     }
 
     private static String GetDeclare(String file) throws FileNotFoundException {
-        return IOHelper.readAllText(new FileInputStream(file));
+        return IOHelper.readAllText(file);
     }
 }

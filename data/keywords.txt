@@ -1,0 +1,46 @@
+ activity x
+ Init[]
+ Existence[] 
+ Existence[]
+ Absence[]
+ Absence[]
+ Exactly[]
+ Choice[] 
+ ExclusiveChoice[] 
+ RespondedExistence[] 
+ Response[] 
+ AlternateResponse[] 
+ ChainResponse[]
+ Precedence[] 
+ AlternatePrecedence[] 
+ ChainPrecedence[] 
+ NotRespondedExistence[] 
+ NotResponse[] 
+ NotPrecedence[] 
+ NotChainResponse[]
+ NotChainPrecedence[]
+ integer between x and x
+ float between x and x
+ trace x
+ bind x
+ : , x
+ is not x
+ not in x
+ is x
+ in x
+ not x
+ or x
+ and x
+ same x
+ different x
+ not x
+ [ ] x
+ ( ) x
+ . x
+ > x
+ < x
+ >= x
+ <= x
+ = x
+ | x
+

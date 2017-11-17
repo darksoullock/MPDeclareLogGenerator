@@ -6,18 +6,20 @@ actions:
 	constraints
 	data constraints
 
+The names containing only digits should be inside quotemarks.
+	
 ------------------
 task definition
+activity TaskName
+
 example:
 
-ApplyForTrip
-ApproveApplication
-BookMeansOfTransport
-BookAccomodation
-CollectTickets
-ArchiveDocuments
-UseTransport
-DoSomething
+activity ApplyForTrip
+activity ApproveApplication
+activity book means of transport
+activity BookAccomodation
+activity CollectTickets
+
 
 ------------------
 constraints
@@ -62,7 +64,9 @@ Absence[ApproveApplication, 1]
 data definition
 Syntax:
 	Attribute: Value1, Value2, ...
-	Attribute type between Number and Number
+	Attribute: type between Number and Number
+	
+: and , in names should be doubled (escaped). Example: data type 'org:group' should be written as 'org::group'
 	
 example:
 	
@@ -79,8 +83,8 @@ Syntax:
 example:
 
 trace AttrName: value1, value2, ..
-trace Age integer between 10 and 100
-trace Angle float between 0.01 and 179.99
+trace Age: integer between 10 and 100
+trace Angle: float between 0.01 and 179.99
 
 ------------------
 data binding

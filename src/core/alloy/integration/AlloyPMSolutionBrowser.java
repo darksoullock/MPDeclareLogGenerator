@@ -14,12 +14,14 @@ import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Tuple;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4TupleSet;
 import edu.mit.csail.sdg.alloy4whole.Helper;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class AlloyPMSolutionBrowser {
     private static Logger logger = Logger.getLogger("AlloySolutionBrowser");
@@ -69,7 +71,8 @@ public class AlloyPMSolutionBrowser {
         }
 
         if (result.stream().map(i -> i.getName()).distinct().count() != result.size())
-            throw new AssertionError("Two payloads with the same name present in activity. Check alloy model");
+            throw new InvalidStateException("Two payloads with the same name present in activity. Check alloy model. \n" +
+                    String.join(", ", result.stream().map(i -> i.getName()).collect(Collectors.toList())));
 
         return result;
     }

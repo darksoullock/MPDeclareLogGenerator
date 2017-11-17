@@ -1,5 +1,6 @@
 package core.alloy.serialization;
 
+import core.Global;
 import core.StatisticsHelper;
 import core.TimestampComposer;
 import core.alloy.integration.AlloyPMSolutionBrowser;
@@ -29,13 +30,15 @@ public class AlloyXESSerializer {
     private XesXmlSerializer xesXmlSerializer;
     private Module module;
     private Map<String, Interval> numericMap;
-    List<AbstractTraceAttribute> traceAttributes;
+    private List<AbstractTraceAttribute> traceAttributes;
+    private Map<String, String> nameEncoding;
 
-    public AlloyXESSerializer(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes) {
+    public AlloyXESSerializer(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes, Map<String, String> nameEncoding) {
         xesXmlSerializer = new XesXmlSerializer();
         this.module = module;
         this.numericMap = numericMap;
         this.traceAttributes = traceAttributes;
+        this.nameEncoding = nameEncoding;
     }
 
     public int serialize(A4Solution alloySolution, int nTraces, String fileName, int l) throws IOException, Err, IllegalAccessException {
@@ -103,7 +106,10 @@ public class AlloyXESSerializer {
                 break;
 
             XAttributeMapImpl attributes = new XAttributeMapImpl();
-            attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", unqualifyLabel(oneStateEvent.getTaskName())));
+            String name = unqualifyLabel(oneStateEvent.getTaskName());
+            if (Global.encodeNames)
+                name = nameEncoding.get(name);
+            attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", name));
             attributes.put("lifecycle:transition", new XAttributeLiteralImpl("lifecycle:transition", "complete"));
             attributes.put("time:timestamp", new XAttributeTimestampImpl("time:timestamp", TimestampComposer.composeForEvent(oneStateEvent.getPosition())));
             handlePayload(oneStateEvent.getPayload(), attributes);
@@ -161,9 +167,13 @@ public class AlloyXESSerializer {
                         dataValue = numericMap.get(dataValue).getDifferent(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                     else throw new InvalidStateException("Different token types within one variables (" +
                                 String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList())) + ");");
-                    //dataValue = dataValue + String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                 }
+            } else if (Global.encodeNames) {
+                dataValue = nameEncoding.get(dataValue);
             }
+
+            if (Global.encodeNames)
+                dataKey = nameEncoding.get(dataKey);
 
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
         }

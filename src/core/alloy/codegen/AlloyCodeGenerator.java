@@ -1,18 +1,19 @@
 package core.alloy.codegen;
 
+import core.Global;
 import core.IOHelper;
 import core.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
 import core.models.declare.DataConstraint;
+import core.models.declare.Task;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
 import core.models.serialization.trace.AbstractTraceAttribute;
 import sun.plugin.dom.exception.InvalidStateException;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class AlloyCodeGenerator {
     int bitwidth;
 
     StringBuilder alloy;
+
     List<AbstractTraceAttribute> traceAttributes;
 
     List<String> tasksCode;
@@ -37,9 +39,6 @@ public class AlloyCodeGenerator {
 
     Map<String, NumericData> numericData;
     Map<String, List<DataExpression>> numericExpressions;
-
-    Map<String, List<String>> taskToData;
-    Map<String, List<String>> dataToTask;
 
     DeclareParser parser;
     DataConstraintGenerator gen;
@@ -55,10 +54,13 @@ public class AlloyCodeGenerator {
 
     public void Run(String declare) throws FileNotFoundException {
         Init();
+        if (Global.encodeNames)
+            declare = parser.encodeNames(declare);
         GenerateTaskEvents(maxTraceLength, bitwidth);
         GenerateVacuityConstraint(minTraceLength, maxTraceLength);
-        SortInput(parser.SplitStatements(declare));
-        ParseAndGenerateTasks();
+        SortInput(parser.splitStatements(declare));
+        List<Task> tasks = parser.parseTasks(tasksCode);
+        generateTasks(tasks);
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
         ParseAndGenerateConstraints();
@@ -96,13 +98,14 @@ public class AlloyCodeGenerator {
         constraintsCode = new ArrayList<>();
         dataConstraintsCode = new ArrayList<>();
 
-        taskToData = new HashMap<>();
-        dataToTask = new HashMap<>();
-
         numericData = new HashMap<>();
         numericExpressions = new HashMap<>();
 
         alloy = new StringBuilder(GetBase());
+    }
+
+    public Map<String, String> getNamesEncoding() {
+        return parser.getNamesEncoding();
     }
 
     private void GenerateDataConstraints(List<DataConstraint> dataConstraints) {
@@ -125,6 +128,9 @@ public class AlloyCodeGenerator {
     }
 
     private void ParseAndGenerateDataBindings() {
+        Map<String, List<String>> taskToData = new HashMap<>();
+        Map<String, List<String>> dataToTask = new HashMap<>();
+
         for (String line : dataBindingsCode) {
             line = line.substring(5);
             List<String> data = Arrays.stream(line.split("[:,\\s]+")).filter(i -> !i.isEmpty()).collect(Collectors.toList());
@@ -139,7 +145,7 @@ public class AlloyCodeGenerator {
             }
         }
 
-        WriteDataBinding();
+        WriteDataBinding(taskToData, dataToTask);
     }
 
 
@@ -189,9 +195,9 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void ParseAndGenerateTasks() {
-        for (String i : tasksCode)
-            alloy.append("one sig ").append(i).append(" extends Task {}\n");
+    private void generateTasks(List<Task> tasks) {
+        for (Task i : tasks)
+            alloy.append("one sig ").append(i.getName()).append(" extends Task {}\n");
     }
 
     private void SortInput(String[] st) {
@@ -241,7 +247,7 @@ public class AlloyCodeGenerator {
     }
 
 
-    private void WriteDataBinding() {
+    private void WriteDataBinding(Map<String, List<String>> taskToData, Map<String, List<String>> dataToTask) {
         for (String task : taskToData.keySet()) {
             alloy.append("fact { all te: TaskEvent | te.task = ")
                     .append(task)
@@ -253,16 +259,16 @@ public class AlloyCodeGenerator {
         }
 
         for (String payload : dataToTask.keySet()) {
-            alloy.append("fact { all te: TaskEvent | #{").append(payload).append(" & te.data} <= 1 }\n");
-            alloy.append("fact { all te: TaskEvent | #{")
+            alloy.append("fact { all te: TaskEvent | lone(").append(payload).append(" & te.data) }\n");
+            alloy.append("fact { all te: TaskEvent | one (")
                     .append(payload)
-                    .append(" & te.data} = 1 implies te.task in (")
+                    .append(" & te.data) implies te.task in (")
                     .append(String.join(" + ", dataToTask.get(payload)))
                     .append(") }\n");
         }
     }
 
     private String GetBase() throws FileNotFoundException {
-        return IOHelper.readAllText(new FileInputStream("./data/base.als"));
+        return IOHelper.readAllText("./data/base.als");
     }
 }
