@@ -131,20 +131,12 @@ public class DeclareParser {
         for (String i : traceAttributesCode) {
             String[] a = i.split(":\\s*|,?\\s+");
 
-            if (i.contains(":"))
+            if (a[2].equals("integer")) {
+                traceAttributes.add(new IntTraceAttribute(a[1], Integer.parseInt(a[4]), Integer.parseInt(a[6])));
+            } else if (a[2].equals("float")) {
+                traceAttributes.add(new FloatTraceAttribute(a[1], Float.parseFloat(a[4]), Float.parseFloat(a[6])));
+            } else {
                 traceAttributes.add(new EnumTraceAttribute(a[1], Arrays.stream(a).skip(2).collect(Collectors.toList())));
-
-            try {
-                if (a[2].equals("integer"))
-                    traceAttributes.add(new IntTraceAttribute(a[1], Integer.parseInt(a[4]), Integer.parseInt(a[6])));
-
-                if (a[2].equals("float"))
-                    traceAttributes.add(new FloatTraceAttribute(a[1], Float.parseFloat(a[4]), Float.parseFloat(a[6])));
-
-            } catch (NumberFormatException ex) {
-                System.out.println(namesEncoding.get(a[4]) + " or " + namesEncoding.get(a[6]) + " caused an error");
-                System.out.println("Possible reason: name containing only digits without quote marks");
-                throw ex;
             }
         }
 
@@ -166,7 +158,7 @@ public class DeclareParser {
             if (isTask(i))
                 names.add(i.substring(9));
 
-            if (isTraceAttribute(i))   // to be added
+            if (isTraceAttribute(i))
                 names.addAll(getTraceAttributeNamesFromRawCode(i));
 
             if (isData(i))
@@ -180,7 +172,7 @@ public class DeclareParser {
         return getDataNamesFromRawCode(taCode.substring(6));    // now syntax is the same with 'trace ' prefix
     }
 
-    public List<String> getDataNamesFromRawCode(String dataCode) {
+    private List<String> getDataNamesFromRawCode(String dataCode) {
         int scc = StringUtils.countMatches(dataCode, ':');
         int cc = StringUtils.countMatches(dataCode, ',');
 

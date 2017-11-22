@@ -1,11 +1,9 @@
 package core.models.intervals;
 
-import core.Global;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
 import sun.plugin.dom.exception.InvalidStateException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 

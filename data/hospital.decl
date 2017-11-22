@@ -629,8 +629,8 @@ activity cytologisch_onderzoek__ectocervix__
 
 Producer code: SIOG, SGAL, SGNA, CRLA, CHE2
 org::group: Medical_Microbiology, Pathology, General_Lab_Clinical_Chemistry, Obstetrics & Gynaecology clinic
-SpecialismCode: 86, 7, 61, 62
-Diagnosis_code: 106, M13
+SpecialismCode: '86', '7', '61', '62'
+Diagnosis_code: '106', M13
 Section: Section_4, Section_2
 
 bind administratief_tarief___eerste_pol: Producer code, Diagnosis_code
@@ -639,13 +639,20 @@ bind cytologisch_onderzoek__ectocervix__: org::group
 bind histologisch_onderzoek___biopten_nno: org::group
 bind aanname_laboratoriumonderzoek: org::group, SpecialismCode, Section
 
+Response[aanname_laboratoriumonderzoek, ordertarief]
+RespondedExistence[administratief_tarief___eerste_pol, aanname_laboratoriumonderzoek]
+NotResponse[aanname_laboratoriumonderzoek, vervolgconsult_poliklinisch]
+AlternatePrecedence[vervolgconsult_poliklinisch, administratief_tarief___eerste_pol]
+RespondedExistence[vervolgconsult_poliklinisch, administratief_tarief___eerste_pol]
 
-Response[administratief_tarief___eerste_pol A, albumine T]|( A.Producer code is SIOG ) or ( A.Diagnosis_code is 106 )| 
+Response[administratief_tarief___eerste_pol A, albumine T]|( A.Producer code is SIOG ) or ( A.Diagnosis_code is '106' )| 
 Absence[bacteriologisc_ onderzoek_met_kweek__nie A]|(A.org::group is not Medical_Microbiology)
 Absence[cytologisch_onderzoek__ectocervix__ A]|(A.org::group is not Pathology)
 Absence[histologisch_onderzoek___biopten_nno A]|(A.org::group is not Pathology)
 NotRespondedExistence[telefonisch_consult A, alkalische_fosfatase__kinetisch_ T]|((A.Producer code is SGAL ) or ( A.Producer code is SGNA ))| 
-Absence[aanname_laboratoriumonderzoek A]|(A.Section is Section_4 ) and (A.SpecialismCode is 86) and (A.org::group is not General_Lab_Clinical_Chemistry)
+Absence[aanname_laboratoriumonderzoek A]|(A.Section is Section_4 ) and (A.SpecialismCode is '86') and (A.org::group is not General_Lab_Clinical_Chemistry)
+ 
+ 
  
 
 

@@ -2,7 +2,6 @@ abstract sig Task {}
 abstract sig Payload {}
 
 abstract sig TaskEvent{
-	pos: disj Int,
 	task: one Task,
 	data: set Payload,
 	tokens: set Token
@@ -52,57 +51,57 @@ pred Choice(taskA, taskB: Task) {
 	some te: TaskEvent | te.task = taskA or te.task = taskB
 }
 
-pred ExclusiveChoice(taskA, taskB: Task) { // remove cardinality
+pred ExclusiveChoice(taskA, taskB: Task) { 
 	some te: TaskEvent | te.task = taskA or te.task = taskB
-	#{ te: TaskEvent | taskA = te.task } = 0 or #{ te: TaskEvent | taskB = te.task } = 0 
+	(no te: TaskEvent | taskA = te.task) or (no te: TaskEvent | taskB = te.task )
 }
 
-pred RespondedExistence(taskA, taskB: Task) { // remove cardinality
-	#{ te: TaskEvent | taskA = te.task } > 0 implies #{ ote: TaskEvent | taskB = ote.task } > 0
+pred RespondedExistence(taskA, taskB: Task) {
+	(some te: TaskEvent | taskA = te.task) implies (some ote: TaskEvent | taskB = ote.task)
 }
 
-pred Response(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task } > 0
+pred Response(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task )
 }
 
-pred AlternateResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task and #{ ite: TaskEvent | ite.pos > te.pos and ite.pos < fte.pos and taskA = ite.task} = 0 } > 0
+pred AlternateResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task and (no ite: TaskEvent | After[te, ite] and After[ite, fte] and taskA = ite.task))
 }
 
-pred ChainResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos = int[te.pos + 1] and taskB = fte.task } > 0
+pred ChainResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[te, fte] and taskB = fte.task)
 }
 
-pred Precedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task } > 0
+pred Precedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task)
 }
 
-pred AlternatePrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task and #{ ite: TaskEvent | ite.pos > te.pos and ite.pos < fte.pos and taskA = ite.task} = 0 } > 0
+pred AlternatePrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task and (no ite: TaskEvent | After[fte, ite] and After[ite, te] and taskA = ite.task))
 }
 
-pred ChainPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | int[fte.pos + 1] = te.pos and taskB = fte.task } > 0
+pred ChainPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[fte, te] and taskB = fte.task)
 }
 
-pred NotRespondedExistence(taskA, taskB: Task) { // remove cardinality
-	#{ te: TaskEvent | taskA = te.task } > 0 implies #{ te: TaskEvent | taskB = te.task } = 0
+pred NotRespondedExistence(taskA, taskB: Task) {
+	(some te: TaskEvent | taskA = te.task) implies (no te: TaskEvent | taskB = te.task)
 }
 
-pred NotResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task } = 0
+pred NotResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[te, fte] and taskB = fte.task)
 }
 
-pred NotPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task } = 0
+pred NotPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[fte, te] and taskB = fte.task)
 }
 
-pred NotChainResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos = int[te.pos + 1] and taskB = fte.task } = 0
+pred NotChainResponse(taskA, taskB: Task) { 
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[te, fte] and taskB = fte.task)
 }
 
-pred NotChainPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | int[fte.pos + 1] = te.pos and taskB = fte.task } = 0
+pred NotChainPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[fte, te] and taskB = fte.task)
 }
 //-
 

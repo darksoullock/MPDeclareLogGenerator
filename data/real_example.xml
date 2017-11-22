@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<model>
+	<assignment language="ConDec" name="new model">
+		<activitydefinitions>
+			<activity id="1" name="administratief_tarief___eerste_pol">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="2" name="vervolgconsult_poliklinisch">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="3" name="aanname_laboratoriumonderzoek">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="4" name="ordertarief">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="5" name="albumine">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="6" name="alkalische_fosfatase__kinetisch_">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="7" name="telefonisch_consult">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="8" name="bacteriologisc_ onderzoek_met_kweek__nie">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="9" name="cytologisch_onderzoek__ectocervix__">
+				<authorization/>
+				<datamodel/>
+			</activity>
+			<activity id="10" name="histologisch_onderzoek___biopten_nno">
+				<authorization/>
+				<datamodel/>
+			</activity>
+		</activitydefinitions>
+		<constraintdefinitions>
+			<constraint id="2" mandatory="true">
+				<condition>[][][]</condition>
+				<name>response</name>
+				<template>
+					<description>Whenever activity &lt;b&gt;aanname_laboratoriumonderzoek&lt;/b&gt; is executed, activity &lt;b&gt;ordertarief&lt;/b&gt; has to be eventually executed afterwards.</description>
+					<display>response</display>
+					<name>response</name>
+					<text>[]( ( "A" -&gt; &lt;&gt;( "B" ) ) )</text>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="2"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">&lt;html&gt;&lt;p&gt;This constraint is temporarily violated because task &amp;quot;A&amp;quot; has been executed, 
+and task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;.&lt;/p&gt;
+&lt;p&gt;Execute task &amp;quot;B&amp;quot; at least once to satisfy this constraint. &lt;/p&gt;&lt;/html&gt;</message>
+						<message state="SATISFIED">&lt;html&gt;&lt;p&gt; There are  two options when this constraint is satisfied:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Either task &amp;quot;A&amp;quot; has not been executed yet, or&lt;/li&gt;
+&lt;li&gt;Task &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/html&gt;</message>
+						<message state="VIOLATED">&lt;html&gt;&lt;p&gt;This constraint is (permanently) violated when the instance is closed 
+such that task &amp;quot;A&amp;quot; was executed, 
+but task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;.&lt;/p&gt;
+&lt;/html&gt;&lt;/html&gt;</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="aanname_laboratoriumonderzoek"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="ordertarief"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="3" mandatory="true">
+				<condition>[][][]</condition>
+				<name>responded existence</name>
+				<template>
+					<description>If A happen (at least once) then B has to have (at least once) happpend before of has to happen after A. </description>
+					<display>responded existence</display>
+					<name>responded existence</name>
+					<text>( &lt;&gt;("A") -&gt; &lt;&gt;( "B" ) )</text>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="false" style="0"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">VIOLATED_TEMPORARY undefined</message>
+						<message state="SATISFIED">SATISFIED undefined</message>
+						<message state="VIOLATED">VIOLATED undefined</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="administratief_tarief___eerste_pol"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="aanname_laboratoriumonderzoek"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="4" mandatory="true">
+				<condition>[][][]</condition>
+				<name>not response</name>
+				<template>
+					<description/>
+					<display>not response</display>
+					<name>not response</name>
+					<text>[]( ( "A" -&gt; !( &lt;&gt;( "B" ) ) ) )</text>
+					<parameters>
+						<parameter branchable="false" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="8"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="2"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">VIOLATED_TEMPORARY undefined</message>
+						<message state="SATISFIED">SATISFIED undefined</message>
+						<message state="VIOLATED">VIOLATED undefined</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="aanname_laboratoriumonderzoek"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="vervolgconsult_poliklinisch"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="5" mandatory="true">
+				<condition>[][][]</condition>
+				<name>alternate precedence</name>
+				<template>
+					<description>B cannot happen before A. After it happens, it can not happen before the next A again.</description>
+					<display>alternate precedence</display>
+					<name>alternate precedence</name>
+					<text>(    ( !( "B" ) U "A" )  )  /\  ( ( "B" -&gt;  X(   ( !( "B" ) U "A" )       ) ) ) ) /\  ! ("B" )</text>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="2"/>
+								<begin fill="true" style="0"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="2"/>
+								<begin fill="true" style="10"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">VIOLATED_TEMPORARY undefined</message>
+						<message state="SATISFIED">SATISFIED undefined</message>
+						<message state="VIOLATED">VIOLATED undefined</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="administratief_tarief___eerste_pol"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="vervolgconsult_poliklinisch"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="6" mandatory="true">
+				<condition>[][][]</condition>
+				<name>responded existence</name>
+				<template>
+					<description>If A happen (at least once) then B has to have (at least once) happpend before of has to happen after A. </description>
+					<display>responded existence</display>
+					<name>responded existence</name>
+					<text>( &lt;&gt;("A") -&gt; &lt;&gt;( "B" ) )</text>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="false" style="0"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">VIOLATED_TEMPORARY undefined</message>
+						<message state="SATISFIED">SATISFIED undefined</message>
+						<message state="VIOLATED">VIOLATED undefined</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="vervolgconsult_poliklinisch"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="administratief_tarief___eerste_pol"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="7" mandatory="true">
+				<condition>[ ( A.Producer code == 'SIOG' ) || ( A.Diagnosis_code == '106' ) ][][]</condition>
+				<name>response</name>
+				<template>
+					<description>Whenever activity &lt;b&gt;administratief_tarief___eerste_pol&lt;/b&gt; is executed, activity &lt;b&gt;albumine&lt;/b&gt; has to be eventually executed afterwards.</description>
+					<display>response</display>
+					<name>response</name>
+					<text>[]( ( "A" -&gt; &lt;&gt;( "B" ) ) )</text>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="2"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">&lt;html&gt;&lt;p&gt;This constraint is temporarily violated because task &amp;quot;A&amp;quot; has been executed, 
+and task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;.&lt;/p&gt;
+&lt;p&gt;Execute task &amp;quot;B&amp;quot; at least once to satisfy this constraint. &lt;/p&gt;&lt;/html&gt;</message>
+						<message state="SATISFIED">&lt;html&gt;&lt;p&gt; There are  two options when this constraint is satisfied:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Either task &amp;quot;A&amp;quot; has not been executed yet, or&lt;/li&gt;
+&lt;li&gt;Task &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/html&gt;</message>
+						<message state="VIOLATED">&lt;html&gt;&lt;p&gt;This constraint is (permanently) violated when the instance is closed 
+such that task &amp;quot;A&amp;quot; was executed, 
+but task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;.&lt;/p&gt;
+&lt;/html&gt;&lt;/html&gt;</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="administratief_tarief___eerste_pol"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="albumine"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+			<constraint id="13" mandatory="true">
+				<condition>[((A.Producer code == 'SGAL' ) || ( A.Producer code == 'SGNA' ))][][]</condition>
+				<name>not responded existence</name>
+				<template>
+					<description/>
+					<display>not responded existence</display>
+					<name>not responded existence</name>
+					<text/>
+					<parameters>
+						<parameter branchable="true" id="1" name="A">
+							<graphical>
+								<style number="1"/>
+								<begin fill="true" style="5"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="8"/>
+							</graphical>
+						</parameter>
+						<parameter branchable="true" id="2" name="B">
+							<graphical>
+								<style number="1"/>
+								<begin fill="false" style="0"/>
+								<middle fill="false" style="0"/>
+								<end fill="false" style="0"/>
+							</graphical>
+						</parameter>
+					</parameters>
+					<statemessages>
+						<message state="VIOLATED_TEMPORARY">VIOLATED_TEMPORARY undefined</message>
+						<message state="SATISFIED">SATISFIED undefined</message>
+						<message state="VIOLATED">VIOLATED undefined</message>
+					</statemessages>
+				</template>
+				<constraintparameters>
+					<parameter templateparameter="1">
+						<branches>
+							<branch name="telefonisch_consult"/>
+						</branches>
+					</parameter>
+					<parameter templateparameter="2">
+						<branches>
+							<branch name="alkalische_fosfatase__kinetisch_"/>
+						</branches>
+					</parameter>
+				</constraintparameters>
+			</constraint>
+		</constraintdefinitions>
+		<data/>
+		<team/>
+		<graphical>
+			<activities>
+				<cell height="72.0" id="1" width="229.0" x="844.0" y="321.0"/>
+				<cell height="81.0" id="2" width="221.0" x="1290.0" y="318.0"/>
+				<cell height="48.0" id="3" width="252.0" x="831.0" y="548.0"/>
+				<cell height="50.0" id="4" width="90.0" x="1355.0" y="549.0"/>
+				<cell height="50.0" id="5" width="90.0" x="914.0" y="30.0"/>
+				<cell height="50.0" id="6" width="90.0" x="458.0" y="29.0"/>
+				<cell height="50.0" id="7" width="90.0" x="458.0" y="228.0"/>
+				<cell height="50.0" id="8" width="280.0" x="52.0" y="387.0"/>
+				<cell height="50.0" id="9" width="291.0" x="0.0" y="533.0"/>
+				<cell height="59.0" id="10" width="240.0" x="366.0" y="533.0"/>
+			</activities>
+			<constraints>
+				<cell height="1.0" id="2" width="1.0" x="1171.0" y="574.0"/>
+				<cell height="1.0" id="3" width="1.0" x="958.0" y="478.0"/>
+				<cell height="1.0" id="4" width="1.0" x="1174.0" y="468.0"/>
+				<cell height="1.0" id="5" width="1.0" x="1180.0" y="310.0"/>
+				<cell height="1.0" id="6" width="1.0" x="1181.0" y="396.0"/>
+				<cell height="1.0" id="7" width="1.0" x="960.0" y="285.0"/>
+				<cell height="1.0" id="13" width="1.0" x="503.0" y="153.0"/>
+				<cell height="1.0" id="15" width="1.0" x="0.0" y="0.0"/>
+				<cell height="1.0" id="16" width="1.0" x="0.0" y="0.0"/>
+			</constraints>
+		</graphical>
+	</assignment>
+</model>

@@ -16,32 +16,28 @@ import org.deckfour.xes.extension.XExtensionParser;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.*;
-import org.deckfour.xes.out.XesXmlSerializer;
 import sun.plugin.dom.exception.InvalidStateException;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AlloyXESSerializer {
-    private XesXmlSerializer xesXmlSerializer;
+public class AlloyLogExtractor {
     private Module module;
     private Map<String, Interval> numericMap;
     private List<AbstractTraceAttribute> traceAttributes;
     private Map<String, String> nameEncoding;
 
-    public AlloyXESSerializer(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes, Map<String, String> nameEncoding) {
-        xesXmlSerializer = new XesXmlSerializer();
+    public AlloyLogExtractor(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes, Map<String, String> nameEncoding) {
         this.module = module;
         this.numericMap = numericMap;
         this.traceAttributes = traceAttributes;
         this.nameEncoding = nameEncoding;
     }
 
-    public int serialize(A4Solution alloySolution, int nTraces, String fileName, int l) throws IOException, Err, IllegalAccessException {
+    public XLog extract(A4Solution alloySolution, int nTraces, int l) throws IOException, Err {
         System.out.println("Serialization..");
 
         XLog plog = this.initLog();
@@ -56,11 +52,7 @@ public class AlloyXESSerializer {
             }
         }
 
-        System.out.println();
-        System.out.println("Writing XES for: " + fileName + t + ".xes");
-        FileOutputStream fileOS = new FileOutputStream(fileName + t + ".xes");
-        xesXmlSerializer.serialize(plog, fileOS);
-        return t;
+        return plog;
     }
 
     private void resetIntervalCaches() {
@@ -149,7 +141,15 @@ public class AlloyXESSerializer {
 
     private void handleTraceAttributes(XTraceImpl oneTrace) {
         for (AbstractTraceAttribute i : traceAttributes) {
-            oneTrace.getAttributes().put(i.getName(), new XAttributeLiteralImpl(i.getName(), i.getValue()));
+            String name = i.getName();
+            String value = i.getValue();
+            if (Global.encodeNames) {
+                name = nameEncoding.get(name);
+                if (nameEncoding.containsKey(value))
+                    value = nameEncoding.get(value);
+            }
+
+            oneTrace.getAttributes().put(name, new XAttributeLiteralImpl(name, value));
         }
     }
 

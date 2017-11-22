@@ -1,7 +1,7 @@
 /task definition
 activity ApplyForTrip
 activity ApproveApplication
-activity BookMeansOfTransport
+activity BookTransport
 activity BookAccomodation
 activity CollectTickets
 activity ArchiveDocuments
@@ -11,14 +11,14 @@ activity DoSomething
 /constraints
 Init[ApplyForTrip]
 Response[CollectTickets, ArchiveDocuments]
-Precedence[BookMeansOfTransport, ApproveApplication]
+Precedence[BookTransport, ApproveApplication]
 Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookMeansOfTransport]
+Precedence[CollectTickets, BookTransport]
 Precedence[CollectTickets, BookAccomodation] 
 Absence[BookAccomodation, 2]
-Absence[BookMeansOfTransport, 3]
-ChainResponse[UseTransport, DoSomething]
-Existence[DoSomething]
+Absence[BookTransport, 3]
+/ChainResponse[UseTransport, DoSomething]
+/Existence[DoSomething]
 Absence[ApplyForTrip, 1]
 Existence[CollectTickets]
 Existence[ArchiveDocuments]
@@ -28,21 +28,25 @@ Absence[ApproveApplication, 1]
 /data definition
 TransportType: Car, Plane, Train, Bus
 Something: One, None, Another
-Price: integer between 0 and 300
+Price: float between 0 and 100
 Speed: integer between 0 and 300
 
 /data binding
-bind BookMeansOfTransport: TransportType, Price, Speed
+bind BookTransport: TransportType, Price, Speed
 bind UseTransport: TransportType, Something, Price
 bind DoSomething: Something
 
 /trace attributes
-trace AlwaysSame: 42
+trace AlwaysSame: '42'
 trace RandomNumber: integer between 42 and 422
 trace RandomFloatNumber: float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-Absence[BookMeansOfTransport A] | A.Price>50 and A.Speed>=50
-RespondedExistence[BookMeansOfTransport A, UseTransport B] | A.Price=50 | B.Price=200
+/Absence[BookTransport A] | A.Price>50 and A.Speed>=50
+/RespondedExistence[BookTransport A, UseTransport B] | A.Price=50 | B.Price=200
+
+ChainResponse[DoSomething, UseTransport]
+Absence[UseTransport, 3]
+Exactly[DoSomething, 3]
 

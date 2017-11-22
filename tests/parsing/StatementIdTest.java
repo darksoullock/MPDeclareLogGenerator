@@ -14,9 +14,9 @@ public class StatementIdTest {
     DeclareParser parser = new DeclareParser(1);
 
     List<String> tasks = Arrays.asList(
-            "ApplyForTrip",
-            "BookAccomodation",
-            "CollectTickets");
+            "activity ApplyForTrip",
+            "activity BookAccomodation",
+            "activity CollectTickets");
 
     List<String> constraints = Arrays.asList(
             "Init[ApplyForTrip]",
@@ -26,8 +26,8 @@ public class StatementIdTest {
 
     List<String> data = Arrays.asList(
             "TransportType: Car, Plane, Train, Bus",
-            "Price integer between 0 and 300",
-            "Angle float between 0 and 180");
+            "Price: integer between 0 and 300",
+            "Angle: float between 0 and 180");
 
     List<String> dataBinding = Arrays.asList(
             "bind BookMeansOfTransport: TransportType",
@@ -40,8 +40,8 @@ public class StatementIdTest {
 
     List<String> traceAttributes = Arrays.asList(
             "trace AlwaysSame: 42",
-            "trace RandomNumber integer between 42 and 422",
-            "trace RandomFloatNumber float between 42 and 422",
+            "trace RandomNumber: integer between 42 and 422",
+            "trace RandomFloatNumber: float between 42 and 422",
             "trace Enum: enum, values, v2, v3");
 
     @Test

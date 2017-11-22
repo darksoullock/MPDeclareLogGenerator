@@ -49,12 +49,12 @@ public class FunctionGenerator {
     }
 
     private DataExpression inverseNotConstraintNumericComparison(DataExpression expression) {
-        if (expression.getNode().getValue().equals("same"))
+        if (expression.getNode().getValue().equals("same") && isNumeric((UnaryExpression) expression))
             return new UnaryExpression(
                     new Token(0, Token.Type.Operator, "nsame"),
                     ((UnaryExpression) expression).getValue());
 
-        if (expression.getNode().getValue().equals("different"))
+        if (expression.getNode().getValue().equals("different") && isNumeric((UnaryExpression) expression))
             return new UnaryExpression(
                     new Token(0, Token.Type.Operator, "ndifferent"),
                     ((UnaryExpression) expression).getValue());
@@ -69,6 +69,10 @@ public class FunctionGenerator {
                     inverseNotConstraintNumericComparison(((UnaryExpression) expression).getValue()));
 
         return expression;
+    }
+
+    private boolean isNumeric(UnaryExpression expression) {
+        return map.containsKey(expression.getValue().getNode().getValue());
     }
 
     private void init(DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
@@ -311,20 +315,20 @@ public class FunctionGenerator {
         }
 
         if (bex.getNode().getValue().equals("in")) {
-            alloy.append("(#{");
+            alloy.append("(one (");
             tc.append(generateExpression(bex.getLeft()));
             alloy.append('&');
             tc.append(generateExpression(bex.getRight()));
-            alloy.append("} = 1)");
+            alloy.append("))");
             return tc.toString();
         }
 
         if (bex.getNode().getValue().equals("not in")) {
-            alloy.append("(#{");
+            alloy.append("(no (");
             tc.append(generateExpression(bex.getLeft()));
             alloy.append('&');
             tc.append(generateExpression(bex.getRight()));
-            alloy.append("} = 0)");
+            alloy.append("))");
             return tc.toString();
         }
 

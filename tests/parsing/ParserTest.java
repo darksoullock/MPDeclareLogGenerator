@@ -1,6 +1,7 @@
 package parsing;
 
 import core.alloy.codegen.DeclareParser;
+import core.models.declare.DataConstraint;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
 import core.models.declare.data.IntegerData;
@@ -12,6 +13,7 @@ import core.models.serialization.trace.IntTraceAttribute;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -90,5 +92,22 @@ public class ParserTest {
             Assert.assertTrue(in < 100 && in >= 10);
             Assert.assertTrue(f <= 179.99 && in >= 0.01);
         }
+    }
+
+    @Test
+    public void testDataConstraints() {
+        List<String> raw = Arrays.asList("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
+                "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low");
+        List<DataConstraint> dcs = parser.parseDataConstraints(raw, null);
+        Assert.assertEquals(dcs.size(), 2);
+        DataConstraint first = dcs.get(0);
+        DataConstraint second = dcs.get(1);
+        Assert.assertEquals(first.getName(), "Absence");
+        Assert.assertEquals(second.getName(), "RespondedExistence");
+        Assert.assertEquals(first.taskA(), "BookTransport");
+        Assert.assertEquals(second.taskA(), "BookTransport");
+        Assert.assertEquals(second.taskB(), "UseTransport");
+        Assert.assertEquals(first.getFirstFunction().getExpression().getNode().getValue(), "and");
+        Assert.assertEquals(second.getSecondFunction().getExpression().getNode().getValue(), "is not");
     }
 }

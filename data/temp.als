@@ -2,7 +2,6 @@ abstract sig Task {}
 abstract sig Payload {}
 
 abstract sig TaskEvent{
-	pos: disj Int,
 	task: one Task,
 	data: set Payload,
 	tokens: set Token
@@ -52,155 +51,143 @@ pred Choice(taskA, taskB: Task) {
 	some te: TaskEvent | te.task = taskA or te.task = taskB
 }
 
-pred ExclusiveChoice(taskA, taskB: Task) { // remove cardinality
+pred ExclusiveChoice(taskA, taskB: Task) { 
 	some te: TaskEvent | te.task = taskA or te.task = taskB
-	#{ te: TaskEvent | taskA = te.task } = 0 or #{ te: TaskEvent | taskB = te.task } = 0 
+	(no te: TaskEvent | taskA = te.task) or (no te: TaskEvent | taskB = te.task )
 }
 
-pred RespondedExistence(taskA, taskB: Task) { // remove cardinality
-	#{ te: TaskEvent | taskA = te.task } > 0 implies #{ ote: TaskEvent | taskB = ote.task } > 0
+pred RespondedExistence(taskA, taskB: Task) {
+	(some te: TaskEvent | taskA = te.task) implies (some ote: TaskEvent | taskB = ote.task)
 }
 
-pred Response(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task } > 0
+pred Response(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task )
 }
 
-pred AlternateResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task and #{ ite: TaskEvent | ite.pos > te.pos and ite.pos < fte.pos and taskA = ite.task} = 0 } > 0
+pred AlternateResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task and (no ite: TaskEvent | After[te, ite] and After[ite, fte] and taskA = ite.task))
 }
 
-pred ChainResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos = int[te.pos + 1] and taskB = fte.task } > 0
+pred ChainResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[te, fte] and taskB = fte.task)
 }
 
-pred Precedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task } > 0
+pred Precedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task)
 }
 
-pred AlternatePrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task and #{ ite: TaskEvent | ite.pos > te.pos and ite.pos < fte.pos and taskA = ite.task} = 0 } > 0
+pred AlternatePrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task and (no ite: TaskEvent | After[fte, ite] and After[ite, te] and taskA = ite.task))
 }
 
-pred ChainPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | int[fte.pos + 1] = te.pos and taskB = fte.task } > 0
+pred ChainPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[fte, te] and taskB = fte.task)
 }
 
-pred NotRespondedExistence(taskA, taskB: Task) { // remove cardinality
-	#{ te: TaskEvent | taskA = te.task } > 0 implies #{ te: TaskEvent | taskB = te.task } = 0
+pred NotRespondedExistence(taskA, taskB: Task) {
+	(some te: TaskEvent | taskA = te.task) implies (no te: TaskEvent | taskB = te.task)
 }
 
-pred NotResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos > te.pos and taskB = fte.task } = 0
+pred NotResponse(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[te, fte] and taskB = fte.task)
 }
 
-pred NotPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos < te.pos and taskB = fte.task } = 0
+pred NotPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[fte, te] and taskB = fte.task)
 }
 
-pred NotChainResponse(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | fte.pos = int[te.pos + 1] and taskB = fte.task } = 0
+pred NotChainResponse(taskA, taskB: Task) { 
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[te, fte] and taskB = fte.task)
 }
 
-pred NotChainPrecedence(taskA, taskB: Task) { // remove cardinality
-	all te: TaskEvent | taskA = te.task implies #{ fte: TaskEvent | int[fte.pos + 1] = te.pos and taskB = fte.task } = 0
+pred NotChainPrecedence(taskA, taskB: Task) {
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[fte, te] and taskB = fte.task)
 }
 //-
 
 pred example { }
 run example
 
-one sig TE0 extends TaskEvent {} {pos=-8}
-one sig TE1 extends TaskEvent {} {pos=-7}
-one sig TE2 extends TaskEvent {} {pos=-6}
-one sig TE3 extends TaskEvent {} {pos=-5}
-one sig TE4 extends TaskEvent {} {pos=-4}
-one sig TE5 extends TaskEvent {} {pos=-3}
-one sig TE6 extends TaskEvent {} {pos=-2}
-one sig TE7 extends TaskEvent {} {pos=-1}
-one sig TE8 extends TaskEvent {} {pos=0}
-one sig TE9 extends TaskEvent {} {pos=1}
-lone sig TE10 extends TaskEvent {} {pos=2}
-lone sig TE11 extends TaskEvent {} {pos=3}
-lone sig TE12 extends TaskEvent {} {pos=4}
+one sig TE0 extends TaskEvent {}
+one sig TE1 extends TaskEvent {}
+one sig TE2 extends TaskEvent {}
+one sig TE3 extends TaskEvent {}
+one sig TE4 extends TaskEvent {}
+lone sig TE5 extends TaskEvent {}
+lone sig TE6 extends TaskEvent {}
+lone sig TE7 extends TaskEvent {}
+pred Next(pre, next: TaskEvent){
+pre = TE0 and next = TE1 or pre = TE1 and next = TE2 or pre = TE2 and next = TE3 or pre = TE3 and next = TE4 or pre = TE4 and next = TE5 or pre = TE5 and next = TE6 or pre = TE6 and next = TE7}
+pred After(b, a: TaskEvent){// b=before, a=after
+b=TE0 or a=TE7 or b=TE1 and not (a=TE0) or b=TE2 and not (a=TE0 or a=TE1) or b=TE3 and not (a=TE0 or a=TE1 or a=TE2) or b=TE4 and (a=TE7 or a=TE6 or a=TE5) or b=TE5 and (a=TE7 or a=TE6)}
 fact{
-one TE11 implies one TE10
-one TE12 implies one TE11
+one TE6 implies one TE5
+one TE7 implies one TE6
 }
-one sig ApplyForTrip extends Task {}
-one sig ApproveApplication extends Task {}
-one sig BookMeansOfTransport extends Task {}
-one sig BookAccomodation extends Task {}
-one sig CollectTickets extends Task {}
-one sig ArchiveDocuments extends Task {}
-one sig UseTransport extends Task {}
-one sig DoSomething extends Task {}
-fact { all te: TaskEvent | te.task = DoSomething implies #{(Something) & te.data} = 1 }
-fact { all te: TaskEvent | te.task = BookMeansOfTransport implies #{(TransportType + Price + Speed) & te.data} = 3 }
-fact { all te: TaskEvent | te.task = UseTransport implies #{(TransportType + Something + Price) & te.data} = 3 }
-fact { all te: TaskEvent | lone(Speed & te.data) }
-fact { all te: TaskEvent | one (Speed & te.data) implies te.task in (BookMeansOfTransport) }
-fact { all te: TaskEvent | lone(Price & te.data) }
-fact { all te: TaskEvent | one (Price & te.data) implies te.task in (BookMeansOfTransport + UseTransport) }
-fact { all te: TaskEvent | lone(TransportType & te.data) }
-fact { all te: TaskEvent | one (TransportType & te.data) implies te.task in (BookMeansOfTransport + UseTransport) }
-fact { all te: TaskEvent | lone(Something & te.data) }
-fact { all te: TaskEvent | one (Something & te.data) implies te.task in (UseTransport + DoSomething) }
+one sig x272111bcx5a52x4ab7x81acxa2d86fa77c44 extends Task {}
+one sig xa47d9947x0cbex477ex81a2x02461098da2f extends Task {}
+one sig xe829e492x7226x4ed5x815exbb17614aa050 extends Task {}
+one sig x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe extends Task {}
+one sig xa1cfeb64x44ecx4488xa5c0x220fbb37ed06 extends Task {}
+one sig x7eaf35acx299bx43faxb5b2x18534253d7b9 extends Task {}
+one sig x947c79cbxe2bbx49f4x82f9xeddf26a92326 extends Task {}
+one sig x1a35c21dx6120x477cx98c9x6532bc00a908 extends Task {}
+fact { all te: TaskEvent | te.task = xe829e492x7226x4ed5x815exbb17614aa050 implies (one x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data and one x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data and one x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data)}
+fact { all te: TaskEvent | te.task = x947c79cbxe2bbx49f4x82f9xeddf26a92326 implies (one x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data and one x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data and one x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data)}
+fact { all te: TaskEvent | te.task = x1a35c21dx6120x477cx98c9x6532bc00a908 implies (one x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data)}
+fact { all te: TaskEvent | lone(x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data) }
+fact { all te: TaskEvent | one (x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data) implies te.task in (x947c79cbxe2bbx49f4x82f9xeddf26a92326 + x1a35c21dx6120x477cx98c9x6532bc00a908) }
+fact { all te: TaskEvent | lone(x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) }
+fact { all te: TaskEvent | one (x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050) }
+fact { all te: TaskEvent | lone(x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data) }
+fact { all te: TaskEvent | one (x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050 + x947c79cbxe2bbx49f4x82f9xeddf26a92326) }
+fact { all te: TaskEvent | lone(x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) }
+fact { all te: TaskEvent | one (x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050 + x947c79cbxe2bbx49f4x82f9xeddf26a92326) }
 fact {
-Init[ApplyForTrip]
-Response[CollectTickets, ArchiveDocuments]
-Precedence[BookMeansOfTransport, ApproveApplication]
-Precedence[BookAccomodation, ApproveApplication]
-Precedence[CollectTickets, BookMeansOfTransport]
-Precedence[CollectTickets, BookAccomodation] 
-Absence[BookAccomodation, 2]
-Absence[BookMeansOfTransport, 3]
-ChainResponse[UseTransport, DoSomething]
-Existence[DoSomething]
-Absence[ApplyForTrip, 1]
-Existence[CollectTickets]
-Existence[ArchiveDocuments]
-Absence[ArchiveDocuments, 1]
-Absence[ApproveApplication, 1]
+Init[x272111bcx5a52x4ab7x81acxa2d86fa77c44]
+Response[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, x7eaf35acx299bx43faxb5b2x18534253d7b9]
+Precedence[xe829e492x7226x4ed5x815exbb17614aa050, xa47d9947x0cbex477ex81a2x02461098da2f]
+Precedence[x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe, xa47d9947x0cbex477ex81a2x02461098da2f]
+Precedence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, xe829e492x7226x4ed5x815exbb17614aa050]
+Precedence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe] 
+Absence[x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe, 2]
+Absence[xe829e492x7226x4ed5x815exbb17614aa050, 3]
+Absence[x272111bcx5a52x4ab7x81acxa2d86fa77c44, 1]
+Existence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06]
+Existence[x7eaf35acx299bx43faxb5b2x18534253d7b9]
+Absence[x7eaf35acx299bx43faxb5b2x18534253d7b9, 1]
+Absence[xa47d9947x0cbex477ex81a2x02461098da2f, 1]
 }
-abstract sig TransportType extends Payload {}
-fact { all te: TaskEvent | #{TransportType & te.data} <= 1 }
-one sig Car extends TransportType{}
-one sig Plane extends TransportType{}
-one sig Train extends TransportType{}
-one sig Bus extends TransportType{}
-abstract sig Something extends Payload {}
-fact { all te: TaskEvent | #{Something & te.data} <= 1 }
-one sig One extends Something{}
-one sig None extends Something{}
-one sig Another extends Something{}
-abstract sig Price extends Payload {
+abstract sig x89494567x32cfx4d3cx90e0x46d286fbcd40 extends Payload {}
+fact { all te: TaskEvent | (lone x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data)}
+one sig xd29daa49x3b6dx4431x9cd1xb5bf732fced2 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
+one sig x771d27a5x50f1x4389x8eefxd8bc1620c180 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
+one sig xfa525bf9xf83fx4db3x8089x4d33ce0d9f38 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
+one sig xb0e00f88x9421x4af7xbfbcx7b9eea630253 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
+abstract sig x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec extends Payload {}
+fact { all te: TaskEvent | (lone x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data)}
+one sig xaf1bd2dfx976bx4453x8066xb1badad5cd25 extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
+one sig x1df40950x04b6x4f2ex9bfex9d451803f17f extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
+one sig x46e57e1fx9d42x4b4dxa64ax6c6a54e11863 extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
+abstract sig x3f17c84axdd9cx4df9x866cx029cc82e5a29 extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | #{Price & te.data} <= 1 }
-pred Single(pl: Price) {{pl.amount=1}}
-fun Amount(pl: Price): one Int {{pl.amount}}
-one sig intBetweenm1and25r100000 extends Price{}{amount=7}
-one sig intBetween124and199r100004 extends Price{}{amount=7}
-one sig intBetween200and251r100006 extends Price{}{amount=7}
-one sig intBetween250and301r100007 extends Price{}{amount=7}
-one sig intEqualsTo200r100005 extends Price{}{amount=1}
-one sig intEqualsTo50r100002 extends Price{}{amount=1}
-one sig intBetween24and50r100001 extends Price{}{amount=7}
-one sig intBetween50and125r100003 extends Price{}{amount=7}
-abstract sig Speed extends Payload {
+fact { all te: TaskEvent | (lone x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) }
+pred Single(pl: x3f17c84axdd9cx4df9x866cx029cc82e5a29) {{pl.amount=1}}
+fun Amount(pl: x3f17c84axdd9cx4df9x866cx029cc82e5a29): one Int {{pl.amount}}
+one sig floatBetween50p0and100p0r100212 extends x3f17c84axdd9cx4df9x866cx029cc82e5a29{}{amount=7}
+one sig floatBetween0p0and50p0r100211 extends x3f17c84axdd9cx4df9x866cx029cc82e5a29{}{amount=7}
+abstract sig x785843d9x2cc8x4076x80c2xaaa6480f4f1b extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | #{Speed & te.data} <= 1 }
-pred Single(pl: Speed) {{pl.amount=1}}
-fun Amount(pl: Speed): one Int {{pl.amount}}
-one sig intBetween50and176r100011 extends Speed{}{amount=7}
-one sig intBetween175and301r100012 extends Speed{}{amount=7}
-one sig intBetween24and50r100009 extends Speed{}{amount=7}
-one sig intBetweenm1and25r100008 extends Speed{}{amount=7}
-one sig intEqualsTo50r100010 extends Speed{}{amount=1}
-fact { no te: TaskEvent | te.task = BookMeansOfTransport and p100013[te] }
-pred p100013(A: set TaskEvent) { { (A.data&Price in (intBetween124and199r100004 + intBetween200and251r100006 + intBetween250and301r100007 + intEqualsTo200r100005 + intBetween50and125r100003) and A.data&Speed in (intBetween50and176r100011 + intBetween175and301r100012 + intEqualsTo50r100010)) } }
-fact { all te: TaskEvent | (BookMeansOfTransport = te.task and p100014[te]) implies #{ ote: TaskEvent | UseTransport = ote.task and p100014c[te, ote]} > 0 }
-pred p100014(A: set TaskEvent) { { A.data&Price in (intEqualsTo50r100002) } }
-pred p100014c(A, B: set TaskEvent) { { B.data&Price in (intEqualsTo200r100005) } }
+fact { all te: TaskEvent | (lone x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) }
+pred Single(pl: x785843d9x2cc8x4076x80c2xaaa6480f4f1b) {{pl.amount=1}}
+fun Amount(pl: x785843d9x2cc8x4076x80c2xaaa6480f4f1b): one Int {{pl.amount}}
+one sig intBetweenm1and150r100213 extends x785843d9x2cc8x4076x80c2xaaa6480f4f1b{}{amount=7}
+one sig intBetween149and300r100214 extends x785843d9x2cc8x4076x80c2xaaa6480f4f1b{}{amount=7}
+fact { all te: TaskEvent | (xe829e492x7226x4ed5x815exbb17614aa050 = te.task and p100215[te]) implies (some ote: TaskEvent | x947c79cbxe2bbx49f4x82f9xeddf26a92326 = ote.task and p100215c[te, ote]) }
+pred p100215(A: set TaskEvent) { { (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=x771d27a5x50f1x4389x8eefxd8bc1620c180) } }
+pred p100215c(A, B: set TaskEvent) { { not (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=B.data&x89494567x32cfx4d3cx90e0x46d286fbcd40) } }
+fact { some te: TaskEvent | te.task = xe829e492x7226x4ed5x815exbb17614aa050 and p100216[te]}
+pred p100216(A: set TaskEvent) { { (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=x771d27a5x50f1x4389x8eefxd8bc1620c180) } }
 

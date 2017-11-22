@@ -56,7 +56,9 @@ public class AlloyCodeGenerator {
         Init();
         if (Global.encodeNames)
             declare = parser.encodeNames(declare);
-        GenerateTaskEvents(maxTraceLength, bitwidth);
+        GenerateTaskEvents(maxTraceLength);
+        GenerateNextPredicate(maxTraceLength);
+        GenerateAfterPredicate(maxTraceLength);
         GenerateVacuityConstraint(minTraceLength, maxTraceLength);
         SortInput(parser.splitStatements(declare));
         List<Task> tasks = parser.parseTasks(tasksCode);
@@ -173,7 +175,7 @@ public class AlloyCodeGenerator {
                 continue;
             }
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
-            alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
+            alloy.append("fact { all te: TaskEvent | (lone ").append(item.getType()).append(" & te.data)}\n");
             for (String value : item.getValues()) {
                 alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}\n");
             }
@@ -182,7 +184,7 @@ public class AlloyCodeGenerator {
 
     private void GenerateNumericDataItem(NumericData item) {
         alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
-        alloy.append("fact { all te: TaskEvent | #{").append(item.getType()).append(" & te.data} <= 1 }\n");
+        alloy.append("fact { all te: TaskEvent | (lone ").append(item.getType()).append(" & te.data) }\n");
         alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
         alloy.append("fun Amount(pl: ").append(item.getType()).append("): one Int {{pl.amount}}\n");
         int limit = (int) Math.pow(2, bitwidth - 1);
@@ -225,16 +227,50 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void GenerateTaskEvents(int length, int bitwidth) {
+    private void GenerateTaskEvents(int length) {
         --bitwidth;
-        int offset = 1 << bitwidth;
         for (int i = 0; i < length; i++) {
             if (i < minTraceLength)
                 alloy.append("one sig TE");
             else
                 alloy.append("lone sig TE");
-            alloy.append(i).append(" extends TaskEvent {} {pos=").append(i - offset).append("}\n");
+            alloy.append(i).append(" extends TaskEvent {}\n");
         }
+    }
+
+
+    private void GenerateNextPredicate(int length) {
+        alloy.append("pred Next(pre, next: TaskEvent){\n");
+        alloy.append("pre = TE0 and next = TE1");
+        for (int i = 2; i < length; i++) {
+            alloy.append(" or pre = TE").append(i - 1).append(" and next = TE").append(i);
+        }
+
+        alloy.append("}\n");
+    }
+
+    private void GenerateAfterPredicate(int length) {
+        alloy.append("pred After(b, a: TaskEvent){// b=before, a=after\n");
+        int middle = length / 2;
+        alloy.append("b=TE0 or a=TE").append(length - 1);
+        for (int i = 1; i < length - 2; ++i) {
+            alloy.append(" or b=TE").append(i).append(" and ");
+            if (i < middle) {
+                alloy.append("not (a=TE").append(0);
+                for (int j = 1; j < i; ++j) {
+                    alloy.append(" or a=TE").append(j);
+                }
+                alloy.append(")");
+            } else {
+                alloy.append("(a=TE").append(length - 1);
+                for (int j = length - 2; j > i; --j) {
+                    alloy.append(" or a=TE").append(j);
+                }
+                alloy.append(")");
+            }
+        }
+
+        alloy.append("}\n");
     }
 
     private void GenerateVacuityConstraint(int minTraceLength, int maxTraceLength) {
@@ -251,12 +287,21 @@ public class AlloyCodeGenerator {
         for (String task : taskToData.keySet()) {
             alloy.append("fact { all te: TaskEvent | te.task = ")
                     .append(task)
-                    .append(" implies #{(")
-                    .append(String.join(" + ", taskToData.get(task)))
-                    .append(") & te.data} = ")
-                    .append(taskToData.get(task).size())
-                    .append(" }\n");
+                    .append(" implies (one ")
+                    .append(String.join(" & te.data and one ", taskToData.get(task)))
+                    .append(" & te.data")
+                    .append(")}\n");
         }
+
+//        for (String task : taskToData.keySet()) {
+//            alloy.append("fact { all te: TaskEvent | te.task = ")
+//                    .append(task)
+//                    .append(" implies #{(")
+//                    .append(String.join(" + ", taskToData.get(task)))
+//                    .append(") & te.data} = ")
+//                    .append(taskToData.get(task).size())
+//                    .append(" }\n");
+//        }
 
         for (String payload : dataToTask.keySet()) {
             alloy.append("fact { all te: TaskEvent | lone(").append(payload).append(" & te.data) }\n");

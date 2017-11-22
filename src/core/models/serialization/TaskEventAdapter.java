@@ -8,9 +8,6 @@ public class TaskEventAdapter {
     private String taskName;
     private List<Payload> payload;
 
-    public TaskEventAdapter() {
-    }
-
     public TaskEventAdapter(int position, String taskName, List<Payload> payload) {
         this.position = position;
         this.taskName = taskName;
@@ -25,15 +22,7 @@ public class TaskEventAdapter {
         return this.taskName;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
     public List<Payload> getPayload() {
         return payload;
-    }
-
-    public void setPayload(List<Payload> payload) {
-        this.payload = payload;
     }
 }

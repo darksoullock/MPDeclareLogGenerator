@@ -2,13 +2,14 @@ package core;
 
 import core.alloy.codegen.AlloyCodeGenerator;
 import core.alloy.integration.AlloyComponent;
-import core.alloy.serialization.AlloyXESSerializer;
+import core.alloy.serialization.AlloyLogExtractor;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.out.XesXmlSerializer;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 
 public class Evaluator {
@@ -23,15 +24,19 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 10;
-        int maxLength = 13;
-        int nTraces = 30;
+        int minLength = 13;
+        int maxLength = 20;
+        int nTraces = 100;
         String inFilename = "./data/example1.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
+        XLog plog = getLog(maxLength, minLength, nTraces, 6, GetDeclare(inFilename), alsFilename, intervalSplits);
 
-        doStuff(maxLength, minLength, nTraces, 6, inFilename, alsFilename, outFilename, intervalSplits);
+        System.out.println();
+        System.out.println("Writing XES for: " + outFilename + plog.size() + ".xes");
+        FileOutputStream fileOS = new FileOutputStream(outFilename + plog.size() + ".xes");
+        new XesXmlSerializer().serialize(plog, fileOS);
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000);
@@ -39,20 +44,18 @@ public class Evaluator {
         StatisticsHelper.print();
     }
 
-    private static void doStuff(int maxTraceLength,
-                                int minTraceLength,
-                                int numberOfTraces,
-                                int maxSameInstances,
-                                String inFilename,
-                                String alsFilename,
-                                String outFilename,
-                                int intervalSplits)
+    public static XLog getLog(int maxTraceLength,
+                              int minTraceLength,
+                              int numberOfTraces,
+                              int maxSameInstances,
+                              String declare,
+                              String alsFilename,
+                              int intervalSplits)
             throws Err, IOException, IllegalAccessException {
 
         System.out.println("Maximum no of traces: " + numberOfTraces);
 
-        int bitwidth = Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
-        String declare = GetDeclare(inFilename);
+        int bitwidth = 5; //Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
         AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
@@ -65,8 +68,8 @@ public class Evaluator {
 
         System.out.println("Found Solution: " + (solution != null && solution.satisfiable()));
 
-        AlloyXESSerializer serializer = new AlloyXESSerializer(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding());
-        serializer.serialize(solution, numberOfTraces, outFilename, maxTraceLength);
+        AlloyLogExtractor serializer = new AlloyLogExtractor(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding());
+        return serializer.extract(solution, numberOfTraces, maxTraceLength);
     }
 
     private static String GetDeclare(String file) throws FileNotFoundException {

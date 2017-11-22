@@ -1,6 +1,5 @@
-import core.alloy.serialization.AlloyXESSerializer;
+import core.alloy.serialization.AlloyLogExtractor;
 import core.models.declare.data.NumericToken;
-import core.models.intervals.IntegerValue;
 import core.models.intervals.Interval;
 import core.models.serialization.Payload;
 import core.models.serialization.TaskEventAdapter;
@@ -116,7 +115,7 @@ public class Serializer {
         TaskEventAdapter d = new TaskEventAdapter(0, "", Arrays.asList(pd));
         Map<String, Interval> map = new HashMap<>();
         map.put("b", null);
-        AlloyXESSerializer ser = new AlloyXESSerializer(new ModuleStub(), map, new ArrayList<>(), new HashMap<>());
+        AlloyLogExtractor ser = new AlloyLogExtractor(new ModuleStub(), map, new ArrayList<>(), new HashMap<>());
         orderedStateEvents.add(a);
         orderedStateEvents.add(b);
         orderedStateEvents.add(c);
