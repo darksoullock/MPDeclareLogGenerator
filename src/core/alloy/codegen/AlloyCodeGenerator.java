@@ -293,16 +293,6 @@ public class AlloyCodeGenerator {
                     .append(")}\n");
         }
 
-//        for (String task : taskToData.keySet()) {
-//            alloy.append("fact { all te: TaskEvent | te.task = ")
-//                    .append(task)
-//                    .append(" implies #{(")
-//                    .append(String.join(" + ", taskToData.get(task)))
-//                    .append(") & te.data} = ")
-//                    .append(taskToData.get(task).size())
-//                    .append(" }\n");
-//        }
-
         for (String payload : dataToTask.keySet()) {
             alloy.append("fact { all te: TaskEvent | lone(").append(payload).append(" & te.data) }\n");
             alloy.append("fact { all te: TaskEvent | one (")

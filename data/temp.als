@@ -124,70 +124,70 @@ fact{
 one TE6 implies one TE5
 one TE7 implies one TE6
 }
-one sig x272111bcx5a52x4ab7x81acxa2d86fa77c44 extends Task {}
-one sig xa47d9947x0cbex477ex81a2x02461098da2f extends Task {}
-one sig xe829e492x7226x4ed5x815exbb17614aa050 extends Task {}
-one sig x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe extends Task {}
-one sig xa1cfeb64x44ecx4488xa5c0x220fbb37ed06 extends Task {}
-one sig x7eaf35acx299bx43faxb5b2x18534253d7b9 extends Task {}
-one sig x947c79cbxe2bbx49f4x82f9xeddf26a92326 extends Task {}
-one sig x1a35c21dx6120x477cx98c9x6532bc00a908 extends Task {}
-fact { all te: TaskEvent | te.task = xe829e492x7226x4ed5x815exbb17614aa050 implies (one x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data and one x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data and one x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data)}
-fact { all te: TaskEvent | te.task = x947c79cbxe2bbx49f4x82f9xeddf26a92326 implies (one x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data and one x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data and one x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data)}
-fact { all te: TaskEvent | te.task = x1a35c21dx6120x477cx98c9x6532bc00a908 implies (one x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data)}
-fact { all te: TaskEvent | lone(x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data) }
-fact { all te: TaskEvent | one (x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data) implies te.task in (x947c79cbxe2bbx49f4x82f9xeddf26a92326 + x1a35c21dx6120x477cx98c9x6532bc00a908) }
-fact { all te: TaskEvent | lone(x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) }
-fact { all te: TaskEvent | one (x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050) }
-fact { all te: TaskEvent | lone(x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data) }
-fact { all te: TaskEvent | one (x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050 + x947c79cbxe2bbx49f4x82f9xeddf26a92326) }
-fact { all te: TaskEvent | lone(x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) }
-fact { all te: TaskEvent | one (x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) implies te.task in (xe829e492x7226x4ed5x815exbb17614aa050 + x947c79cbxe2bbx49f4x82f9xeddf26a92326) }
+one sig x7e58a2a9xa52dx4318xbde8x5c414e178fac extends Task {}
+one sig x01933d8cx41e0x41e5x8a95x7d967fc6cfaa extends Task {}
+one sig x8f79cecfxb4bex46eax9d54xcd46b70eb90c extends Task {}
+one sig xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a extends Task {}
+one sig x9f5ed38cx6c20x44f1x845cx09c63489447b extends Task {}
+one sig xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5 extends Task {}
+one sig x48d86a07x374bx46ecxa2a8x8ac64e812ebe extends Task {}
+one sig xc39016eexe728x4398x8210xf84655f3803d extends Task {}
+fact { all te: TaskEvent | te.task = x8f79cecfxb4bex46eax9d54xcd46b70eb90c implies (one xbae42616x7903x4c7dxa993xc41b08090aeb & te.data and one xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data and one xa567056exbd3ax4681xa06axe37f92f4984e & te.data)}
+fact { all te: TaskEvent | te.task = xc39016eexe728x4398x8210xf84655f3803d implies (one x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data)}
+fact { all te: TaskEvent | te.task = x48d86a07x374bx46ecxa2a8x8ac64e812ebe implies (one xbae42616x7903x4c7dxa993xc41b08090aeb & te.data and one x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data and one xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data)}
+fact { all te: TaskEvent | lone(xa567056exbd3ax4681xa06axe37f92f4984e & te.data) }
+fact { all te: TaskEvent | one (xa567056exbd3ax4681xa06axe37f92f4984e & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c) }
+fact { all te: TaskEvent | lone(xbae42616x7903x4c7dxa993xc41b08090aeb & te.data) }
+fact { all te: TaskEvent | one (xbae42616x7903x4c7dxa993xc41b08090aeb & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c + x48d86a07x374bx46ecxa2a8x8ac64e812ebe) }
+fact { all te: TaskEvent | lone(x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data) }
+fact { all te: TaskEvent | one (x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data) implies te.task in (x48d86a07x374bx46ecxa2a8x8ac64e812ebe + xc39016eexe728x4398x8210xf84655f3803d) }
+fact { all te: TaskEvent | lone(xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) }
+fact { all te: TaskEvent | one (xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c + x48d86a07x374bx46ecxa2a8x8ac64e812ebe) }
 fact {
-Init[x272111bcx5a52x4ab7x81acxa2d86fa77c44]
-Response[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, x7eaf35acx299bx43faxb5b2x18534253d7b9]
-Precedence[xe829e492x7226x4ed5x815exbb17614aa050, xa47d9947x0cbex477ex81a2x02461098da2f]
-Precedence[x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe, xa47d9947x0cbex477ex81a2x02461098da2f]
-Precedence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, xe829e492x7226x4ed5x815exbb17614aa050]
-Precedence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06, x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe] 
-Absence[x6ae64eedx0736x4f8bx98c9xe2f5b69f11fe, 2]
-Absence[xe829e492x7226x4ed5x815exbb17614aa050, 3]
-Absence[x272111bcx5a52x4ab7x81acxa2d86fa77c44, 1]
-Existence[xa1cfeb64x44ecx4488xa5c0x220fbb37ed06]
-Existence[x7eaf35acx299bx43faxb5b2x18534253d7b9]
-Absence[x7eaf35acx299bx43faxb5b2x18534253d7b9, 1]
-Absence[xa47d9947x0cbex477ex81a2x02461098da2f, 1]
+Init[x7e58a2a9xa52dx4318xbde8x5c414e178fac]
+Response[x9f5ed38cx6c20x44f1x845cx09c63489447b, xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5]
+Precedence[x8f79cecfxb4bex46eax9d54xcd46b70eb90c, x01933d8cx41e0x41e5x8a95x7d967fc6cfaa]
+Precedence[xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a, x01933d8cx41e0x41e5x8a95x7d967fc6cfaa]
+Precedence[x9f5ed38cx6c20x44f1x845cx09c63489447b, x8f79cecfxb4bex46eax9d54xcd46b70eb90c]
+Precedence[x9f5ed38cx6c20x44f1x845cx09c63489447b, xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a] 
+Absence[xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a, 2]
+Absence[x8f79cecfxb4bex46eax9d54xcd46b70eb90c, 3]
+Absence[x7e58a2a9xa52dx4318xbde8x5c414e178fac, 1]
+Existence[x9f5ed38cx6c20x44f1x845cx09c63489447b]
+Existence[xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5]
+Absence[xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5, 1]
+Absence[x01933d8cx41e0x41e5x8a95x7d967fc6cfaa, 1]
 }
-abstract sig x89494567x32cfx4d3cx90e0x46d286fbcd40 extends Payload {}
-fact { all te: TaskEvent | (lone x89494567x32cfx4d3cx90e0x46d286fbcd40 & te.data)}
-one sig xd29daa49x3b6dx4431x9cd1xb5bf732fced2 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
-one sig x771d27a5x50f1x4389x8eefxd8bc1620c180 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
-one sig xfa525bf9xf83fx4db3x8089x4d33ce0d9f38 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
-one sig xb0e00f88x9421x4af7xbfbcx7b9eea630253 extends x89494567x32cfx4d3cx90e0x46d286fbcd40{}
-abstract sig x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec extends Payload {}
-fact { all te: TaskEvent | (lone x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec & te.data)}
-one sig xaf1bd2dfx976bx4453x8066xb1badad5cd25 extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
-one sig x1df40950x04b6x4f2ex9bfex9d451803f17f extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
-one sig x46e57e1fx9d42x4b4dxa64ax6c6a54e11863 extends x25b0a7a9xb9b9x45eexab33x34fa62a8c3ec{}
-abstract sig x3f17c84axdd9cx4df9x866cx029cc82e5a29 extends Payload {
+abstract sig xbae42616x7903x4c7dxa993xc41b08090aeb extends Payload {}
+fact { all te: TaskEvent | (lone xbae42616x7903x4c7dxa993xc41b08090aeb & te.data)}
+one sig x8c9c1e21x3618x4933xa938xb1f6dc353e82 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
+one sig x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
+one sig x0456e06axa85ex42cfxbf86xc3e9ce86db7e extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
+one sig x663613acxe449x48c2x9a20xdf36d20b7418 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
+abstract sig x3f92d4c9x67c5x4e71x8975x0509c38e673c extends Payload {}
+fact { all te: TaskEvent | (lone x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data)}
+one sig xcb5767ddx6ae8x4fddx97b2x25d0357d079f extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
+one sig xff94ab07x9ec3x43c4x81bax2948db9f8310 extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
+one sig x2ab2b0faxf494x4d41xb549x032b55aa3331 extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
+abstract sig xe488a0b0x4591x4b4bxa798x0bfc242d99ee extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | (lone x3f17c84axdd9cx4df9x866cx029cc82e5a29 & te.data) }
-pred Single(pl: x3f17c84axdd9cx4df9x866cx029cc82e5a29) {{pl.amount=1}}
-fun Amount(pl: x3f17c84axdd9cx4df9x866cx029cc82e5a29): one Int {{pl.amount}}
-one sig floatBetween50p0and100p0r100212 extends x3f17c84axdd9cx4df9x866cx029cc82e5a29{}{amount=7}
-one sig floatBetween0p0and50p0r100211 extends x3f17c84axdd9cx4df9x866cx029cc82e5a29{}{amount=7}
-abstract sig x785843d9x2cc8x4076x80c2xaaa6480f4f1b extends Payload {
+fact { all te: TaskEvent | (lone xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) }
+pred Single(pl: xe488a0b0x4591x4b4bxa798x0bfc242d99ee) {{pl.amount=1}}
+fun Amount(pl: xe488a0b0x4591x4b4bxa798x0bfc242d99ee): one Int {{pl.amount}}
+one sig floatBetween50p0and100p0r100212 extends xe488a0b0x4591x4b4bxa798x0bfc242d99ee{}{amount=7}
+one sig floatBetween0p0and50p0r100211 extends xe488a0b0x4591x4b4bxa798x0bfc242d99ee{}{amount=7}
+abstract sig xa567056exbd3ax4681xa06axe37f92f4984e extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | (lone x785843d9x2cc8x4076x80c2xaaa6480f4f1b & te.data) }
-pred Single(pl: x785843d9x2cc8x4076x80c2xaaa6480f4f1b) {{pl.amount=1}}
-fun Amount(pl: x785843d9x2cc8x4076x80c2xaaa6480f4f1b): one Int {{pl.amount}}
-one sig intBetweenm1and150r100213 extends x785843d9x2cc8x4076x80c2xaaa6480f4f1b{}{amount=7}
-one sig intBetween149and300r100214 extends x785843d9x2cc8x4076x80c2xaaa6480f4f1b{}{amount=7}
-fact { all te: TaskEvent | (xe829e492x7226x4ed5x815exbb17614aa050 = te.task and p100215[te]) implies (some ote: TaskEvent | x947c79cbxe2bbx49f4x82f9xeddf26a92326 = ote.task and p100215c[te, ote]) }
-pred p100215(A: set TaskEvent) { { (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=x771d27a5x50f1x4389x8eefxd8bc1620c180) } }
-pred p100215c(A, B: set TaskEvent) { { not (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=B.data&x89494567x32cfx4d3cx90e0x46d286fbcd40) } }
-fact { some te: TaskEvent | te.task = xe829e492x7226x4ed5x815exbb17614aa050 and p100216[te]}
-pred p100216(A: set TaskEvent) { { (A.data&x89494567x32cfx4d3cx90e0x46d286fbcd40=x771d27a5x50f1x4389x8eefxd8bc1620c180) } }
+fact { all te: TaskEvent | (lone xa567056exbd3ax4681xa06axe37f92f4984e & te.data) }
+pred Single(pl: xa567056exbd3ax4681xa06axe37f92f4984e) {{pl.amount=1}}
+fun Amount(pl: xa567056exbd3ax4681xa06axe37f92f4984e): one Int {{pl.amount}}
+one sig intBetweenm1and150r100213 extends xa567056exbd3ax4681xa06axe37f92f4984e{}{amount=7}
+one sig intBetween149and300r100214 extends xa567056exbd3ax4681xa06axe37f92f4984e{}{amount=7}
+fact { all te: TaskEvent | (x8f79cecfxb4bex46eax9d54xcd46b70eb90c = te.task and p100215[te]) implies (some ote: TaskEvent | x48d86a07x374bx46ecxa2a8x8ac64e812ebe = ote.task and p100215c[te, ote]) }
+pred p100215(A: set TaskEvent) { { (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175) } }
+pred p100215c(A, B: set TaskEvent) { { not (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=B.data&xbae42616x7903x4c7dxa993xc41b08090aeb) } }
+fact { some te: TaskEvent | te.task = x8f79cecfxb4bex46eax9d54xcd46b70eb90c and p100216[te]}
+pred p100216(A: set TaskEvent) { { (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175) } }
 

@@ -70,6 +70,8 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             XEvent event = trace.get(0);
@@ -90,13 +92,15 @@ public class GenerationWithData {
                 "Exactly[BookTransport A, 3]|A.TransportType is Train\n";
 
         XLog log = Evaluator.getLog(
-                15,
+                18,
                 5,
                 50,
-                2,
+                3,
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -119,7 +123,8 @@ public class GenerationWithData {
     @Test
     public void testExistenceAndNotChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|B.TransportType in (Car, Bus, Plane)\n" +
-                "Existence[BookTransport A, 3]|A.TransportType is Train\n";
+                "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
+                "ChainResponse[BookTransport, UseTransport]\n";
 
         XLog log = Evaluator.getLog(
                 15,
@@ -129,6 +134,8 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -162,6 +169,8 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -197,6 +206,8 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -231,6 +242,8 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -259,7 +272,7 @@ public class GenerationWithData {
 
     @Test
     public void testExistenceAndResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
-        String declare = baseDeclare + "Response[BookTransport A, UseTransport B]|A.Price<10|B.Price>10\n" +
+        String declare = baseDeclare + "Response[BookTransport A, UseTransport B]|A.Price<10|10<B.Price\n" +
                 "Existence[BookTransport A, 3]|A.Price<10\n";
 
         XLog log = Evaluator.getLog(
@@ -270,6 +283,8 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -308,6 +323,8 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -338,15 +355,17 @@ public class GenerationWithData {
                 15,
                 5,
                 50,
-                2,
+                3,
                 declare,
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
-            float value = 0;
+            Set<Float> values = new HashSet<>();
             boolean precede = false;
             for (int j = 0; j < trace.size(); ++j) {
                 XEvent event = trace.get(j);
@@ -354,12 +373,12 @@ public class GenerationWithData {
                         && Float.parseFloat(getEventAttributeValue(event, "Price")) > 10) {
                     ++counter;
                     Assert.assertTrue(precede, "Precedence constraint violated");
-                    Assert.assertEquals(value, Float.parseFloat(getEventAttributeValue(event, "Price")), "'same' data constraint violated");
+                    Assert.assertTrue(values.contains(Float.parseFloat(getEventAttributeValue(event, "Price"))), "'same' data constraint violated");
                 }
                 if (getEventAttributeValue(event, "concept:name").equals("BookTransport")
                         && Float.parseFloat(getEventAttributeValue(event, "Price")) > 10) {
                     precede = true;
-                    value = Float.parseFloat(getEventAttributeValue(event, "Price"));
+                    values.add(Float.parseFloat(getEventAttributeValue(event, "Price")));
                 }
             }
 
@@ -381,6 +400,8 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -435,10 +456,10 @@ public class GenerationWithData {
 
     @Test
     public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
-        String declare = baseDeclare + "Choice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
+        String declare = baseDeclare + "ExclusiveChoice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
 
         XLog log = Evaluator.getLog(
-                8,
+                18,
                 5,
                 50,
                 2,
@@ -447,6 +468,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean a = false;
@@ -481,6 +503,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean ok = false;
@@ -510,6 +533,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int count = 0;
@@ -539,6 +563,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         boolean ok = true;
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -569,6 +594,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean a = false;
@@ -604,6 +630,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean a = false;
@@ -639,6 +666,7 @@ public class GenerationWithData {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean a = false;
@@ -675,6 +703,8 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean awaiting = false;
@@ -708,6 +738,8 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);

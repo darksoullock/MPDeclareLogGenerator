@@ -126,15 +126,6 @@ public class AlloyPMSolutionBrowser {
         //throw new InvalidStateException("No value present for a given expression");
     }
 
-    private String retrieveAtom(Expr exprToTupleSet) throws Err {
-        for (A4Tuple t : (A4TupleSet) solution.eval(exprToTupleSet)) {
-            return t.atom(0);
-        }
-
-        return null;
-        //throw new InvalidStateException("No value present for a given expression");
-    }
-
     public Expr exprFromString(String stringExpr) throws IOException, Err {
         return module.parseOneExpressionFromString(stringExpr);
     }

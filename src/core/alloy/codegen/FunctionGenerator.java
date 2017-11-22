@@ -243,8 +243,8 @@ public class FunctionGenerator {
                 .append(".data&").append(value).append(") or ((not ");
         if (Global.singleFirstForSame)
             alloy.append(" Single[").append(args.get(0)).append(".data&").append(value).append("] and not ");
-        alloy.append("(#{ (").append(token)
-                .append(" & ").append(args.get(1)).append(".tokens)}>=1 and one (").append(token).append(" & ")
+        alloy.append("(some((").append(token)
+                .append(" & ").append(args.get(1)).append(".tokens)) and one (").append(token).append(" & ")
                 .append(args.get(0)).append(".tokens & ").append(token).append(" & ").append(args.get(1))
                 .append(".tokens)))) ");
 
@@ -257,12 +257,12 @@ public class FunctionGenerator {
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
-            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\n#{te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ").append(ast).append(" in te.tokens } = 2 }\n");
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\n(no te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens) or #{te: TaskEvent | ").append(ast).append(" in te.tokens } = 2 }\n");
         }
 
         tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0)).append(" or te.task = ")
-                .append(argTypes.get(1)).append(" or #{").append(token).append(" & te.tokens}<=0)\nsome te: TaskEvent | ")
+                .append(argTypes.get(1)).append(" or no (").append(token).append(" & te.tokens))\nsome te: TaskEvent | ")
                 .append(token).append(" in te.tokens implies (all ote: TaskEvent| ").append(token)
                 .append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&").append(value).append(")\n}\n");
 
@@ -271,8 +271,8 @@ public class FunctionGenerator {
 
     private String generateDifferentTokens(String value, String token) {
         StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | #{")
-                .append(token).append(" & te.tokens}>0 implies #{").append(value).append("&te.data}>0 and not Single[")
+        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | (some ")
+                .append(token).append(" & te.tokens) implies (some ").append(value).append("&te.data) and not Single[")
                 .append(value).append("&te.data] }\n");
 
         tc.append("fact { all te:TaskEvent| some (te.data&").append(value).append(") implies #{te.tokens&").append(token)
@@ -281,7 +281,7 @@ public class FunctionGenerator {
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
             tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
-                    .append("fact { #{te: TaskEvent | ").append(ast).append(" in te.tokens}=0 or #{te: TaskEvent | ")
+                    .append("fact { (no te: TaskEvent | ").append(ast).append(" in te.tokens) or #{te: TaskEvent | ")
                     .append(ast).append(" in te.tokens } = 2}\n");
         }
 

@@ -73,6 +73,9 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             Assert.assertEquals(trace.getAttributes().size(), 5);
@@ -102,6 +105,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             XEvent event = trace.get(0);
@@ -129,6 +134,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -160,6 +167,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -195,6 +204,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -225,6 +236,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -266,6 +279,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -300,6 +315,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -332,6 +349,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -366,6 +385,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int counter = 0;
@@ -397,6 +418,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -455,6 +478,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean x = checkOccurrence(trace, "DoSomething", "UseTransport", (a, b) -> a || b);
@@ -476,6 +500,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean x = checkOccurrence(trace, "DoSomething", "UseTransport", (a, b) -> (a || b) && !(a && b));
@@ -497,6 +522,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean ok = false;
@@ -525,6 +551,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             int count = 0;
@@ -553,6 +580,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         boolean ok = true;
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
@@ -581,6 +609,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean x = checkOccurrence(trace, "DoSomething", "UseTransport", (a, b) -> !a || b);
@@ -603,6 +632,7 @@ public class Generation {
                 2);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean x = checkOccurrence(trace, "DoSomething", "UseTransport", (a, b) -> !a || !b);
@@ -641,6 +671,8 @@ public class Generation {
                 "./data/temp.als",
                 2);
 
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             boolean awaiting = false;
@@ -672,6 +704,8 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2);
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);

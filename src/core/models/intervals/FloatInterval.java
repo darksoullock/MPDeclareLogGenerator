@@ -62,7 +62,7 @@ public class FloatInterval extends Interval {
 
         BinaryExpression bex = rot((BinaryExpression) expr);
         float number = Float.parseFloat(bex.getRight().getNode().getValue());
-        String op = expr.getNode().getValue();
+        String op = bex.getNode().getValue();
         if (op.equals(">="))
             return min >= number;
         if (op.equals(">"))
