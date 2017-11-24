@@ -1,10 +1,10 @@
 abstract sig Task {}
 abstract sig Payload {}
 
-abstract sig TaskEvent{
-	task: one Task,
+abstract sig TaskEvent{	// One event in trace
+	task: one Task,		// Name of task
 	data: set Payload,
-	tokens: set Token
+	tokens: set Token	// Used only for 'same' or 'different' constraints on numeric data
 }
 
 one sig DummyPayload extends Payload {}
@@ -21,10 +21,12 @@ fact {
 	all te:TaskEvent| no (te.tokens & SameToken) or no (te.tokens & DiffToken)
 }
 
+pred True[]{some TE0}
+
 // declare templates
 
 pred Init(taskA: Task) { 
-	one te: TaskEvent | taskA = te.task and te = TE0
+	taskA = TE0.task
 }
 
 pred Existence(taskA: Task) { 
@@ -61,27 +63,27 @@ pred RespondedExistence(taskA, taskB: Task) {
 }
 
 pred Response(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task )
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte])
 }
 
 pred AlternateResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task and (no ite: TaskEvent | After[te, ite] and After[ite, fte] and taskA = ite.task))
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte] and (no ite: TaskEvent | taskA = ite.task and After[te, ite] and After[ite, fte]))
 }
 
 pred ChainResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[te, fte])
 }
 
 pred Precedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te])
 }
 
 pred AlternatePrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task and (no ite: TaskEvent | After[fte, ite] and After[ite, te] and taskA = ite.task))
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te] and (no ite: TaskEvent | taskA = ite.task and After[fte, ite] and After[ite, te]))
 }
 
 pred ChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[fte, te])
 }
 
 pred NotRespondedExistence(taskA, taskB: Task) {
@@ -89,19 +91,19 @@ pred NotRespondedExistence(taskA, taskB: Task) {
 }
 
 pred NotResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[te, fte])
 }
 
 pred NotPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[fte, te])
 }
 
 pred NotChainResponse(taskA, taskB: Task) { 
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[te, fte])
 }
 
 pred NotChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[fte, te])
 }
 //-
 
@@ -116,78 +118,77 @@ one sig TE4 extends TaskEvent {}
 lone sig TE5 extends TaskEvent {}
 lone sig TE6 extends TaskEvent {}
 lone sig TE7 extends TaskEvent {}
-pred Next(pre, next: TaskEvent){
-pre = TE0 and next = TE1 or pre = TE1 and next = TE2 or pre = TE2 and next = TE3 or pre = TE3 and next = TE4 or pre = TE4 and next = TE5 or pre = TE5 and next = TE6 or pre = TE6 and next = TE7}
+pred Next(pre, next: TaskEvent){pre=TE0 and next=TE1 or pre=TE1 and next=TE2 or pre=TE2 and next=TE3 or pre=TE3 and next=TE4 or pre=TE4 and next=TE5 or pre=TE5 and next=TE6 or pre=TE6 and next=TE7}
 pred After(b, a: TaskEvent){// b=before, a=after
 b=TE0 or a=TE7 or b=TE1 and not (a=TE0) or b=TE2 and not (a=TE0 or a=TE1) or b=TE3 and not (a=TE0 or a=TE1 or a=TE2) or b=TE4 and (a=TE7 or a=TE6 or a=TE5) or b=TE5 and (a=TE7 or a=TE6)}
 fact{
 one TE6 implies one TE5
 one TE7 implies one TE6
 }
-one sig x7e58a2a9xa52dx4318xbde8x5c414e178fac extends Task {}
-one sig x01933d8cx41e0x41e5x8a95x7d967fc6cfaa extends Task {}
-one sig x8f79cecfxb4bex46eax9d54xcd46b70eb90c extends Task {}
-one sig xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a extends Task {}
-one sig x9f5ed38cx6c20x44f1x845cx09c63489447b extends Task {}
-one sig xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5 extends Task {}
-one sig x48d86a07x374bx46ecxa2a8x8ac64e812ebe extends Task {}
-one sig xc39016eexe728x4398x8210xf84655f3803d extends Task {}
-fact { all te: TaskEvent | te.task = x8f79cecfxb4bex46eax9d54xcd46b70eb90c implies (one xbae42616x7903x4c7dxa993xc41b08090aeb & te.data and one xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data and one xa567056exbd3ax4681xa06axe37f92f4984e & te.data)}
-fact { all te: TaskEvent | te.task = xc39016eexe728x4398x8210xf84655f3803d implies (one x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data)}
-fact { all te: TaskEvent | te.task = x48d86a07x374bx46ecxa2a8x8ac64e812ebe implies (one xbae42616x7903x4c7dxa993xc41b08090aeb & te.data and one x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data and one xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data)}
-fact { all te: TaskEvent | lone(xa567056exbd3ax4681xa06axe37f92f4984e & te.data) }
-fact { all te: TaskEvent | one (xa567056exbd3ax4681xa06axe37f92f4984e & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c) }
-fact { all te: TaskEvent | lone(xbae42616x7903x4c7dxa993xc41b08090aeb & te.data) }
-fact { all te: TaskEvent | one (xbae42616x7903x4c7dxa993xc41b08090aeb & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c + x48d86a07x374bx46ecxa2a8x8ac64e812ebe) }
-fact { all te: TaskEvent | lone(x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data) }
-fact { all te: TaskEvent | one (x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data) implies te.task in (x48d86a07x374bx46ecxa2a8x8ac64e812ebe + xc39016eexe728x4398x8210xf84655f3803d) }
-fact { all te: TaskEvent | lone(xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) }
-fact { all te: TaskEvent | one (xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) implies te.task in (x8f79cecfxb4bex46eax9d54xcd46b70eb90c + x48d86a07x374bx46ecxa2a8x8ac64e812ebe) }
+one sig xad750dcax4dafx4149x88c5x6e873e9e7796 extends Task {}
+one sig xc75b1f2fxf096x48bfxbf8bx7245e3737e97 extends Task {}
+one sig x0228024fx32bcx47e9xb8d7x2ba59b390776 extends Task {}
+one sig x2556aa07xe3efx4476x8f00x7899de3b071e extends Task {}
+one sig xf6c06288x4d74x42daxa7a0x9d9d45d6f8b3 extends Task {}
+one sig x708b191dx7131x4dfbxa422x45e001565edd extends Task {}
+one sig xf15019bcxb876x4a67x828dxcbcc15f0055b extends Task {}
+one sig x9cf1ac49xccd6x4220x8bddx82f26f89d9bd extends Task {}
+fact { all te: TaskEvent | te.task = x9cf1ac49xccd6x4220x8bddx82f26f89d9bd implies (one x49079df7xe2d9x41d5xb1e4xc9d33774a810 & te.data)}
+fact { all te: TaskEvent | te.task = xf15019bcxb876x4a67x828dxcbcc15f0055b implies (one x49386c07xa6f7x433fx8645xd5b06c7934d0 & te.data and one x49079df7xe2d9x41d5xb1e4xc9d33774a810 & te.data and one x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 & te.data)}
+fact { all te: TaskEvent | te.task = x0228024fx32bcx47e9xb8d7x2ba59b390776 implies (one x49386c07xa6f7x433fx8645xd5b06c7934d0 & te.data and one x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 & te.data and one x4ec753ecx0d76x421ax91b4xb14b03e67449 & te.data)}
+fact { all te: TaskEvent | lone(x49386c07xa6f7x433fx8645xd5b06c7934d0 & te.data) }
+fact { all te: TaskEvent | one (x49386c07xa6f7x433fx8645xd5b06c7934d0 & te.data) implies te.task in (x0228024fx32bcx47e9xb8d7x2ba59b390776 + xf15019bcxb876x4a67x828dxcbcc15f0055b) }
+fact { all te: TaskEvent | lone(x49079df7xe2d9x41d5xb1e4xc9d33774a810 & te.data) }
+fact { all te: TaskEvent | one (x49079df7xe2d9x41d5xb1e4xc9d33774a810 & te.data) implies te.task in (xf15019bcxb876x4a67x828dxcbcc15f0055b + x9cf1ac49xccd6x4220x8bddx82f26f89d9bd) }
+fact { all te: TaskEvent | lone(x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 & te.data) }
+fact { all te: TaskEvent | one (x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 & te.data) implies te.task in (x0228024fx32bcx47e9xb8d7x2ba59b390776 + xf15019bcxb876x4a67x828dxcbcc15f0055b) }
+fact { all te: TaskEvent | lone(x4ec753ecx0d76x421ax91b4xb14b03e67449 & te.data) }
+fact { all te: TaskEvent | one (x4ec753ecx0d76x421ax91b4xb14b03e67449 & te.data) implies te.task in (x0228024fx32bcx47e9xb8d7x2ba59b390776) }
 fact {
-Init[x7e58a2a9xa52dx4318xbde8x5c414e178fac]
-Response[x9f5ed38cx6c20x44f1x845cx09c63489447b, xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5]
-Precedence[x8f79cecfxb4bex46eax9d54xcd46b70eb90c, x01933d8cx41e0x41e5x8a95x7d967fc6cfaa]
-Precedence[xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a, x01933d8cx41e0x41e5x8a95x7d967fc6cfaa]
-Precedence[x9f5ed38cx6c20x44f1x845cx09c63489447b, x8f79cecfxb4bex46eax9d54xcd46b70eb90c]
-Precedence[x9f5ed38cx6c20x44f1x845cx09c63489447b, xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a] 
-Absence[xa2daf4dex0bcax4ec2xaf56x768ea6b5e88a, 2]
-Absence[x8f79cecfxb4bex46eax9d54xcd46b70eb90c, 3]
-Absence[x7e58a2a9xa52dx4318xbde8x5c414e178fac, 1]
-Existence[x9f5ed38cx6c20x44f1x845cx09c63489447b]
-Existence[xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5]
-Absence[xd4ac1a44xf46cx4fd7xbff4xd65a620aeff5, 1]
-Absence[x01933d8cx41e0x41e5x8a95x7d967fc6cfaa, 1]
+Init[xad750dcax4dafx4149x88c5x6e873e9e7796]
+Response[xf6c06288x4d74x42daxa7a0x9d9d45d6f8b3,x708b191dx7131x4dfbxa422x45e001565edd]
+Precedence[x0228024fx32bcx47e9xb8d7x2ba59b390776,xc75b1f2fxf096x48bfxbf8bx7245e3737e97]
+Precedence[x2556aa07xe3efx4476x8f00x7899de3b071e,xc75b1f2fxf096x48bfxbf8bx7245e3737e97]
+Precedence[xf6c06288x4d74x42daxa7a0x9d9d45d6f8b3,x0228024fx32bcx47e9xb8d7x2ba59b390776]
+Precedence[xf6c06288x4d74x42daxa7a0x9d9d45d6f8b3,x2556aa07xe3efx4476x8f00x7899de3b071e]
+Absence[x2556aa07xe3efx4476x8f00x7899de3b071e,2]
+Absence[x0228024fx32bcx47e9xb8d7x2ba59b390776,3]
+Absence[xad750dcax4dafx4149x88c5x6e873e9e7796,1]
+Existence[xf6c06288x4d74x42daxa7a0x9d9d45d6f8b3]
+Existence[x708b191dx7131x4dfbxa422x45e001565edd]
+Absence[x708b191dx7131x4dfbxa422x45e001565edd,1]
+Absence[xc75b1f2fxf096x48bfxbf8bx7245e3737e97,1]
 }
-abstract sig xbae42616x7903x4c7dxa993xc41b08090aeb extends Payload {}
-fact { all te: TaskEvent | (lone xbae42616x7903x4c7dxa993xc41b08090aeb & te.data)}
-one sig x8c9c1e21x3618x4933xa938xb1f6dc353e82 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
-one sig x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
-one sig x0456e06axa85ex42cfxbf86xc3e9ce86db7e extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
-one sig x663613acxe449x48c2x9a20xdf36d20b7418 extends xbae42616x7903x4c7dxa993xc41b08090aeb{}
-abstract sig x3f92d4c9x67c5x4e71x8975x0509c38e673c extends Payload {}
-fact { all te: TaskEvent | (lone x3f92d4c9x67c5x4e71x8975x0509c38e673c & te.data)}
-one sig xcb5767ddx6ae8x4fddx97b2x25d0357d079f extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
-one sig xff94ab07x9ec3x43c4x81bax2948db9f8310 extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
-one sig x2ab2b0faxf494x4d41xb549x032b55aa3331 extends x3f92d4c9x67c5x4e71x8975x0509c38e673c{}
-abstract sig xe488a0b0x4591x4b4bxa798x0bfc242d99ee extends Payload {
+abstract sig x49386c07xa6f7x433fx8645xd5b06c7934d0 extends Payload {}
+fact { all te: TaskEvent | (lone x49386c07xa6f7x433fx8645xd5b06c7934d0 & te.data)}
+one sig x4f8c0e7fxbbcbx4a3dxbd1ex8c8db79aaed1 extends x49386c07xa6f7x433fx8645xd5b06c7934d0{}
+one sig xc458e46axcf0ax4162xadffx8adf63f6ee67 extends x49386c07xa6f7x433fx8645xd5b06c7934d0{}
+one sig xcbd83ef7x4b64x4a06xae86xe7c22faa249d extends x49386c07xa6f7x433fx8645xd5b06c7934d0{}
+one sig xad8dbf9bx7c7fx4ad9xbf74x189470cac204 extends x49386c07xa6f7x433fx8645xd5b06c7934d0{}
+abstract sig x49079df7xe2d9x41d5xb1e4xc9d33774a810 extends Payload {}
+fact { all te: TaskEvent | (lone x49079df7xe2d9x41d5xb1e4xc9d33774a810 & te.data)}
+one sig x63b679b5x057bx4986xbb8ex22c29ed421c3 extends x49079df7xe2d9x41d5xb1e4xc9d33774a810{}
+one sig xf940d495x77fdx4501x9164x223286cbf477 extends x49079df7xe2d9x41d5xb1e4xc9d33774a810{}
+one sig xc3f76bc5x69f4x446bxa830x9f7336b9d79a extends x49079df7xe2d9x41d5xb1e4xc9d33774a810{}
+abstract sig x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | (lone xe488a0b0x4591x4b4bxa798x0bfc242d99ee & te.data) }
-pred Single(pl: xe488a0b0x4591x4b4bxa798x0bfc242d99ee) {{pl.amount=1}}
-fun Amount(pl: xe488a0b0x4591x4b4bxa798x0bfc242d99ee): one Int {{pl.amount}}
-one sig floatBetween50p0and100p0r100212 extends xe488a0b0x4591x4b4bxa798x0bfc242d99ee{}{amount=7}
-one sig floatBetween0p0and50p0r100211 extends xe488a0b0x4591x4b4bxa798x0bfc242d99ee{}{amount=7}
-abstract sig xa567056exbd3ax4681xa06axe37f92f4984e extends Payload {
+fact { all te: TaskEvent | (lone x0ac3e8a2xfac9x4358x9cd3x941c7c43df66 & te.data) }
+pred Single(pl: x0ac3e8a2xfac9x4358x9cd3x941c7c43df66) {{pl.amount=1}}
+fun Amount(pl: x0ac3e8a2xfac9x4358x9cd3x941c7c43df66): one Int {{pl.amount}}
+one sig floatBetween50p0and100p0r100212 extends x0ac3e8a2xfac9x4358x9cd3x941c7c43df66{}{amount=15}
+one sig floatBetween0p0and50p0r100211 extends x0ac3e8a2xfac9x4358x9cd3x941c7c43df66{}{amount=15}
+abstract sig x4ec753ecx0d76x421ax91b4xb14b03e67449 extends Payload {
 amount: Int
 }
-fact { all te: TaskEvent | (lone xa567056exbd3ax4681xa06axe37f92f4984e & te.data) }
-pred Single(pl: xa567056exbd3ax4681xa06axe37f92f4984e) {{pl.amount=1}}
-fun Amount(pl: xa567056exbd3ax4681xa06axe37f92f4984e): one Int {{pl.amount}}
-one sig intBetweenm1and150r100213 extends xa567056exbd3ax4681xa06axe37f92f4984e{}{amount=7}
-one sig intBetween149and300r100214 extends xa567056exbd3ax4681xa06axe37f92f4984e{}{amount=7}
-fact { all te: TaskEvent | (x8f79cecfxb4bex46eax9d54xcd46b70eb90c = te.task and p100215[te]) implies (some ote: TaskEvent | x48d86a07x374bx46ecxa2a8x8ac64e812ebe = ote.task and p100215c[te, ote]) }
-pred p100215(A: set TaskEvent) { { (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175) } }
-pred p100215c(A, B: set TaskEvent) { { not (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=B.data&xbae42616x7903x4c7dxa993xc41b08090aeb) } }
-fact { some te: TaskEvent | te.task = x8f79cecfxb4bex46eax9d54xcd46b70eb90c and p100216[te]}
-pred p100216(A: set TaskEvent) { { (A.data&xbae42616x7903x4c7dxa993xc41b08090aeb=x86b8bd8dx9b96x4b1cx92ebx7d7a66eb9175) } }
+fact { all te: TaskEvent | (lone x4ec753ecx0d76x421ax91b4xb14b03e67449 & te.data) }
+pred Single(pl: x4ec753ecx0d76x421ax91b4xb14b03e67449) {{pl.amount=1}}
+fun Amount(pl: x4ec753ecx0d76x421ax91b4xb14b03e67449): one Int {{pl.amount}}
+one sig intBetweenm1and150r100213 extends x4ec753ecx0d76x421ax91b4xb14b03e67449{}{amount=15}
+one sig intBetween149and300r100214 extends x4ec753ecx0d76x421ax91b4xb14b03e67449{}{amount=15}
+fact { all te: TaskEvent | (x0228024fx32bcx47e9xb8d7x2ba59b390776 = te.task and p100215[te]) implies (some ote: TaskEvent | xf15019bcxb876x4a67x828dxcbcc15f0055b = ote.task and p100215c[te, ote]) }
+pred p100215(A: set TaskEvent) { { (A.data&x49386c07xa6f7x433fx8645xd5b06c7934d0=xc458e46axcf0ax4162xadffx8adf63f6ee67) } }
+pred p100215c(A, B: set TaskEvent) { { not (A.data&x49386c07xa6f7x433fx8645xd5b06c7934d0=B.data&x49386c07xa6f7x433fx8645xd5b06c7934d0) } }
+fact { some te: TaskEvent | te.task = x0228024fx32bcx47e9xb8d7x2ba59b390776 and p100216[te]}
+pred p100216(A: set TaskEvent) { { (A.data&x49386c07xa6f7x433fx8645xd5b06c7934d0=xc458e46axcf0ax4162xadffx8adf63f6ee67) } }
 

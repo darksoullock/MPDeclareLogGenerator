@@ -1,10 +1,10 @@
 abstract sig Task {}
 abstract sig Payload {}
 
-abstract sig TaskEvent{
-	task: one Task,
+abstract sig TaskEvent{	// One event in trace
+	task: one Task,		// Name of task
 	data: set Payload,
-	tokens: set Token
+	tokens: set Token	// Used only for 'same' or 'different' constraints on numeric data
 }
 
 one sig DummyPayload extends Payload {}
@@ -21,10 +21,12 @@ fact {
 	all te:TaskEvent| no (te.tokens & SameToken) or no (te.tokens & DiffToken)
 }
 
+pred True[]{some TE0}
+
 // declare templates
 
 pred Init(taskA: Task) { 
-	one te: TaskEvent | taskA = te.task and te = TE0
+	taskA = TE0.task
 }
 
 pred Existence(taskA: Task) { 
@@ -61,27 +63,27 @@ pred RespondedExistence(taskA, taskB: Task) {
 }
 
 pred Response(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task )
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte])
 }
 
 pred AlternateResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[te, fte] and taskB = fte.task and (no ite: TaskEvent | After[te, ite] and After[ite, fte] and taskA = ite.task))
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte] and (no ite: TaskEvent | taskA = ite.task and After[te, ite] and After[ite, fte]))
 }
 
 pred ChainResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[te, fte])
 }
 
 pred Precedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te])
 }
 
 pred AlternatePrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | After[fte, te] and taskB = fte.task and (no ite: TaskEvent | After[fte, ite] and After[ite, te] and taskA = ite.task))
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te] and (no ite: TaskEvent | taskA = ite.task and After[fte, ite] and After[ite, te]))
 }
 
 pred ChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | Next[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[fte, te])
 }
 
 pred NotRespondedExistence(taskA, taskB: Task) {
@@ -89,19 +91,19 @@ pred NotRespondedExistence(taskA, taskB: Task) {
 }
 
 pred NotResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[te, fte])
 }
 
 pred NotPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | After[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[fte, te])
 }
 
 pred NotChainResponse(taskA, taskB: Task) { 
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[te, fte] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[te, fte])
 }
 
 pred NotChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | Next[fte, te] and taskB = fte.task)
+	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[fte, te])
 }
 //-
 

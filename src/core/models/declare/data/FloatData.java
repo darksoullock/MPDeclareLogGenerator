@@ -70,7 +70,7 @@ public class FloatData extends NumericData {
     public void addValue(String value) {
         float val = Float.parseFloat(value);
         if (val < min || val > max)
-            throw new InvalidStateException(val + " is out of defined interval of " + type);
+            throw new InvalidStateException(val + " is out of defined float interval " + min + ".." +max);
         if (val == min)
             includeMin = true;
         if (val == max)

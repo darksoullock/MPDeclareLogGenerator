@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class AlloyLogExtractor {
@@ -89,7 +90,7 @@ public class AlloyLogExtractor {
         oneTrace.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + ++number));
         handleTraceAttributes(oneTrace);
 
-        StatisticsHelper.add((int) orderedStateEvents.stream().filter(i -> i != null).count());
+        StatisticsHelper.add((int) orderedStateEvents.stream().filter(Objects::nonNull).count());
         StatisticsHelper.trace = number;
 
         equalizeSameTokens(orderedStateEvents);

@@ -68,7 +68,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -98,7 +98,7 @@ public class GenerationWithData {
                 3,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -133,7 +133,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -168,7 +168,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -204,7 +204,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -240,7 +240,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -282,7 +282,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -321,7 +321,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -358,7 +358,7 @@ public class GenerationWithData {
                 3,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -399,7 +399,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -435,7 +435,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
         for (int i = 0; i < log.size(); ++i) {
@@ -465,7 +465,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -500,7 +500,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -530,7 +530,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -560,7 +560,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -591,7 +591,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -627,7 +627,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -663,7 +663,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -701,7 +701,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -737,7 +737,7 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 

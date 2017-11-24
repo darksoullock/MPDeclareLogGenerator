@@ -77,7 +77,7 @@ public class DataExpressionParser {
                 return new ValueExpression(i);
         }
 
-        return new ValueExpression(new Token(0, Token.Type.Task, "1=1"));   // empty expression evaluates to true
+        return new ValueExpression(new Token(0, Token.Type.Task, "True[]"));   // empty expression evaluates to true
     }
 
     private List<Token> unwrap(List<Token> tokens) {
@@ -184,7 +184,7 @@ public class DataExpressionParser {
 
     private String getVariableNameFromComparison(BinaryExpression expr) {
         if (expr.getLeft().getNode().getType() == expr.getRight().getNode().getType())
-            throw new AssertionError("Comparison of variables unsupported yet");
+            throw new InvalidStateException("Comparison of variables is not supported");
 
         if (expr.getLeft().getNode().getType() == Token.Type.Variable)
             return expr.getLeft().getNode().getValue();

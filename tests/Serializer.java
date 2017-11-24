@@ -85,7 +85,7 @@ public class Serializer {
         }
 
         @Override
-        public Expr parseOneExpressionFromString(String input) throws Err, FileNotFoundException, IOException {
+        public Expr parseOneExpressionFromString(String input) throws Err, IOException {
             return null;
         }
     }

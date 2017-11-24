@@ -16,5 +16,5 @@ public class Global {
      */
     public static boolean singleFirstForSame = false;
     public static boolean deepNamingCheck = false;  // increase execution time by ~1s. but can show errors
-    public static boolean encodeNames = false;  // set to false only if you want to debug intermediate .als
+    public static boolean encodeNames = true;  // set to false only if you want to debug intermediate .als
 }

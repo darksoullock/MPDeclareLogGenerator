@@ -29,6 +29,7 @@ public class AlloyPMSolutionBrowser {
     private A4Solution solution;
     private Map<String, PrimSig> atomToSig;
     private int length;
+    private Field parentField;
 
     public AlloyPMSolutionBrowser(A4Solution solution, Module module, int length) {
         this.solution = solution;
@@ -51,7 +52,7 @@ public class AlloyPMSolutionBrowser {
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
             String name = retrieveAtomLabel(taskExpr);
-            if (name == null)
+            if (name == null)  // end of trace with length<max
                 break;
 
             List<Payload> payload = retrievePayload(i);
@@ -103,8 +104,11 @@ public class AlloyPMSolutionBrowser {
 
     private Sig getParentSignature(String atom) {
         try {
-            Field parentField = PrimSig.class.getField("parent");
-            parentField.setAccessible(true);
+            if (parentField == null) {
+                parentField = PrimSig.class.getField("parent");
+                parentField.setAccessible(true);
+            }
+
             return (Sig) parentField.get(atom2Sig(atom));
         } catch (NoSuchFieldException e) {
             System.out.println("No 'parent' field found. It worked on alloy 4.2. Check alloy encoding for payloads");
@@ -114,7 +118,7 @@ public class AlloyPMSolutionBrowser {
             e.printStackTrace();
         }
 
-        throw new Error();  // fail here; return null would cause other error later;
+        throw new Error("Critical: cannot get parent signature (data payload)");  // fail here; return null would cause other error later; should never occur
     }
 
     private String retrieveAtomLabel(Expr exprToTupleSet) throws Err {
@@ -123,7 +127,6 @@ public class AlloyPMSolutionBrowser {
         }
 
         return null;
-        //throw new InvalidStateException("No value present for a given expression");
     }
 
     public Expr exprFromString(String stringExpr) throws IOException, Err {

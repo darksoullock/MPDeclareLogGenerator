@@ -43,8 +43,8 @@ trace RandomFloatNumber: float between 42 and 422
 trace Enum: enum, values, v2, v3
 
 /data constraints
-/Absence[BookTransport A] | A.Price>50 and A.Speed>=50
-/RespondedExistence[BookTransport A, UseTransport B] | A.Price=50 | B.Price=200
+Absence[BookTransport A] | A.Price>50 and A.Speed>=50
+RespondedExistence[BookTransport A, UseTransport B] | A.Price=50 | B.Price=80
 
 ChainResponse[DoSomething, UseTransport]
 Absence[UseTransport, 3]

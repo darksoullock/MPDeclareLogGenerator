@@ -71,7 +71,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -103,7 +103,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -133,7 +133,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -166,7 +166,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -202,7 +202,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -235,7 +235,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -277,7 +277,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -313,7 +313,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -348,7 +348,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -383,7 +383,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -417,7 +417,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -475,7 +475,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -497,7 +497,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -519,7 +519,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -539,16 +539,17 @@ public class Generation {
 
     @Test
     public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
-        String declare = baseDeclare + "Absence[DoSomething, 3]\n";
+        String declare = baseDeclare + "Absence[DoSomething, 3]\n" +
+                "Existence[DoSomething, 3]\n";
 
         XLog log = Evaluator.getLog(
-                15,
+                20,
                 5,
                 50,
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -577,7 +578,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -606,7 +607,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -629,7 +630,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -669,7 +670,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -703,7 +704,7 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2);
+                2, false);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 

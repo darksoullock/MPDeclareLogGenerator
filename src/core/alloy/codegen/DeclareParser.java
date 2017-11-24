@@ -99,7 +99,7 @@ public class DeclareParser {
     public List<DataConstraint> parseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) {
         List<DataConstraint> dataConstraints = new ArrayList<>();
         for (String line : dataConstraintsCode) {
-            String[] lr = line.split("\\|");
+            String[] lr = line.split("\\|",-1);
             String activity = lr[0].substring(0, lr[0].indexOf('['));
             List<String[]> args = Arrays.stream(getActivityArgsFromConstraintText(lr[0]).split(",\\s*"))
                     .map(i -> i.split("\\s+"))

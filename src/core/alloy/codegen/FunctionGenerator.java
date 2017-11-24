@@ -257,8 +257,8 @@ public class FunctionGenerator {
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
-            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\n(no te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens) or #{te: TaskEvent | ").append(ast).append(" in te.tokens } = 2 }\n");
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\nall te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens implies (one ote: TaskEvent | not ote = te and ").append(ast).append(" in ote.tokens)\n}\n");
         }
 
         tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0)).append(" or te.task = ")
@@ -281,8 +281,8 @@ public class FunctionGenerator {
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
             tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
-                    .append("fact { (no te: TaskEvent | ").append(ast).append(" in te.tokens) or #{te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens } = 2}\n");
+                    .append("fact { all te: TaskEvent | ")
+                    .append(ast).append(" in te.tokens implies (one ote: TaskEvent | not ote = te and ").append(ast).append(" in ote.tokens) }\n");
         }
 
         return tc.toString();

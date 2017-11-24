@@ -6,6 +6,7 @@ import core.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
 import core.models.declare.Task;
 import core.models.declare.data.EnumeratedData;
@@ -25,6 +26,7 @@ public class AlloyCodeGenerator {
     int maxTraceLength;
     int minTraceLength;
     int bitwidth;
+    boolean vacuity;
 
     StringBuilder alloy;
 
@@ -43,13 +45,14 @@ public class AlloyCodeGenerator {
     DeclareParser parser;
     DataConstraintGenerator gen;
 
-    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances, int intervalSplits) {
+    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances, int intervalSplits, boolean vacuity) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
+        this.vacuity = vacuity;
         this.parser = new DeclareParser(intervalSplits);
         maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
-        this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth);
+        this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
     public void Run(String declare) throws FileNotFoundException {
@@ -59,13 +62,16 @@ public class AlloyCodeGenerator {
         GenerateTaskEvents(maxTraceLength);
         GenerateNextPredicate(maxTraceLength);
         GenerateAfterPredicate(maxTraceLength);
-        GenerateVacuityConstraint(minTraceLength, maxTraceLength);
+        GenerateVariableLengthConstraint(minTraceLength, maxTraceLength);
         SortInput(parser.splitStatements(declare));
         List<Task> tasks = parser.parseTasks(tasksCode);
         generateTasks(tasks);
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
-        ParseAndGenerateConstraints();
+        List<Constraint> constraints = parseConstraints();
+        generateConstraints(constraints);
+        if (vacuity)
+            generateVacuity(constraints);
         List<DataConstraint> dataConstraints = parser.parseDataConstraints(dataConstraintsCode, numericExpressions);
         ExtendNumericData();
         GenerateData(data);
@@ -116,11 +122,32 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void ParseAndGenerateConstraints() {
-        alloy.append("fact {\n");
-        for (String i : constraintsCode) {
-            alloy.append(i).append('\n');
+    private List<Constraint> parseConstraints() {
+        List<Constraint> constraints = new ArrayList<>();
+        for (String c : constraintsCode) {
+            String[] p = c.split("\\s*[\\[\\],]\\s*");
+            constraints.add(new Constraint(p[0], Arrays.stream(p).skip(1).collect(Collectors.toList())));
         }
+
+        return constraints;
+    }
+
+    private void generateConstraints(List<Constraint> constraints) {
+        alloy.append("fact {\n");
+        for (Constraint i : constraints) {
+            alloy.append(i.getName()).append('[').append(i.taskA());
+            if (i.isBinary())
+                alloy.append(',').append(i.taskB());
+            alloy.append("]\n");
+        }
+
+        alloy.append("}\n");
+    }
+
+    private void generateVacuity(List<Constraint> constraints) {
+        alloy.append("fact {\n");
+        for (String i : constraints.stream().filter(i -> i.supportsVacuity()).map(i -> i.taskA()).distinct().collect(Collectors.toList()))
+            alloy.append("Existence[").append(i).append("]\n");
 
         alloy.append("}\n");
     }
@@ -191,7 +218,7 @@ public class AlloyCodeGenerator {
         for (String value : item.getValues()) {
             int cnt = item.getMapping().get(value).getValueCount(limit);
             if (cnt < 0)
-                cnt = (int) Math.pow(2, bitwidth - 1) - 1;
+                cnt = limit - 1;
             alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{amount=")
                     .append(cnt).append("}\n");
         }
@@ -228,7 +255,6 @@ public class AlloyCodeGenerator {
     }
 
     private void GenerateTaskEvents(int length) {
-        --bitwidth;
         for (int i = 0; i < length; i++) {
             if (i < minTraceLength)
                 alloy.append("one sig TE");
@@ -240,10 +266,10 @@ public class AlloyCodeGenerator {
 
 
     private void GenerateNextPredicate(int length) {
-        alloy.append("pred Next(pre, next: TaskEvent){\n");
-        alloy.append("pre = TE0 and next = TE1");
+        alloy.append("pred Next(pre, next: TaskEvent){");
+        alloy.append("pre=TE0 and next=TE1");
         for (int i = 2; i < length; i++) {
-            alloy.append(" or pre = TE").append(i - 1).append(" and next = TE").append(i);
+            alloy.append(" or pre=TE").append(i - 1).append(" and next=TE").append(i);
         }
 
         alloy.append("}\n");
@@ -273,7 +299,7 @@ public class AlloyCodeGenerator {
         alloy.append("}\n");
     }
 
-    private void GenerateVacuityConstraint(int minTraceLength, int maxTraceLength) {
+    private void GenerateVariableLengthConstraint(int minTraceLength, int maxTraceLength) {
         alloy.append("fact{\n");
         for (int i = minTraceLength; i < maxTraceLength - 1; ++i) {
             alloy.append("one TE").append(i + 1).append(" implies one TE").append(i).append('\n');

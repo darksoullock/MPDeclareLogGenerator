@@ -10,11 +10,13 @@ import java.util.Map;
  */
 public class DataConstraintGenerator {
 
+    boolean vacuity;
     Map<String, NumericData> map;
     StringBuilder alloy;
     FunctionGenerator fnGen;
 
-    public DataConstraintGenerator(int maxSameInstances, int bitwidth) {
+    public DataConstraintGenerator(int maxSameInstances, int bitwidth, boolean vacuity) {
+        this.vacuity = vacuity;
         this.fnGen = new FunctionGenerator(maxSameInstances, bitwidth);
     }
 
@@ -84,11 +86,15 @@ public class DataConstraintGenerator {
         if (c.getName().equals("ExclusiveChoice"))
             addExclusiveChoiceDataConstraint(c, name, name + "a");
 
+        if (vacuity && c.supportsVacuity()) {
+            alloy.append("fact { some te: TaskEvent | te.task = ").append(c.taskA()).append(" and ").append(name).append("[te]} //vc\n");
+        }
+
         return alloy.toString();
     }
 
     private void addInitDataConstraint(DataConstraint one, String name) {
-        alloy.append("fact { one te: TaskEvent | ").append(one.taskA()).append(" = te.task and te = TE0 and ").append(name).append("[te] }\n");
+        alloy.append("fact { ").append(one.taskA()).append(" = TE0.task and ").append(name).append("[TE0] }\n");
         alloy.append(fnGen.generateFunction(name, one.getFirstFunction(), map, one.getArgs()));
     }
 
@@ -126,46 +132,46 @@ public class DataConstraintGenerator {
 
     private void addResponseDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | After[te, fte] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte] and After[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addAlternateResponseDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | After[te, fte] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName)
-                .append("[te, fte] and (no ite: TaskEvent | After[te, ite] and After[ite, fte] and ").append(one.taskA())
-                .append(" = ite.task and ").append(fFnName).append("[ite])) }\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName)
+                .append("[te, fte] and After[te, fte] and (no ite: TaskEvent | ").append(one.taskA())
+                .append(" = ite.task and ").append(fFnName).append("[ite] and  After[te, ite] and After[ite, fte])) }\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addChainResponseDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | Next[te, fte] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and Next[te, fte] and ").append(sFnName).append("[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addPrecedenceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | After[fte, te] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte] and After[fte, te])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addAlternatePrecedenceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | After[fte, te] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName)
-                .append("[te, fte] and (no ite: TaskEvent | After[fte, ite] and After[ite, te] and ").append(one.taskA())
-                .append(" = ite.task and ").append(fFnName).append("[ite]))}\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName)
+                .append("[te, fte] and After[fte, te] and (no ite: TaskEvent | ").append(one.taskA())
+                .append(" = ite.task and ").append(fFnName).append("[ite] and After[fte, ite] and After[ite, te]))}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addChainPrecedenceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(some fte: TaskEvent | Next[fte, te] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(some fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and Next[fte, te] and ").append(sFnName).append("[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
@@ -179,28 +185,28 @@ public class DataConstraintGenerator {
 
     private void addNotResponseDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(no fte: TaskEvent | After[te, fte] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(no fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte] and After[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateNotFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addNotChainResponseDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(no fte: TaskEvent | Next[te, fte] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(no fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and Next[te, fte] and ").append(sFnName).append("[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateNotFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addNotPrecedenceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(no fte: TaskEvent | After[fte, te] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(no fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte] and After[fte, te])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateNotFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }
 
     private void addNotChainPrecedenceDataConstraint(DataConstraint one, String fFnName, String sFnName) {
         addActivation(one, fFnName);
-        alloy.append("(no fte: TaskEvent | Next[fte, te] and ").append(one.taskB()).append(" = fte.task and ").append(sFnName).append("[te, fte])}\n");
+        alloy.append("(no fte: TaskEvent | ").append(one.taskB()).append(" = fte.task and Next[fte, te] and ").append(sFnName).append("[te, fte])}\n");
         alloy.append(fnGen.generateFunction(fFnName, one.getFirstFunction(), map, one.getArgs()));
         alloy.append(fnGen.generateNotFunction(sFnName, one.getSecondFunction(), map, one.getArgs()));
     }

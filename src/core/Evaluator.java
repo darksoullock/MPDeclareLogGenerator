@@ -31,7 +31,7 @@ public class Evaluator {
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
-        XLog plog = getLog(maxLength, minLength, nTraces, 6, GetDeclare(inFilename), alsFilename, intervalSplits);
+        XLog plog = getLog(maxLength, minLength, nTraces, 4, GetDeclare(inFilename), alsFilename, intervalSplits, true);
 
         System.out.println();
         System.out.println("Writing XES for: " + outFilename + plog.size() + ".xes");
@@ -50,13 +50,14 @@ public class Evaluator {
                               int maxSameInstances,
                               String declare,
                               String alsFilename,
-                              int intervalSplits)
-            throws Err, IOException, IllegalAccessException {
+                              int intervalSplits,
+                              boolean vacuity)
+            throws Err, IOException {
 
         System.out.println("Maximum no of traces: " + numberOfTraces);
 
-        int bitwidth = 5; //Math.max((int) Math.ceil(Math.log((double) maxTraceLength) / Math.log(2.0D)), 4);
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits);
+        int bitwidth = 5;
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits, vacuity);
         gen.Run(declare);
         String alloyCode = gen.getAlloyCode();
 
