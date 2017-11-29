@@ -1,5 +1,7 @@
 package core.models.intervals;
 
+import core.Exceptions.BadSolutionException;
+import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
@@ -38,9 +40,9 @@ public abstract class Interval {
         sameCache = new HashMap<>();
     }
 
-    public abstract String getDifferent(List<String> tokens);
+    public abstract String getDifferent(List<String> tokens) throws BadSolutionException;
 
-    public abstract boolean isCompliant(DataExpression expr);
+    public abstract boolean isCompliant(DataExpression expr) throws DeclareParserException;
 
     protected BinaryExpression rot(BinaryExpression expr) {   // move number to the right part of expression
         if (expr.getRight().getNode().getType() == Token.Type.Number)

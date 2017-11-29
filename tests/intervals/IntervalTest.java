@@ -1,12 +1,13 @@
 package intervals;
 
+import core.Exceptions.BadSolutionException;
+import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.Token;
 import core.alloy.codegen.fnparser.ValueExpression;
 import core.models.intervals.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.Arrays;
 
@@ -29,14 +30,14 @@ public class IntervalTest {
         Assert.assertEquals(iv.getValueCount(10), 9);
     }
 
-    @Test(expectedExceptions = InvalidStateException.class)
-    public void IntegerValueDifferentTest() {
+    @Test(expectedExceptions = BadSolutionException.class)
+    public void IntegerValueDifferentTest() throws BadSolutionException {
         Interval iv = new IntegerValue(11);
         iv.getDifferent(Arrays.asList("1"));
     }
 
     @Test
-    public void IntegerIntervalTest() {
+    public void IntegerIntervalTest() throws BadSolutionException {
         Interval iv = new IntegerInterval(0, 10);
         for (int i = 0; i < 100; ++i) {
             int n = Integer.parseInt(iv.get());
@@ -63,7 +64,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void IntegerIsCompliantTest() {
+    public void IntegerIsCompliantTest() throws DeclareParserException {
         Interval iv = new IntegerInterval(40, 60);
         Token moreToken = new Token(0, Token.Type.Comparator, ">");
         Token lessToken = new Token(0, Token.Type.Comparator, "<");
@@ -88,7 +89,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void IntegerValueIsCompliantTest() {
+    public void IntegerValueIsCompliantTest() throws DeclareParserException {
         Interval iv = new IntegerValue(40);
         Token eqToken = new Token(0, Token.Type.Comparator, "=");
         ValueExpression var = new ValueExpression(new Token(0, Token.Type.Variable, "v"));
@@ -112,14 +113,14 @@ public class IntervalTest {
         Assert.assertEquals(iv.getValueCount(10), -1);
     }
 
-    @Test(expectedExceptions = InvalidStateException.class)
-    public void FloatValueDifferentTest() {
+    @Test(expectedExceptions = BadSolutionException.class)
+    public void FloatValueDifferentTest() throws BadSolutionException {
         Interval iv = new FloatValue(11.11f);
         iv.getDifferent(Arrays.asList("1"));
     }
 
     @Test
-    public void FloatIntervalTest() {
+    public void FloatIntervalTest() throws BadSolutionException {
         Interval iv = new FloatInterval(0, 10);
         for (int i = 0; i < 100; ++i) {
             float n = Float.parseFloat(iv.get());

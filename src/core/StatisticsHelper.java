@@ -27,10 +27,6 @@ public class StatisticsHelper {
         for (Integer i : lengthsMap.keySet()) {
             System.out.println(i + ": " + lengthsMap.get(i));
         }
-
-//        for (int i:lengths){
-//            System.out.print(i+", ");
-//        }
     }
 
     public static void executionTime(Runnable o) {

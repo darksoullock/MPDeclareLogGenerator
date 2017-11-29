@@ -1,5 +1,7 @@
 package core.models.declare.data;
 
+import core.Exceptions.DeclareParserException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class EnumeratedData {
         return values;
     }
 
-    public void addValue(String value) {
+    public void addValue(String value) throws DeclareParserException {
         this.values.add(value);
     }
 }

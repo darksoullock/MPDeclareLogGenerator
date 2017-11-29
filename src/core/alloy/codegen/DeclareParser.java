@@ -1,5 +1,6 @@
 package core.alloy.codegen;
 
+import core.Exceptions.DeclareParserException;
 import core.Global;
 import core.IOHelper;
 import core.RandomHelper;
@@ -96,7 +97,7 @@ public class DeclareParser {
         return data;
     }
 
-    public List<DataConstraint> parseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) {
+    public List<DataConstraint> parseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
         List<DataConstraint> dataConstraints = new ArrayList<>();
         for (String line : dataConstraintsCode) {
             String[] lr = line.split("\\|",-1);
@@ -220,10 +221,56 @@ public class DeclareParser {
 
     // may throw exception if name might interfere with reserved keywords
     private void checkInterference(String declare, List<String> names) {
-        String keywords = IOHelper.readAllText("./data/keywords.txt");
+        //String keywords = IOHelper.readAllText("./data/keywords.txt");
+        String keywords = " activity x\n" +
+                " Init[]\n" +
+                " Existence[] \n" +
+                " Existence[]\n" +
+                " Absence[]\n" +
+                " Absence[]\n" +
+                " Exactly[]\n" +
+                " Choice[] \n" +
+                " ExclusiveChoice[] \n" +
+                " RespondedExistence[] \n" +
+                " Response[] \n" +
+                " AlternateResponse[] \n" +
+                " ChainResponse[]\n" +
+                " Precedence[] \n" +
+                " AlternatePrecedence[] \n" +
+                " ChainPrecedence[] \n" +
+                " NotRespondedExistence[] \n" +
+                " NotResponse[] \n" +
+                " NotPrecedence[] \n" +
+                " NotChainResponse[]\n" +
+                " NotChainPrecedence[]\n" +
+                " integer between x and x\n" +
+                " float between x and x\n" +
+                " trace x\n" +
+                " bind x\n" +
+                " : , x\n" +
+                " is not x\n" +
+                " not in x\n" +
+                " is x\n" +
+                " in x\n" +
+                " not x\n" +
+                " or x\n" +
+                " and x\n" +
+                " same x\n" +
+                " different x\n" +
+                " not x\n" +
+                " [ ] x\n" +
+                " ( ) x\n" +
+                " . x\n" +
+                " > x\n" +
+                " < x\n" +
+                " >= x\n" +
+                " <= x\n" +
+                " = x\n" +
+                " | x\n" +
+                "\n";
         for (String name : names) {
             if (keywords.contains(name)) {
-                System.out.println("The name '" + name + "' might be part of reserved keyword. If other errors appear try to rename it or use in quote marks.");
+                Global.log.accept("The name '" + name + "' might be part of reserved keyword. If other errors appear try to rename it or use in quote marks.");
                 continue;
             }
 
@@ -231,7 +278,7 @@ public class DeclareParser {
                 Pattern pattern = Pattern.compile("[\\d\\w]" + name + "[\\d\\w]|[\\d\\w]" + name + "|" + name + "[\\d\\w]");
                 Matcher m = pattern.matcher(declare);
                 if (m.find() && !name.contains(m.group(0)))
-                    System.out.println("The name '" + name + "' might be part of reserved keyword. If other errors appear try to rename it or use in quote marks.");
+                    Global.log.accept("The name '" + name + "' might be part of reserved keyword. If other errors appear try to rename it or use in quote marks.");
             }
         }
     }

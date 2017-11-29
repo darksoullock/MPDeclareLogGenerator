@@ -1,3 +1,4 @@
+import core.Exceptions.DeclareParserException;
 import core.Global;
 import core.alloy.codegen.FunctionGenerator;
 import core.alloy.codegen.fnparser.*;
@@ -17,28 +18,28 @@ public class FunctionGeneratorTest {
     FunctionGenerator gen = new FunctionGenerator(2, 4);
 
     @Test
-    public void testTask() {
+    public void testTask() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         String afn = gen.generateFunction("fn", fn, null, null);
         Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { Task } }\n");
     }
 
     @Test
-    public void testArgs() {
+    public void testArgs() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         String afn = gen.generateFunction("fn", fn, null, null);
         Assert.assertEquals(afn, "pred fn(A, B: set TaskEvent) { { Task } }\n");
     }
 
     @Test
-    public void testVariable() {
+    public void testVariable() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")));
         String afn = gen.generateFunction("fn", fn, null, null);
         Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { A.data&Value } }\n");
     }
 
     @Test
-    public void testAnd() {
+    public void testAnd() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"),
                 new BinaryExpression(
                         new Token(0, Token.Type.Operator, "and"),
@@ -49,7 +50,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNor() {
+    public void testNor() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"),
                 new UnaryExpression(
                         new Token(0, Token.Type.Operator, "not"),
@@ -62,14 +63,14 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNumber() {
+    public void testNumber() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "20")));
         String afn = gen.generateFunction("fn", fn, null, null);
         Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { 20 } }\n");
     }
 
     @Test
-    public void testSame() {
+    public void testSame() throws DeclareParserException {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
@@ -77,7 +78,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testDifferent() {
+    public void testDifferent() throws DeclareParserException {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
@@ -85,7 +86,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNot() {
+    public void testNot() throws DeclareParserException {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "not"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         DataFunction fn = new DataFunction(Arrays.asList("A"), expr);
         String afn = gen.generateFunction("fn", fn, null, null);
@@ -93,7 +94,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNumericSame() {
+    public void testNumericSame() throws DeclareParserException {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
@@ -105,7 +106,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNumericDifferent() {
+    public void testNumericDifferent() throws DeclareParserException {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
@@ -117,7 +118,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNumericNotSame() {
+    public void testNumericNotSame() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "not"),
                         new UnaryExpression(new Token(0, Token.Type.Operator, "same"),
@@ -133,7 +134,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNumericNotDifferent() {
+    public void testNumericNotDifferent() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "not"),
                         new UnaryExpression(new Token(0, Token.Type.Operator, "different"),
@@ -150,7 +151,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNotConstraintNumericSame() {
+    public void testNotConstraintNumericSame() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "same"),
                         new ValueExpression(new Token(0, Token.Type.Task, "Task")));
@@ -164,7 +165,7 @@ public class FunctionGeneratorTest {
     }
 
     @Test
-    public void testNotConstraintNumericDifferent() {
+    public void testNotConstraintNumericDifferent() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "different"),
                         new ValueExpression(new Token(0, Token.Type.Task, "Task")));

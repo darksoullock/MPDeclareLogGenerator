@@ -1,5 +1,7 @@
 package core;
 
+import core.Exceptions.BadSolutionException;
+import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.AlloyCodeGenerator;
 import core.alloy.integration.AlloyComponent;
 import core.alloy.serialization.AlloyLogExtractor;
@@ -9,7 +11,9 @@ import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XesXmlSerializer;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class Evaluator {
@@ -33,13 +37,13 @@ public class Evaluator {
 
         XLog plog = getLog(maxLength, minLength, nTraces, 4, GetDeclare(inFilename), alsFilename, intervalSplits, true);
 
-        System.out.println();
-        System.out.println("Writing XES for: " + outFilename + plog.size() + ".xes");
+        Global.log.accept("Writing XES for: " + outFilename + plog.size() + ".xes");
         FileOutputStream fileOS = new FileOutputStream(outFilename + plog.size() + ".xes");
         new XesXmlSerializer().serialize(plog, fileOS);
+        fileOS.close();
 
         long end = System.nanoTime();
-        System.out.println((end - start) / 1_000_000);
+        Global.log.accept(((end - start) / 1_000_000) + "");
 
         StatisticsHelper.print();
     }
@@ -52,22 +56,22 @@ public class Evaluator {
                               String alsFilename,
                               int intervalSplits,
                               boolean vacuity)
-            throws Err, IOException {
+            throws Err, IOException, DeclareParserException, BadSolutionException {
 
-        System.out.println("Maximum no of traces: " + numberOfTraces);
+        Global.log.accept("Maximum no of traces: " + numberOfTraces);
 
         int bitwidth = 5;
         AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits, vacuity);
         gen.Run(declare);
-        String alloyCode = gen.getAlloyCode();
 
+        String alloyCode = gen.getAlloyCode();
         IOHelper.writeAllText(alsFilename, alloyCode);
 
         AlloyComponent alloy = new AlloyComponent();
         Module world = alloy.parse(alsFilename);
         A4Solution solution = alloy.executeFromFile(maxTraceLength, bitwidth);
 
-        System.out.println("Found Solution: " + (solution != null && solution.satisfiable()));
+        Global.log.accept("Found Solution: " + (solution != null && solution.satisfiable()));
 
         AlloyLogExtractor serializer = new AlloyLogExtractor(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding());
         return serializer.extract(solution, numberOfTraces, maxTraceLength);

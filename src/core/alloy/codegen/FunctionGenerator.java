@@ -1,11 +1,11 @@
 package core.alloy.codegen;
 
+import core.Exceptions.DeclareParserException;
 import core.Global;
 import core.RandomHelper;
 import core.alloy.codegen.fnparser.*;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
-import sun.plugin.dom.exception.InvalidStateException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class FunctionGenerator {
         this.minInt = -(int) Math.pow(2, bitwidth - 1);
     }
 
-    public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
+    public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
         init(function, map, argTypes);
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
         String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
@@ -37,7 +37,7 @@ public class FunctionGenerator {
         return alloy.toString();
     }
 
-    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
+    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
         init(function, map, argTypes);
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
         DataExpression expr = handleNegativeNumericComparison(function.getExpression());
@@ -133,7 +133,7 @@ public class FunctionGenerator {
         return expression.getNode().getValue().equals("not");
     }
 
-    private String generateExpression(DataExpression expression) {
+    private String generateExpression(DataExpression expression) throws DeclareParserException {
         if (expression instanceof ValueExpression)
             return handleValueExpression((ValueExpression) expression);
 
@@ -162,7 +162,7 @@ public class FunctionGenerator {
         return "";
     }
 
-    private String handleUnaryExpression(UnaryExpression uex) {
+    private String handleUnaryExpression(UnaryExpression uex) throws DeclareParserException {
         StringBuilder tc = new StringBuilder();
         if (uex.getNode().getValue().equals("same")) {
             if (map.containsKey(getFieldType(uex.getValue().getNode().getValue()))) {
@@ -288,7 +288,7 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
-    private String handleBinaryExpression(BinaryExpression bex) {
+    private String handleBinaryExpression(BinaryExpression bex) throws DeclareParserException {
         if (bex.getNode().getType() == Token.Type.Comparator) {
             handleNumericComparison(bex);
             return "";
@@ -340,7 +340,7 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
-    private void handleNumericComparison(BinaryExpression bex) {
+    private void handleNumericComparison(BinaryExpression bex) throws DeclareParserException {
         String var = getVariable(bex);
         String field = getFieldType(var);
         Map<String, Interval> intervalsMap = map.get(field).getMapping();
@@ -356,13 +356,13 @@ public class FunctionGenerator {
         return var.substring(var.indexOf('.') + 1);
     }
 
-    private String getVariable(BinaryExpression bex) {
+    private String getVariable(BinaryExpression bex) throws DeclareParserException {
         if (bex.getLeft().getNode().getType() == Token.Type.Variable)
             return bex.getLeft().getNode().getValue();
 
         if (bex.getRight().getNode().getType() == Token.Type.Variable)
             return bex.getRight().getNode().getValue();
 
-        throw new InvalidStateException("No variable in " + bex.toString());
+        throw new DeclareParserException("No variable in " + bex.toString());
     }
 }

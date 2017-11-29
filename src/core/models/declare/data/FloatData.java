@@ -1,10 +1,9 @@
 package core.models.declare.data;
 
-import core.Global;
+import core.Exceptions.DeclareParserException;
 import core.RandomHelper;
 import core.models.intervals.FloatInterval;
 import core.models.intervals.FloatValue;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,10 +66,10 @@ public class FloatData extends NumericData {
     }
 
     @Override
-    public void addValue(String value) {
+    public void addValue(String value) throws DeclareParserException {
         float val = Float.parseFloat(value);
         if (val < min || val > max)
-            throw new InvalidStateException(val + " is out of defined float interval " + min + ".." +max);
+            throw new DeclareParserException(val + " is out of defined float interval " + min + ".." + max);
         if (val == min)
             includeMin = true;
         if (val == max)

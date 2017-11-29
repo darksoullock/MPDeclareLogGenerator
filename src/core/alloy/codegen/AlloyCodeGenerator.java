@@ -1,7 +1,7 @@
 package core.alloy.codegen;
 
+import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.IOHelper;
 import core.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
@@ -13,9 +13,7 @@ import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
 import core.models.serialization.trace.AbstractTraceAttribute;
-import sun.plugin.dom.exception.InvalidStateException;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +53,7 @@ public class AlloyCodeGenerator {
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
-    public void Run(String declare) throws FileNotFoundException {
+    public void Run(String declare) throws DeclareParserException {
         Init();
         if (Global.encodeNames)
             declare = parser.encodeNames(declare);
@@ -98,7 +96,7 @@ public class AlloyCodeGenerator {
         return map;
     }
 
-    private void Init() throws FileNotFoundException {
+    private void Init() {
         tasksCode = new ArrayList<>();
         traceAttributesCode = new ArrayList<>();
         dataCode = new ArrayList<>();
@@ -116,7 +114,7 @@ public class AlloyCodeGenerator {
         return parser.getNamesEncoding();
     }
 
-    private void GenerateDataConstraints(List<DataConstraint> dataConstraints) {
+    private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws DeclareParserException {
         for (DataConstraint i : dataConstraints) {
             alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
         }
@@ -178,21 +176,21 @@ public class AlloyCodeGenerator {
     }
 
 
-    private void ExtendNumericData() {  // adds split values to the numeric range
+    private void ExtendNumericData() throws DeclareParserException {
         for (NumericData d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
                     d.addValue(getNumberFromComparison((BinaryExpression) i));
     }
 
-    private String getNumberFromComparison(BinaryExpression ex) {
+    private String getNumberFromComparison(BinaryExpression ex) throws DeclareParserException {
         if (ex.getLeft().getNode().getType() == Token.Type.Number)
             return ex.getLeft().getNode().getValue();
 
         if (ex.getRight().getNode().getType() == Token.Type.Number)
             return ex.getRight().getNode().getValue();
 
-        throw new InvalidStateException("No number in comparison operator");
+        throw new DeclareParserException("No number in comparison operator: " + ex.toString());
     }
 
     private void GenerateData(List<EnumeratedData> data) {
@@ -329,7 +327,119 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private String GetBase() throws FileNotFoundException {
-        return IOHelper.readAllText("./data/base.als");
+    private String GetBase() {
+        return "abstract sig Task {}\n" +
+                "abstract sig Payload {}\n" +
+                "\n" +
+                "abstract sig TaskEvent{\t// One event in trace\n" +
+                "\ttask: one Task,\t\t// Name of task\n" +
+                "\tdata: set Payload,\n" +
+                "\ttokens: set Token\t// Used only for 'same' or 'different' constraints on numeric data\n" +
+                "}\n" +
+                "\n" +
+                "one sig DummyPayload extends Payload {}\n" +
+                "fact { no te:TaskEvent | DummyPayload in te.data }\n" +
+                "\n" +
+                "abstract sig Token {}\n" +
+                "abstract sig SameToken extends Token {}\n" +
+                "abstract sig DiffToken extends Token {}\n" +
+                "lone sig DummySToken extends SameToken{}\n" +
+                "lone sig DummyDToken extends DiffToken{}\n" +
+                "fact { \n" +
+                "\tno DummySToken\n" +
+                "\tno DummyDToken\n" +
+                "\tall te:TaskEvent| no (te.tokens & SameToken) or no (te.tokens & DiffToken)\n" +
+                "}\n" +
+                "\n" +
+                "pred True[]{some TE0}\n" +
+                "\n" +
+                "// declare templates\n" +
+                "\n" +
+                "pred Init(taskA: Task) { \n" +
+                "\ttaskA = TE0.task\n" +
+                "}\n" +
+                "\n" +
+                "pred Existence(taskA: Task) { \n" +
+                "\tsome te: TaskEvent | te.task = taskA\n" +
+                "}\n" +
+                "\n" +
+                "pred Existence(taskA: Task, n: Int) {\n" +
+                "\t#{ te: TaskEvent | taskA in te.task } >= n\n" +
+                "}\n" +
+                "\n" +
+                "pred Absence(taskA: Task) { \n" +
+                "\tno te: TaskEvent | te.task = taskA\n" +
+                "}\n" +
+                "\n" +
+                "pred Absence(taskA: Task, n: Int) {\n" +
+                "\t#{ te: TaskEvent | taskA in te.task } <= n\n" +
+                "}\n" +
+                "\n" +
+                "pred Exactly(taskA: Task, n: Int) {\n" +
+                "\t#{ te: TaskEvent | taskA in te.task } = n\n" +
+                "}\n" +
+                "\n" +
+                "pred Choice(taskA, taskB: Task) { \n" +
+                "\tsome te: TaskEvent | te.task = taskA or te.task = taskB\n" +
+                "}\n" +
+                "\n" +
+                "pred ExclusiveChoice(taskA, taskB: Task) { \n" +
+                "\tsome te: TaskEvent | te.task = taskA or te.task = taskB\n" +
+                "\t(no te: TaskEvent | taskA = te.task) or (no te: TaskEvent | taskB = te.task )\n" +
+                "}\n" +
+                "\n" +
+                "pred RespondedExistence(taskA, taskB: Task) {\n" +
+                "\t(some te: TaskEvent | taskA = te.task) implies (some ote: TaskEvent | taskB = ote.task)\n" +
+                "}\n" +
+                "\n" +
+                "pred Response(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte])\n" +
+                "}\n" +
+                "\n" +
+                "pred AlternateResponse(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte] and (no ite: TaskEvent | taskA = ite.task and After[te, ite] and After[ite, fte]))\n" +
+                "}\n" +
+                "\n" +
+                "pred ChainResponse(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[te, fte])\n" +
+                "}\n" +
+                "\n" +
+                "pred Precedence(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te])\n" +
+                "}\n" +
+                "\n" +
+                "pred AlternatePrecedence(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te] and (no ite: TaskEvent | taskA = ite.task and After[fte, ite] and After[ite, te]))\n" +
+                "}\n" +
+                "\n" +
+                "pred ChainPrecedence(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[fte, te])\n" +
+                "}\n" +
+                "\n" +
+                "pred NotRespondedExistence(taskA, taskB: Task) {\n" +
+                "\t(some te: TaskEvent | taskA = te.task) implies (no te: TaskEvent | taskB = te.task)\n" +
+                "}\n" +
+                "\n" +
+                "pred NotResponse(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[te, fte])\n" +
+                "}\n" +
+                "\n" +
+                "pred NotPrecedence(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[fte, te])\n" +
+                "}\n" +
+                "\n" +
+                "pred NotChainResponse(taskA, taskB: Task) { \n" +
+                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[te, fte])\n" +
+                "}\n" +
+                "\n" +
+                "pred NotChainPrecedence(taskA, taskB: Task) {\n" +
+                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[fte, te])\n" +
+                "}\n" +
+                "//-\n" +
+                "\n" +
+                "pred example { }\n" +
+                "run example\n" +
+                "\n";
+        //return IOHelper.readAllText("./data/base.als");
     }
 }

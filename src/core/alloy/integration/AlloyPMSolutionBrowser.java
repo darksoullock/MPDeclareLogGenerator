@@ -1,6 +1,7 @@
 package core.alloy.integration;
 
 
+import core.Exceptions.BadSolutionException;
 import core.Global;
 import core.models.declare.data.NumericToken;
 import core.models.serialization.Payload;
@@ -14,7 +15,6 @@ import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Tuple;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4TupleSet;
 import edu.mit.csail.sdg.alloy4whole.Helper;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -47,7 +47,7 @@ public class AlloyPMSolutionBrowser {
         return atomToSig.get(atom);
     }
 
-    public List<TaskEventAdapter> orderPEvents() throws Err, IOException {
+    public List<TaskEventAdapter> orderPEvents() throws Err, IOException, BadSolutionException {
         List<TaskEventAdapter> orderedPEvents = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
@@ -62,7 +62,7 @@ public class AlloyPMSolutionBrowser {
         return orderedPEvents;
     }
 
-    private List<Payload> retrievePayload(int pos) throws Err, IOException {
+    private List<Payload> retrievePayload(int pos) throws Err, IOException, BadSolutionException {
         Expr payloadExpr = exprFromString("TE" + pos + ".data");
         ArrayList<Payload> result = new ArrayList<>();
         for (A4Tuple t : ((A4TupleSet) solution.eval(payloadExpr))) {
@@ -72,7 +72,7 @@ public class AlloyPMSolutionBrowser {
         }
 
         if (result.stream().map(i -> i.getName()).distinct().count() != result.size())
-            throw new InvalidStateException("Two payloads with the same name present in activity. Check alloy model. \n" +
+            throw new BadSolutionException("Two payloads with the same name present in activity. Check alloy model. \n" +
                     String.join(", ", result.stream().map(i -> i.getName()).collect(Collectors.toList())));
 
         return result;
@@ -111,10 +111,10 @@ public class AlloyPMSolutionBrowser {
 
             return (Sig) parentField.get(atom2Sig(atom));
         } catch (NoSuchFieldException e) {
-            System.out.println("No 'parent' field found. It worked on alloy 4.2. Check alloy encoding for payloads");
+            Global.log.accept("No 'parent' field found. It worked on alloy 4.2. Check alloy encoding for payloads");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            System.out.println("Is 'parentField.setAccessible(true);' still there?");
+            Global.log.accept("Is 'parentField.setAccessible(true);' still there?");
             e.printStackTrace();
         }
 

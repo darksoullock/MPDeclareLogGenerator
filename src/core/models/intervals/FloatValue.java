@@ -1,6 +1,6 @@
 package core.models.intervals;
 
-import sun.plugin.dom.exception.InvalidStateException;
+import core.Exceptions.BadSolutionException;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class FloatValue extends FloatInterval {
     }
 
     @Override
-    public String getDifferent(List<String> k) {
-        throw  new InvalidStateException("Impossible to get different value for this interval");
+    public String getDifferent(List<String> k) throws BadSolutionException {
+        throw new BadSolutionException("Impossible to get different value for this interval");
     }
 
     @Override

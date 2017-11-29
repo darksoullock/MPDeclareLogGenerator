@@ -1,5 +1,7 @@
 package core;
 
+import java.util.function.Consumer;
+
 /**
  * Created by Vasiliy on 2017-11-03.
  */
@@ -17,4 +19,6 @@ public class Global {
     public static boolean singleFirstForSame = false;
     public static boolean deepNamingCheck = false;  // increase execution time by ~1s. but can show errors
     public static boolean encodeNames = true;  // set to false only if you want to debug intermediate .als
+
+    public static Consumer<String> log = System.out::println;
 }

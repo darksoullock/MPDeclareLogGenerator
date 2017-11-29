@@ -1,6 +1,6 @@
 package core.alloy.codegen.fnparser;
 
-import sun.plugin.dom.exception.InvalidStateException;
+import core.Exceptions.DeclareParserException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ public class DataExpressionParser {
     Pattern groupTokenPattern = Pattern.compile("\\(|\\)");
     Pattern compTokenPattern = Pattern.compile("<=|>=|<|>|=");
 
-    public DataExpression parse(String code) {
+    public DataExpression parse(String code) throws DeclareParserException {
         List<Token> tokens = parseTokens(code);
         DataExpression tree = buildExpressionTree(tokens);
         return tree;
     }
 
-    private DataExpression buildExpressionTree(List<Token> tokens) {
+    private DataExpression buildExpressionTree(List<Token> tokens) throws DeclareParserException {
         //priority: is/is not/in/not in, not/same/different/<>=, not, and, or
         //parsing is backwards
 
@@ -66,8 +66,8 @@ public class DataExpressionParser {
         }
 
         if (tokens.size() > 1)
-            throw new InvalidStateException("tokens: " + tokens.size() + "\n" +
-                    String.join(" ", tokens.stream().map(i -> i.getValue()).collect(Collectors.toList())));
+            throw new DeclareParserException("Error during function expression parsing.\nTokens: " + tokens.size() + "\n" +
+                    String.join(" ", tokens.stream().map(i -> i.getValue()).collect(Collectors.toList()))); // TODO: write erroneous line of code in all DeclareParseException cases
 
         for (Token i : tokens) {    //values
             if (i.getType() == Token.Type.Set
@@ -80,7 +80,7 @@ public class DataExpressionParser {
         return new ValueExpression(new Token(0, Token.Type.Task, "True[]"));   // empty expression evaluates to true
     }
 
-    private List<Token> unwrap(List<Token> tokens) {
+    private List<Token> unwrap(List<Token> tokens) throws DeclareParserException {
         if (tokens.isEmpty() || tokens.get(0).getType() != Token.Type.Group)
             return tokens;
 
@@ -98,15 +98,15 @@ public class DataExpressionParser {
             return sub;
         }
 
-        throw new InvalidStateException("parenthesis mismatch");
+        throw new DeclareParserException("parenthesis mismatch");    // TODO: write erroneous line of code
     }
 
-    private DataExpression getLeft(List<Token> tokens, int position) {
+    private DataExpression getLeft(List<Token> tokens, int position) throws DeclareParserException {
         return buildExpressionTree(tokens.subList(0, position));
     }
 
 
-    private DataExpression getRight(List<Token> tokens, int position) {
+    private DataExpression getRight(List<Token> tokens, int position) throws DeclareParserException {
         List<Token> sub = tokens.subList(position + 1, tokens.size());
         sub.forEach(i -> i.setPosition(i.getPosition() - position - 1));
         return buildExpressionTree(sub);
@@ -123,7 +123,7 @@ public class DataExpressionParser {
         return depth;
     }
 
-    private List<Token> parseTokens(String code) {
+    private List<Token> parseTokens(String code) throws DeclareParserException {
         List<Token> tokens = new ArrayList<>();
         int index = 0;
         Matcher token = tokenPattern.matcher(code);
@@ -132,12 +132,12 @@ public class DataExpressionParser {
         }
 
         if (!tokens.isEmpty() && tokens.stream().map(i -> i.getType() == Token.Type.Group ? i.getValue().equals("(") ? 1 : -1 : 0).reduce((i, j) -> i + j).get() != 0)
-            throw new InvalidStateException("Parenthesis count not match");
+            throw new DeclareParserException("Parenthesis count not match");    // TODO: write erroneous line of code
 
         return tokens;
     }
 
-    private Token createToken(int i, String value) {
+    private Token createToken(int i, String value) throws DeclareParserException {
         // Order matters!
 
         if (setTokenPattern.matcher(value).matches())
@@ -161,10 +161,10 @@ public class DataExpressionParser {
         if (compTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Comparator, value);
 
-        throw new InvalidStateException("unknown token: " + value);
+        throw new DeclareParserException("unknown token: " + value);    // TODO: write erroneous line of code
     }
 
-    public void retrieveNumericExpressions(Map<String, List<DataExpression>> map, DataExpression expr) {
+    public void retrieveNumericExpressions(Map<String, List<DataExpression>> map, DataExpression expr) throws DeclareParserException {
         if (expr.getNode().getType() == Token.Type.Comparator) {
             String var = getVariableNameFromComparison((BinaryExpression) expr);
             var = var.substring(var.indexOf('.') + 1);
@@ -182,9 +182,9 @@ public class DataExpressionParser {
         }
     }
 
-    private String getVariableNameFromComparison(BinaryExpression expr) {
+    private String getVariableNameFromComparison(BinaryExpression expr) throws DeclareParserException {
         if (expr.getLeft().getNode().getType() == expr.getRight().getNode().getType())
-            throw new InvalidStateException("Comparison of variables is not supported");
+            throw new DeclareParserException("Comparison of variables is not supported\n" + expr.toString());   // TODO: write erroneous line of code
 
         if (expr.getLeft().getNode().getType() == Token.Type.Variable)
             return expr.getLeft().getNode().getValue();
@@ -192,7 +192,7 @@ public class DataExpressionParser {
         if (expr.getRight().getNode().getType() == Token.Type.Variable)
             return expr.getRight().getNode().getValue();
 
-        throw new InvalidStateException("Comparison should include variable");
+        throw new DeclareParserException("Comparison should include variable\n" + expr.toString()); // TODO: write erroneous line of code
     }
 
 

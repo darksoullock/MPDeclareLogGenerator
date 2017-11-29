@@ -1,4 +1,6 @@
 import core.Evaluator;
+import core.Exceptions.BadSolutionException;
+import core.Exceptions.DeclareParserException;
 import core.Global;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
@@ -56,7 +58,7 @@ public class Generation {
             "bind DoSomething: Something\n";
 
     @Test
-    public void testTraceAttributes() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testTraceAttributes() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         Global.encodeNames = true;
         String declare = baseDeclare +
                 "trace one: '42'\n" +
@@ -93,7 +95,7 @@ public class Generation {
     }
 
     @Test
-    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare;
 
         XLog log = Evaluator.getLog(
@@ -121,7 +123,7 @@ public class Generation {
     }
 
     @Test
-    public void testExactlyAndChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExactlyAndChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ChainResponse[DoSomething, UseTransport]\n" +
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
@@ -154,7 +156,7 @@ public class Generation {
     }
 
     @Test
-    public void testExactlyAndNotChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExactlyAndNotChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotChainResponse[DoSomething, UseTransport]\n" +
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
@@ -190,7 +192,7 @@ public class Generation {
     }
 
     @Test
-    public void testExactlyAndChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExactlyAndChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ChainPrecedence[DoSomething, UseTransport]\n" +
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
@@ -223,7 +225,7 @@ public class Generation {
     }
 
     @Test
-    public void testExactlyAndNotChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExactlyAndNotChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotChainPrecedence[DoSomething, UseTransport]\n" +
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
@@ -266,7 +268,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistenceAndResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExistenceAndResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Response[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -302,7 +304,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistenceAndNotResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExistenceAndNotResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotResponse[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -337,7 +339,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistenceAndPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExistenceAndPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Precedence[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -372,7 +374,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistenceAndNotPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExistenceAndNotPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotPrecedence[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -407,7 +409,7 @@ public class Generation {
     }
 
     @Test
-    public void testDataBinding() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testDataBinding() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare;
 
         XLog log = Evaluator.getLog(
@@ -465,7 +467,7 @@ public class Generation {
     }
 
     @Test
-    public void testChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Choice[DoSomething, UseTransport]\n";
 
         XLog log = Evaluator.getLog(
@@ -487,7 +489,7 @@ public class Generation {
     }
 
     @Test
-    public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ExclusiveChoice[DoSomething, UseTransport]\n";
 
         XLog log = Evaluator.getLog(
@@ -509,7 +511,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Existence[DoSomething]\n";
 
         XLog log = Evaluator.getLog(
@@ -538,7 +540,7 @@ public class Generation {
     }
 
     @Test
-    public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Absence[DoSomething, 3]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -568,7 +570,7 @@ public class Generation {
     }
 
     @Test
-    public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Absence[DoSomething]\n";
 
         XLog log = Evaluator.getLog(
@@ -597,7 +599,7 @@ public class Generation {
     }
 
     @Test
-    public void testRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "RespondedExistence[DoSomething, UseTransport]\n";
 
         XLog log = Evaluator.getLog(
@@ -620,7 +622,7 @@ public class Generation {
     }
 
     @Test
-    public void testNotRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testNotRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotRespondedExistence[DoSomething, UseTransport]\n";
 
         XLog log = Evaluator.getLog(
@@ -659,7 +661,7 @@ public class Generation {
     }
 
     @Test
-    public void testAlternateResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testAlternateResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "AlternateResponse[DoSomething, UseTransport]\n" +
                 "Exactly[DoSomething, 3]\n";
 
@@ -693,7 +695,7 @@ public class Generation {
     }
 
     @Test
-    public void testAlternatePrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException {
+    public void testAlternatePrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "AlternatePrecedence[DoSomething, UseTransport]\n" +
                 "Exactly[DoSomething, 3]\n";
 

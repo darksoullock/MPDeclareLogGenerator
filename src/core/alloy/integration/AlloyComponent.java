@@ -1,6 +1,8 @@
 package core.alloy.integration;
 
 
+import core.Global;
+import core.IOHelper;
 import edu.mit.csail.sdg.alloy4.A4Reporter;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4.ErrorWarning;
@@ -23,7 +25,7 @@ public class AlloyComponent {
         this.config.solver = SatSolver.SAT4J; // use for windows
         //this.config.solver = SatSolver.MiniSatJNI; // use for linux
 
-        System.out.println("Chosen solver: " + this.config.solver);
+        Global.log.accept("Chosen solver: " + this.config.solver);
         this.config.skolemDepth = 4;
         this.config.noOverflow = true;
         this.reporter = new A4Reporter() {
@@ -38,12 +40,12 @@ public class AlloyComponent {
 
     public A4Solution executeFromFile(int maxTraceLength, int bitwidth) throws Err {
         if (world.getAllCommands().size() != 1)
-            System.out.println("Should be only one command");
+            Global.log.accept("Should be only one command");
 
         Sig scopeChange = getSignature("this/TaskEvent", world);
         Command c = this.world.getAllCommands().get(0);
         Command newCommand = changeBitwidth(bitwidth, c.change(scopeChange, false, maxTraceLength));
-        System.out.println("Bitwidth: " + newCommand.bitwidth);
+        Global.log.accept("Bitwidth: " + newCommand.bitwidth);
         return TranslateAlloyToKodkod.execute_command(this.reporter, this.world.getAllReachableSigs(), newCommand, config);
     }
 

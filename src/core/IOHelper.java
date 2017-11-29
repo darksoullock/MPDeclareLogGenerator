@@ -30,4 +30,14 @@ public class IOHelper { // TODO: review
             e.printStackTrace();
         }
     }
+
+    public static void appendAllText(String filename, String text) {
+        try(  PrintWriter out = new PrintWriter( new FileWriter(filename, true) )  ){
+            out.println( text );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

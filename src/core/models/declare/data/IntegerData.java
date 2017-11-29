@@ -1,10 +1,9 @@
 package core.models.declare.data;
 
+import core.Exceptions.DeclareParserException;
 import core.RandomHelper;
-import core.models.intervals.FloatInterval;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,10 +67,10 @@ public class IntegerData extends NumericData {
     }
 
     @Override
-    public void addValue(String value) {
+    public void addValue(String value) throws DeclareParserException {
         int val = Integer.parseInt(value);
         if (val <= min || val >= max)
-            throw new InvalidStateException(val + " is out of defined interval of " + type);
+            throw new DeclareParserException(val + " is out of defined interval of " + type);
         this.values.add(value);
     }
 

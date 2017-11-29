@@ -1,5 +1,6 @@
 package parsing;
 
+import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.DeclareParser;
 import core.models.declare.DataConstraint;
 import core.models.declare.data.EnumeratedData;
@@ -95,7 +96,7 @@ public class ParserTest {
     }
 
     @Test
-    public void testDataConstraints() {
+    public void testDataConstraints() throws DeclareParserException {
         List<String> raw = Arrays.asList("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
                 "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low");
         List<DataConstraint> dcs = parser.parseDataConstraints(raw, null);

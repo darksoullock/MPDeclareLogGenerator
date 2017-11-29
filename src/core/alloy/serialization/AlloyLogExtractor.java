@@ -1,5 +1,6 @@
 package core.alloy.serialization;
 
+import core.Exceptions.BadSolutionException;
 import core.Global;
 import core.StatisticsHelper;
 import core.TimestampComposer;
@@ -16,7 +17,6 @@ import org.deckfour.xes.extension.XExtensionParser;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.*;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,8 +38,8 @@ public class AlloyLogExtractor {
         this.nameEncoding = nameEncoding;
     }
 
-    public XLog extract(A4Solution alloySolution, int nTraces, int l) throws IOException, Err {
-        System.out.println("Serialization..");
+    public XLog extract(A4Solution alloySolution, int nTraces, int l) throws IOException, Err, BadSolutionException {
+        Global.log.accept("Serialization..");
 
         XLog plog = this.initLog();
         int t;
@@ -77,14 +77,14 @@ public class AlloyLogExtractor {
             log.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Artificial Log"));
             log.getAttributes().put("lifecycle:model", new XAttributeLiteralImpl("lifecycle:model", "standard"));
         } catch (Exception ex) {
-            System.out.println("O-o-ops. Something happened, no log extensions will be written. Log itself is untouched");
+            Global.log.accept("O-o-ops. Something happened, no log extensions will be written. Log itself is untouched");
             ex.printStackTrace();
         }
 
         return log;
     }
 
-    private XTrace composeTrace(AlloyPMSolutionBrowser browser, int number) throws Err, IOException {
+    private XTrace composeTrace(AlloyPMSolutionBrowser browser, int number) throws Err, IOException, BadSolutionException {
         List<TaskEventAdapter> orderedStateEvents = browser.orderPEvents();
         XTraceImpl oneTrace = new XTraceImpl(new XAttributeMapImpl());
         oneTrace.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + ++number));
@@ -154,7 +154,7 @@ public class AlloyLogExtractor {
         }
     }
 
-    private void handlePayload(List<Payload> payloads, XAttributeMapImpl attributes) {
+    private void handlePayload(List<Payload> payloads, XAttributeMapImpl attributes) throws BadSolutionException {
         for (Payload p : payloads) {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
@@ -166,7 +166,7 @@ public class AlloyLogExtractor {
                         dataValue = numericMap.get(dataValue).getSame(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
                     else if (p.getTokens().stream().allMatch(i -> i.getType() == NumericToken.Type.Different))
                         dataValue = numericMap.get(dataValue).getDifferent(p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList()));
-                    else throw new InvalidStateException("Different token types within one variables (" +
+                    else throw new BadSolutionException("Different token types within one variables (" +
                                 String.join(", ", p.getTokens().stream().map(NumericToken::getValue).collect(Collectors.toList())) + ");");
                 }
             } else if (Global.encodeNames) {

@@ -1,6 +1,6 @@
 package core.models.intervals;
 
-import sun.plugin.dom.exception.InvalidStateException;
+import core.Exceptions.BadSolutionException;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class IntegerValue extends IntegerInterval {
     }
 
     @Override
-    public String getDifferent(List<String> key) {
-        throw new InvalidStateException("Impossible to get different value from " + get());
+    public String getDifferent(List<String> key) throws BadSolutionException {
+        throw new BadSolutionException("Impossible to get different value from " + get());
     }
 
     @Override
