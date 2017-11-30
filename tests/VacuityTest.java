@@ -20,7 +20,7 @@ public class VacuityTest {
 
     @Test
     public void testExclusiveChoise() throws FileNotFoundException, DeclareParserException {
-        gen.Run("ExclusiveChoise[A,B]\n");
+        gen.Run("ExclusiveChoice[A,B]\n");
         String result = gen.getAlloyCode();
         Assert.assertFalse(result.contains("Existence[A]"));
     }
@@ -139,7 +139,7 @@ public class VacuityTest {
 
     @Test
     public void testExclusiveChoiseWithData() throws FileNotFoundException, DeclareParserException {
-        gen.Run("ExclusiveChoise[A,B]||\n");
+        gen.Run("ExclusiveChoice[A,B]||\n");
         String result = gen.getAlloyCode();
         Assert.assertFalse(result.contains("fact { some te: TaskEvent | te.task = A and "));
     }

@@ -3,6 +3,7 @@ package parsing;
 import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.DeclareParser;
 import core.models.declare.DataConstraint;
+import core.models.declare.Statement;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
 import core.models.declare.data.IntegerData;
@@ -14,11 +15,12 @@ import core.models.serialization.trace.IntTraceAttribute;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Vasiliy on 2017-10-25.
@@ -97,8 +99,9 @@ public class ParserTest {
 
     @Test
     public void testDataConstraints() throws DeclareParserException {
-        List<String> raw = Arrays.asList("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
-                "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low");
+        List<Statement> raw = Stream.of("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
+                "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low")
+                .map(i -> new Statement(i, 0)).collect(Collectors.toList());
         List<DataConstraint> dcs = parser.parseDataConstraints(raw, null);
         Assert.assertEquals(dcs.size(), 2);
         DataConstraint first = dcs.get(0);

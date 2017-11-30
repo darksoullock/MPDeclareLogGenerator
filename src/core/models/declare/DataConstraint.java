@@ -10,8 +10,8 @@ import java.util.List;
 public class DataConstraint extends Constraint {
     List<DataFunction> functions;
 
-    public DataConstraint(String name, List<String> args, List<DataFunction> functions) {
-        super(name, args);
+    public DataConstraint(String name, List<String> args, List<DataFunction> functions, Statement statement) {
+        super(name, args, statement);
         this.functions = functions;
     }
 

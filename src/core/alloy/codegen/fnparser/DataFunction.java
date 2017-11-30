@@ -1,5 +1,7 @@
 package core.alloy.codegen.fnparser;
 
+import core.models.declare.Statement;
+
 import java.util.List;
 
 /**

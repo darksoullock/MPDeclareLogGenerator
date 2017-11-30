@@ -8,6 +8,7 @@ import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
 import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
+import core.models.declare.Statement;
 import core.models.declare.Task;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
@@ -34,8 +35,8 @@ public class AlloyCodeGenerator {
     List<String> traceAttributesCode;
     List<String> dataCode;
     List<String> dataBindingsCode;
-    List<String> constraintsCode;
-    List<String> dataConstraintsCode;
+    List<Statement> constraintsCode;
+    List<Statement> dataConstraintsCode;
 
     Map<String, NumericData> numericData;
     Map<String, List<DataExpression>> numericExpressions;
@@ -116,23 +117,32 @@ public class AlloyCodeGenerator {
 
     private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws DeclareParserException {
         for (DataConstraint i : dataConstraints) {
-            alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
+            try {
+                alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
+            } catch (DeclareParserException ex) {
+                throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
+            }
         }
     }
 
     private List<Constraint> parseConstraints() {
         List<Constraint> constraints = new ArrayList<>();
-        for (String c : constraintsCode) {
-            String[] p = c.split("\\s*[\\[\\],]\\s*");
-            constraints.add(new Constraint(p[0], Arrays.stream(p).skip(1).collect(Collectors.toList())));
+        for (Statement s : constraintsCode) {
+            String[] p = s.getCode().split("\\s*[\\[\\],]\\s*");
+            constraints.add(new Constraint(p[0], Arrays.stream(p).skip(1).collect(Collectors.toList()), s));
         }
 
         return constraints;
     }
 
-    private void generateConstraints(List<Constraint> constraints) {
+    private void generateConstraints(List<Constraint> constraints) throws DeclareParserException {
+        Set<String> supported = Global.getSupportedConstraints();
+
         alloy.append("fact {\n");
         for (Constraint i : constraints) {
+            if (!supported.contains(i.getName()))
+                throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
+                        "' is not supported. Supported constraints are: " + String.join(", ", supported));
             alloy.append(i.getName()).append('[').append(i.taskA());
             if (i.isBinary())
                 alloy.append(',').append(i.taskB());
@@ -141,6 +151,8 @@ public class AlloyCodeGenerator {
 
         alloy.append("}\n");
     }
+
+
 
     private void generateVacuity(List<Constraint> constraints) {
         alloy.append("fact {\n");
@@ -228,7 +240,10 @@ public class AlloyCodeGenerator {
     }
 
     private void SortInput(String[] st) {
+        int line = 0;
         for (String i : st) {
+            ++line;
+
             if (i.isEmpty() || i.startsWith("/"))
                 continue;
 
@@ -245,10 +260,10 @@ public class AlloyCodeGenerator {
                 dataBindingsCode.add(i);
 
             if (parser.isConstraint(i))
-                constraintsCode.add(i);
+                constraintsCode.add(new Statement(i, line));
 
             if (parser.isDataConstraint(i))
-                dataConstraintsCode.add(i);
+                dataConstraintsCode.add(new Statement(i, line));
         }
     }
 

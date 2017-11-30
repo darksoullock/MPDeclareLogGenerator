@@ -1,10 +1,12 @@
 package core.alloy.codegen;
 
 import core.Exceptions.DeclareParserException;
+import core.Global;
 import core.models.declare.DataConstraint;
 import core.models.declare.data.NumericData;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Vasiliy on 2017-10-23.
@@ -15,6 +17,7 @@ public class DataConstraintGenerator {
     Map<String, NumericData> map;
     StringBuilder alloy;
     FunctionGenerator fnGen;
+    Set<String> supported = Global.getSupportedConstraints();
 
     public DataConstraintGenerator(int maxSameInstances, int bitwidth, boolean vacuity) {
         this.vacuity = vacuity;
@@ -24,6 +27,10 @@ public class DataConstraintGenerator {
     public String Generate(DataConstraint c, String name, Map<String, NumericData> map) throws DeclareParserException {
         this.map = map;
         this.alloy = new StringBuilder();
+
+        if (!supported.contains(c.getName()))
+            throw new DeclareParserException("Constraint '" + c.getName() + "' is not supported. Supported constraints are: " +
+                    String.join(", ", supported));
 
         if (c.getName().equals("Init"))
             addInitDataConstraint(c, name);

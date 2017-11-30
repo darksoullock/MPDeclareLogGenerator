@@ -2,12 +2,12 @@ package core.alloy.codegen;
 
 import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.IOHelper;
 import core.RandomHelper;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.DataFunction;
 import core.models.declare.DataConstraint;
+import core.models.declare.Statement;
 import core.models.declare.Task;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
@@ -97,10 +97,10 @@ public class DeclareParser {
         return data;
     }
 
-    public List<DataConstraint> parseDataConstraints(List<String> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
+    public List<DataConstraint> parseDataConstraints(List<Statement> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
         List<DataConstraint> dataConstraints = new ArrayList<>();
-        for (String line : dataConstraintsCode) {
-            String[] lr = line.split("\\|",-1);
+        for (Statement st : dataConstraintsCode) {
+            String[] lr = st.getCode().split("\\|", -1);
             String activity = lr[0].substring(0, lr[0].indexOf('['));
             List<String[]> args = Arrays.stream(getActivityArgsFromConstraintText(lr[0]).split(",\\s*"))
                     .map(i -> i.split("\\s+"))
@@ -113,7 +113,7 @@ public class DeclareParser {
                 fns.add(fn);
             }
 
-            DataConstraint c = new DataConstraint(activity, args.stream().map(i -> i[0]).collect(Collectors.toList()), fns);
+            DataConstraint c = new DataConstraint(activity, args.stream().map(i -> i[0]).collect(Collectors.toList()), fns, st);
             dataConstraints.add(c);
         }
 

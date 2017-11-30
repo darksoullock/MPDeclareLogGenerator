@@ -8,10 +8,12 @@ import java.util.List;
 public class Constraint {
     String name;
     List<String> args;
+    Statement statement;
 
-    public Constraint(String name, List<String> args) {
+    public Constraint(String name, List<String> args, Statement statement) {
         this.name = name;
         this.args = args;
+        this.statement = statement;
     }
 
     public String getName() {
@@ -28,6 +30,10 @@ public class Constraint {
 
     public String taskB() {
         return args.get(1);
+    }
+
+    public Statement getStatement() {
+        return statement;
     }
 
     public boolean isBinary() {

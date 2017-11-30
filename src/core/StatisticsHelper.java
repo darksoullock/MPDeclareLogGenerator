@@ -11,9 +11,6 @@ import java.util.Map;
 public class StatisticsHelper {
     static Map<Integer, Integer> lengthsMap = new HashMap<>();
     static List<Integer> lengths = new ArrayList<>();
-    static Map<String, Integer> times = new HashMap<>();
-    static int scnt = 0;
-    static int st = 0;
     public static int trace;
 
     public static void add(int a) {
@@ -27,9 +24,5 @@ public class StatisticsHelper {
         for (Integer i : lengthsMap.keySet()) {
             System.out.println(i + ": " + lengthsMap.get(i));
         }
-    }
-
-    public static void executionTime(Runnable o) {
-        o.run();
     }
 }
