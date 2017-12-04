@@ -71,13 +71,13 @@ public class DataExpressionParser {
 
         for (Token i : tokens) {    //values
             if (i.getType() == Token.Type.Set
-                    || i.getType() == Token.Type.Task
+                    || i.getType() == Token.Type.Activity
                     || i.getType() == Token.Type.Number
                     || i.getType() == Token.Type.Variable)
                 return new ValueExpression(i);
         }
 
-        return new ValueExpression(new Token(0, Token.Type.Task, "True[]"));   // empty expression evaluates to true
+        return new ValueExpression(new Token(0, Token.Type.Activity, "True[]"));   // empty expression evaluates to true
     }
 
     private List<Token> unwrap(List<Token> tokens) throws DeclareParserException {
@@ -153,7 +153,7 @@ public class DataExpressionParser {
             return new Token(i, Token.Type.Number, value);
 
         if (taskTokenPattern.matcher(value).matches())
-            return new Token(i, Token.Type.Task, value);
+            return new Token(i, Token.Type.Activity, value);
 
         if (groupTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Group, value);

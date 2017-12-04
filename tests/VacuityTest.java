@@ -141,111 +141,111 @@ public class VacuityTest {
     public void testExclusiveChoiseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("ExclusiveChoice[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertFalse(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertFalse(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testAbsenceNWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("Absence[A,3]|\n");
         String result = gen.getAlloyCode();
-        Assert.assertFalse(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertFalse(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testExistenceNWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("Existence[A,3]|\n");
         String result = gen.getAlloyCode();
-        Assert.assertFalse(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertFalse(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testExactlyNWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("Exactly[A,3]|\n");
         String result = gen.getAlloyCode();
-        Assert.assertFalse(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertFalse(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testRespondedExistenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("RespondedExistence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testResponseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("Response[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testAlternateResponseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("AlternateResponse[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testChainResponseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("ChainResponse[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testPrecedenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("Precedence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testAlternatePrecedenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("AlternatePrecedence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testChainPrecedenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("ChainPrecedence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testNotRespondedExistenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("NotRespondedExistence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testNotResponseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("NotResponse[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testNotPrecedenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("NotPrecedence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testNotChainResponseWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("NotChainResponse[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 
     @Test
     public void testNotChainPrecedenceWithData() throws FileNotFoundException, DeclareParserException {
         gen.Run("NotChainPrecedence[A,B]||\n");
         String result = gen.getAlloyCode();
-        Assert.assertTrue(result.contains("fact { some te: TaskEvent | te.task = A and "));
+        Assert.assertTrue(result.contains("fact { some te: Event | te.task = A and "));
     }
 }

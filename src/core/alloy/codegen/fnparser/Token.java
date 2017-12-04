@@ -4,7 +4,7 @@ package core.alloy.codegen.fnparser;
  * Created by Vasiliy on 2017-10-19.
  */
 public class Token {
-    public enum Type {Task, Variable, Operator, Set, Number, Comparator, Group, R }
+    public enum Type {Activity, Variable, Operator, Set, Number, Comparator, Group, R }
     int position;
     Type type;
     String value;

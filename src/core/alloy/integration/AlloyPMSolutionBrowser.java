@@ -5,7 +5,7 @@ import core.Exceptions.BadSolutionException;
 import core.Global;
 import core.models.declare.data.NumericToken;
 import core.models.serialization.Payload;
-import core.models.serialization.TaskEventAdapter;
+import core.models.serialization.EventAdapter;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
@@ -47,8 +47,8 @@ public class AlloyPMSolutionBrowser {
         return atomToSig.get(atom);
     }
 
-    public List<TaskEventAdapter> orderPEvents() throws Err, IOException, BadSolutionException {
-        List<TaskEventAdapter> orderedPEvents = new ArrayList<>();
+    public List<EventAdapter> orderPEvents() throws Err, IOException, BadSolutionException {
+        List<EventAdapter> orderedPEvents = new ArrayList<>();
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
             String name = retrieveAtomLabel(taskExpr);
@@ -56,7 +56,7 @@ public class AlloyPMSolutionBrowser {
                 break;
 
             List<Payload> payload = retrievePayload(i);
-            orderedPEvents.add(new TaskEventAdapter(i, name, payload));
+            orderedPEvents.add(new EventAdapter(i, name, payload));
         }
 
         return orderedPEvents;

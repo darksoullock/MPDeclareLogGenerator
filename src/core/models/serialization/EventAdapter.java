@@ -3,12 +3,12 @@ package core.models.serialization;
 
 import java.util.List;
 
-public class TaskEventAdapter {
+public class EventAdapter {
     private int position;
     private String taskName;
     private List<Payload> payload;
 
-    public TaskEventAdapter(int position, String taskName, List<Payload> payload) {
+    public EventAdapter(int position, String taskName, List<Payload> payload) {
         this.position = position;
         this.taskName = taskName;
         this.payload = payload;
@@ -18,7 +18,7 @@ public class TaskEventAdapter {
         return position;
     }
 
-    public String getTaskName() {
+    public String getActivityName() {
         return this.taskName;
     }
 

@@ -6,10 +6,10 @@ import core.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import core.models.declare.Activity;
 import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
 import core.models.declare.Statement;
-import core.models.declare.Task;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
@@ -58,13 +58,12 @@ public class AlloyCodeGenerator {
         Init();
         if (Global.encodeNames)
             declare = parser.encodeNames(declare);
-        GenerateTaskEvents(maxTraceLength);
+        GenerateEvents(maxTraceLength);
         GenerateNextPredicate(maxTraceLength);
         GenerateAfterPredicate(maxTraceLength);
-        GenerateVariableLengthConstraint(minTraceLength, maxTraceLength);
         SortInput(parser.splitStatements(declare));
-        List<Task> tasks = parser.parseTasks(tasksCode);
-        generateTasks(tasks);
+        List<Activity> tasks = parser.parseActivitys(tasksCode);
+        generateActivities(tasks);
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
         List<Constraint> constraints = parseConstraints();
@@ -153,7 +152,6 @@ public class AlloyCodeGenerator {
     }
 
 
-
     private void generateVacuity(List<Constraint> constraints) {
         alloy.append("fact {\n");
         for (String i : constraints.stream().filter(i -> i.supportsVacuity()).map(i -> i.taskA()).distinct().collect(Collectors.toList()))
@@ -168,7 +166,7 @@ public class AlloyCodeGenerator {
 
     private void ParseAndGenerateDataBindings() {
         Map<String, List<String>> taskToData = new HashMap<>();
-        Map<String, List<String>> dataToTask = new HashMap<>();
+        Map<String, List<String>> dataToActivity = new HashMap<>();
 
         for (String line : dataBindingsCode) {
             line = line.substring(5);
@@ -178,13 +176,13 @@ public class AlloyCodeGenerator {
                 taskToData.put(task, new ArrayList<>());
             for (String i : data.stream().skip(1).collect(Collectors.toList())) {
                 taskToData.get(task).add(i);
-                if (!dataToTask.containsKey(i))
-                    dataToTask.put(i, new ArrayList<>());
-                dataToTask.get(i).add(task);
+                if (!dataToActivity.containsKey(i))
+                    dataToActivity.put(i, new ArrayList<>());
+                dataToActivity.get(i).add(task);
             }
         }
 
-        WriteDataBinding(taskToData, dataToTask);
+        WriteDataBinding(taskToData, dataToActivity);
     }
 
 
@@ -212,7 +210,7 @@ public class AlloyCodeGenerator {
                 continue;
             }
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
-            alloy.append("fact { all te: TaskEvent | (lone ").append(item.getType()).append(" & te.data)}\n");
+            alloy.append("fact { all te: Event | (lone ").append(item.getType()).append(" & te.data)}\n");
             for (String value : item.getValues()) {
                 alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}\n");
             }
@@ -221,7 +219,7 @@ public class AlloyCodeGenerator {
 
     private void GenerateNumericDataItem(NumericData item) {
         alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
-        alloy.append("fact { all te: TaskEvent | (lone ").append(item.getType()).append(" & te.data) }\n");
+        alloy.append("fact { all te: Event | (lone ").append(item.getType()).append(" & te.data) }\n");
         alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
         alloy.append("fun Amount(pl: ").append(item.getType()).append("): one Int {{pl.amount}}\n");
         int limit = (int) Math.pow(2, bitwidth - 1);
@@ -234,9 +232,9 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void generateTasks(List<Task> tasks) {
-        for (Task i : tasks)
-            alloy.append("one sig ").append(i.getName()).append(" extends Task {}\n");
+    private void generateActivities(List<Activity> tasks) {
+        for (Activity i : tasks)
+            alloy.append("one sig ").append(i.getName()).append(" extends Activity {}\n");
     }
 
     private void SortInput(String[] st) {
@@ -247,7 +245,7 @@ public class AlloyCodeGenerator {
             if (i.isEmpty() || i.startsWith("/"))
                 continue;
 
-            if (parser.isTask(i))
+            if (parser.isActivity(i))
                 tasksCode.add(i);
 
             if (parser.isTraceAttribute(i))
@@ -267,19 +265,18 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void GenerateTaskEvents(int length) {
+    private void GenerateEvents(int length) {
         for (int i = 0; i < length; i++) {
             if (i < minTraceLength)
-                alloy.append("one sig TE");
+                alloy.append("one sig TE").append(i).append(" extends Event {}\n");
             else
-                alloy.append("lone sig TE");
-            alloy.append(i).append(" extends TaskEvent {}\n");
+                alloy.append("lone sig TE").append(i).append(" extends Event {}{ one TE").append(i - 1).append("}\n");
         }
     }
 
 
     private void GenerateNextPredicate(int length) {
-        alloy.append("pred Next(pre, next: TaskEvent){");
+        alloy.append("pred Next(pre, next: Event){");
         alloy.append("pre=TE0 and next=TE1");
         for (int i = 2; i < length; i++) {
             alloy.append(" or pre=TE").append(i - 1).append(" and next=TE").append(i);
@@ -289,7 +286,7 @@ public class AlloyCodeGenerator {
     }
 
     private void GenerateAfterPredicate(int length) {
-        alloy.append("pred After(b, a: TaskEvent){// b=before, a=after\n");
+        alloy.append("pred After(b, a: Event){// b=before, a=after\n");
         int middle = length / 2;
         alloy.append("b=TE0 or a=TE").append(length - 1);
         for (int i = 1; i < length - 2; ++i) {
@@ -312,19 +309,9 @@ public class AlloyCodeGenerator {
         alloy.append("}\n");
     }
 
-    private void GenerateVariableLengthConstraint(int minTraceLength, int maxTraceLength) {
-        alloy.append("fact{\n");
-        for (int i = minTraceLength; i < maxTraceLength - 1; ++i) {
-            alloy.append("one TE").append(i + 1).append(" implies one TE").append(i).append('\n');
-        }
-
-        alloy.append("}\n");
-    }
-
-
-    private void WriteDataBinding(Map<String, List<String>> taskToData, Map<String, List<String>> dataToTask) {
+    private void WriteDataBinding(Map<String, List<String>> taskToData, Map<String, List<String>> dataToActivity) {
         for (String task : taskToData.keySet()) {
-            alloy.append("fact { all te: TaskEvent | te.task = ")
+            alloy.append("fact { all te: Event | te.task = ")
                     .append(task)
                     .append(" implies (one ")
                     .append(String.join(" & te.data and one ", taskToData.get(task)))
@@ -332,28 +319,28 @@ public class AlloyCodeGenerator {
                     .append(")}\n");
         }
 
-        for (String payload : dataToTask.keySet()) {
-            alloy.append("fact { all te: TaskEvent | lone(").append(payload).append(" & te.data) }\n");
-            alloy.append("fact { all te: TaskEvent | one (")
+        for (String payload : dataToActivity.keySet()) {
+            alloy.append("fact { all te: Event | lone(").append(payload).append(" & te.data) }\n");
+            alloy.append("fact { all te: Event | one (")
                     .append(payload)
                     .append(" & te.data) implies te.task in (")
-                    .append(String.join(" + ", dataToTask.get(payload)))
+                    .append(String.join(" + ", dataToActivity.get(payload)))
                     .append(") }\n");
         }
     }
 
     private String GetBase() {
-        return "abstract sig Task {}\n" +
+        return "abstract sig Activity {}\n" +
                 "abstract sig Payload {}\n" +
                 "\n" +
-                "abstract sig TaskEvent{\t// One event in trace\n" +
-                "\ttask: one Task,\t\t// Name of task\n" +
+                "abstract sig Event{\t// One event in trace\n" +
+                "\ttask: one Activity,\t\t// Name of task\n" +
                 "\tdata: set Payload,\n" +
                 "\ttokens: set Token\t// Used only for 'same' or 'different' constraints on numeric data\n" +
                 "}\n" +
                 "\n" +
                 "one sig DummyPayload extends Payload {}\n" +
-                "fact { no te:TaskEvent | DummyPayload in te.data }\n" +
+                "fact { no te:Event | DummyPayload in te.data }\n" +
                 "\n" +
                 "abstract sig Token {}\n" +
                 "abstract sig SameToken extends Token {}\n" +
@@ -363,92 +350,92 @@ public class AlloyCodeGenerator {
                 "fact { \n" +
                 "\tno DummySToken\n" +
                 "\tno DummyDToken\n" +
-                "\tall te:TaskEvent| no (te.tokens & SameToken) or no (te.tokens & DiffToken)\n" +
+                "\tall te:Event| no (te.tokens & SameToken) or no (te.tokens & DiffToken)\n" +
                 "}\n" +
                 "\n" +
                 "pred True[]{some TE0}\n" +
                 "\n" +
                 "// declare templates\n" +
                 "\n" +
-                "pred Init(taskA: Task) { \n" +
+                "pred Init(taskA: Activity) { \n" +
                 "\ttaskA = TE0.task\n" +
                 "}\n" +
                 "\n" +
-                "pred Existence(taskA: Task) { \n" +
-                "\tsome te: TaskEvent | te.task = taskA\n" +
+                "pred Existence(taskA: Activity) { \n" +
+                "\tsome te: Event | te.task = taskA\n" +
                 "}\n" +
                 "\n" +
-                "pred Existence(taskA: Task, n: Int) {\n" +
-                "\t#{ te: TaskEvent | taskA in te.task } >= n\n" +
+                "pred Existence(taskA: Activity, n: Int) {\n" +
+                "\t#{ te: Event | taskA in te.task } >= n\n" +
                 "}\n" +
                 "\n" +
-                "pred Absence(taskA: Task) { \n" +
-                "\tno te: TaskEvent | te.task = taskA\n" +
+                "pred Absence(taskA: Activity) { \n" +
+                "\tno te: Event | te.task = taskA\n" +
                 "}\n" +
                 "\n" +
-                "pred Absence(taskA: Task, n: Int) {\n" +
-                "\t#{ te: TaskEvent | taskA in te.task } <= n\n" +
+                "pred Absence(taskA: Activity, n: Int) {\n" +
+                "\t#{ te: Event | taskA in te.task } <= n\n" +
                 "}\n" +
                 "\n" +
-                "pred Exactly(taskA: Task, n: Int) {\n" +
-                "\t#{ te: TaskEvent | taskA in te.task } = n\n" +
+                "pred Exactly(taskA: Activity, n: Int) {\n" +
+                "\t#{ te: Event | taskA in te.task } = n\n" +
                 "}\n" +
                 "\n" +
-                "pred Choice(taskA, taskB: Task) { \n" +
-                "\tsome te: TaskEvent | te.task = taskA or te.task = taskB\n" +
+                "pred Choice(taskA, taskB: Activity) { \n" +
+                "\tsome te: Event | te.task = taskA or te.task = taskB\n" +
                 "}\n" +
                 "\n" +
-                "pred ExclusiveChoice(taskA, taskB: Task) { \n" +
-                "\tsome te: TaskEvent | te.task = taskA or te.task = taskB\n" +
-                "\t(no te: TaskEvent | taskA = te.task) or (no te: TaskEvent | taskB = te.task )\n" +
+                "pred ExclusiveChoice(taskA, taskB: Activity) { \n" +
+                "\tsome te: Event | te.task = taskA or te.task = taskB\n" +
+                "\t(no te: Event | taskA = te.task) or (no te: Event | taskB = te.task )\n" +
                 "}\n" +
                 "\n" +
-                "pred RespondedExistence(taskA, taskB: Task) {\n" +
-                "\t(some te: TaskEvent | taskA = te.task) implies (some ote: TaskEvent | taskB = ote.task)\n" +
+                "pred RespondedExistence(taskA, taskB: Activity) {\n" +
+                "\t(some te: Event | taskA = te.task) implies (some ote: Event | taskB = ote.task)\n" +
                 "}\n" +
                 "\n" +
-                "pred Response(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte])\n" +
+                "pred Response(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[te, fte])\n" +
                 "}\n" +
                 "\n" +
-                "pred AlternateResponse(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte] and (no ite: TaskEvent | taskA = ite.task and After[te, ite] and After[ite, fte]))\n" +
+                "pred AlternateResponse(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[te, fte] and (no ite: Event | taskA = ite.task and After[te, ite] and After[ite, fte]))\n" +
                 "}\n" +
                 "\n" +
-                "pred ChainResponse(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[te, fte])\n" +
+                "pred ChainResponse(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and Next[te, fte])\n" +
                 "}\n" +
                 "\n" +
-                "pred Precedence(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te])\n" +
+                "pred Precedence(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[fte, te])\n" +
                 "}\n" +
                 "\n" +
-                "pred AlternatePrecedence(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te] and (no ite: TaskEvent | taskA = ite.task and After[fte, ite] and After[ite, te]))\n" +
+                "pred AlternatePrecedence(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[fte, te] and (no ite: Event | taskA = ite.task and After[fte, ite] and After[ite, te]))\n" +
                 "}\n" +
                 "\n" +
-                "pred ChainPrecedence(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[fte, te])\n" +
+                "pred ChainPrecedence(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and Next[fte, te])\n" +
                 "}\n" +
                 "\n" +
-                "pred NotRespondedExistence(taskA, taskB: Task) {\n" +
-                "\t(some te: TaskEvent | taskA = te.task) implies (no te: TaskEvent | taskB = te.task)\n" +
+                "pred NotRespondedExistence(taskA, taskB: Activity) {\n" +
+                "\t(some te: Event | taskA = te.task) implies (no te: Event | taskB = te.task)\n" +
                 "}\n" +
                 "\n" +
-                "pred NotResponse(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[te, fte])\n" +
+                "pred NotResponse(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and After[te, fte])\n" +
                 "}\n" +
                 "\n" +
-                "pred NotPrecedence(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[fte, te])\n" +
+                "pred NotPrecedence(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and After[fte, te])\n" +
                 "}\n" +
                 "\n" +
-                "pred NotChainResponse(taskA, taskB: Task) { \n" +
-                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[te, fte])\n" +
+                "pred NotChainResponse(taskA, taskB: Activity) { \n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[te, fte])\n" +
                 "}\n" +
                 "\n" +
-                "pred NotChainPrecedence(taskA, taskB: Task) {\n" +
-                "\tall te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[fte, te])\n" +
+                "pred NotChainPrecedence(taskA, taskB: Activity) {\n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[fte, te])\n" +
                 "}\n" +
                 "//-\n" +
                 "\n" +

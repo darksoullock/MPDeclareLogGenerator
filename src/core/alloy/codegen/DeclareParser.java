@@ -8,7 +8,7 @@ import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.DataFunction;
 import core.models.declare.DataConstraint;
 import core.models.declare.Statement;
-import core.models.declare.Task;
+import core.models.declare.Activity;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
 import core.models.declare.data.IntegerData;
@@ -38,7 +38,7 @@ public class DeclareParser {
         this.intervalSplits = intervalSplits;
     }
 
-    public boolean isTask(String line) {
+    public boolean isActivity(String line) {
         return line.startsWith("activity ");
     }
 
@@ -66,11 +66,11 @@ public class DeclareParser {
         return code.replace("\r\n", "\n").split("\n");
     }
 
-    public List<Task> parseTasks(List<String> tasksCode) {
-        ArrayList<Task> data = new ArrayList<>();
+    public List<Activity> parseActivitys(List<String> tasksCode) {
+        ArrayList<Activity> data = new ArrayList<>();
         for (String i : tasksCode) {
-            String name = i.substring(9); // syntax: 'activity TaskName'
-            data.add(new Task(name));
+            String name = i.substring(9); // syntax: 'activity ActivityName'
+            data.add(new Activity(name));
         }
 
         return data;
@@ -156,7 +156,7 @@ public class DeclareParser {
             if (i.isEmpty() || i.startsWith("/"))
                 continue;
 
-            if (isTask(i))
+            if (isActivity(i))
                 names.add(i.substring(9));
 
             if (isTraceAttribute(i))

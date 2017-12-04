@@ -2,7 +2,7 @@ import core.alloy.serialization.AlloyLogExtractor;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.Payload;
-import core.models.serialization.TaskEventAdapter;
+import core.models.serialization.EventAdapter;
 import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import org.testng.Assert;
@@ -92,7 +92,7 @@ public class Serializer {
 
     @Test
     public void equilizeTest() {
-        List<TaskEventAdapter> orderedStateEvents = new ArrayList<>();
+        List<EventAdapter> orderedStateEvents = new ArrayList<>();
         NumericToken ta = new NumericToken(NumericToken.Type.Same, "aaa");
         NumericToken tb = new NumericToken(NumericToken.Type.Same, "bbb");
         NumericToken tc = new NumericToken(NumericToken.Type.Same, "ccc");
@@ -106,13 +106,13 @@ public class Serializer {
         Set<NumericToken> cs = new HashSet<>();
         cs.add(tc);
         Payload pa = new Payload("a", "b", abs);
-        TaskEventAdapter a = new TaskEventAdapter(0, "", Arrays.asList(pa));
+        EventAdapter a = new EventAdapter(0, "", Arrays.asList(pa));
         Payload pb = new Payload("a", "b", as);
-        TaskEventAdapter b = new TaskEventAdapter(0, "", Arrays.asList(pb));
+        EventAdapter b = new EventAdapter(0, "", Arrays.asList(pb));
         Payload pc = new Payload("a", "b", bs);
-        TaskEventAdapter c = new TaskEventAdapter(0, "", Arrays.asList(pc));
+        EventAdapter c = new EventAdapter(0, "", Arrays.asList(pc));
         Payload pd = new Payload("a", "b", cs);
-        TaskEventAdapter d = new TaskEventAdapter(0, "", Arrays.asList(pd));
+        EventAdapter d = new EventAdapter(0, "", Arrays.asList(pd));
         Map<String, Interval> map = new HashMap<>();
         map.put("b", null);
         AlloyLogExtractor ser = new AlloyLogExtractor(new ModuleStub(), map, new ArrayList<>(), new HashMap<>());

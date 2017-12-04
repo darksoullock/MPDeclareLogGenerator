@@ -18,24 +18,24 @@ public class FunctionGeneratorTest {
     FunctionGenerator gen = new FunctionGenerator(2, 4);
 
     @Test
-    public void testTask() throws DeclareParserException {
-        DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+    public void testActivity() throws DeclareParserException {
+        DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { Task } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { Activity } }\n");
     }
 
     @Test
     public void testArgs() throws DeclareParserException {
-        DataFunction fn = new DataFunction(Arrays.asList("A", "B"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        DataFunction fn = new DataFunction(Arrays.asList("A", "B"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A, B: set TaskEvent) { { Task } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { Activity } }\n");
     }
 
     @Test
     public void testVariable() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { A.data&Value } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { A.data&Value } }\n");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FunctionGeneratorTest {
                         new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")),
                         new ValueExpression(new Token(0, Token.Type.Variable, "B.Value"))));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { (A.data&Value and B.data&Value) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { (A.data&Value and B.data&Value) } }\n");
     }
 
     @Test
@@ -59,62 +59,62 @@ public class FunctionGeneratorTest {
                                 new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")),
                                 new ValueExpression(new Token(0, Token.Type.Variable, "B.Value")))));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { (not (A.data&Value) and not (B.data&Value)) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { (not (A.data&Value) and not (B.data&Value)) } }\n");
     }
 
     @Test
     public void testNumber() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "20")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { 20 } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { 20 } }\n");
     }
 
     @Test
     public void testSame() throws DeclareParserException {
-        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
-        Assert.assertEquals(afn, "pred fn(A, B: set TaskEvent) { { (A.data&Task=B.data&Task) } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { (A.data&Activity=B.data&Activity) } }\n");
     }
 
     @Test
     public void testDifferent() throws DeclareParserException {
-        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
-        Assert.assertEquals(afn, "pred fn(A, B: set TaskEvent) { { not (A.data&Task=B.data&Task) } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { not (A.data&Activity=B.data&Activity) } }\n");
     }
 
     @Test
     public void testNot() throws DeclareParserException {
-        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "not"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "not"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A"), expr);
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set TaskEvent) { { not (Task) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: set Event) { { not (Activity) } }\n");
     }
 
     @Test
     public void testNumericSame() throws DeclareParserException {
-        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
-        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("A.data&Activity=B.data&Activity"));
     }
 
     @Test
     public void testNumericDifferent() throws DeclareParserException {
-        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+        UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
-        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("not A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("not A.data&Activity=B.data&Activity"));
     }
 
     @Test
@@ -122,15 +122,15 @@ public class FunctionGeneratorTest {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "not"),
                         new UnaryExpression(new Token(0, Token.Type.Operator, "same"),
-                                new ValueExpression(new Token(0, Token.Type.Task, "Task"))));
+                                new ValueExpression(new Token(0, Token.Type.Activity, "Activity"))));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
 
-        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("not A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("not A.data&Activity=B.data&Activity"));
     }
 
     @Test
@@ -138,45 +138,45 @@ public class FunctionGeneratorTest {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "not"),
                         new UnaryExpression(new Token(0, Token.Type.Operator, "different"),
-                                new ValueExpression(new Token(0, Token.Type.Task, "Task"))));
+                                new ValueExpression(new Token(0, Token.Type.Activity, "Activity"))));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
-        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("A.data&Activity=B.data&Activity"));
     }
 
     @Test
     public void testNotConstraintNumericSame() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "same"),
-                        new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+                        new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateNotFunction("fn", fn, map, Arrays.asList("T1", "T2"));
-        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Task"));
-        Assert.assertTrue(afn.contains("A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Activity"));
+        Assert.assertTrue(afn.contains("A.data&Activity=B.data&Activity"));
     }
 
     @Test
     public void testNotConstraintNumericDifferent() throws DeclareParserException {
         UnaryExpression expr =
                 new UnaryExpression(new Token(0, Token.Type.Operator, "different"),
-                        new ValueExpression(new Token(0, Token.Type.Task, "Task")));
+                        new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericData> map = new HashMap<>();
-        map.put("Task", new IntegerData("Task", 0, 5, 1));
+        map.put("Activity", new IntegerData("Activity", 0, 5, 1));
         String afn = gen.generateNotFunction("fn", fn, map, Arrays.asList("T1", "T2"));
-        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Task"));
-        Assert.assertTrue(afn.contains("not A.data&Task=B.data&Task"));
+        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
+        Assert.assertTrue(afn.contains("not A.data&Activity=B.data&Activity"));
     }
 }

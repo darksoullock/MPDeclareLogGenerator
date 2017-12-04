@@ -42,7 +42,7 @@ public class AlloyComponent {
         if (world.getAllCommands().size() != 1)
             Global.log.accept("Should be only one command");
 
-        Sig scopeChange = getSignature("this/TaskEvent", world);
+        Sig scopeChange = getSignature("this/Event", world);
         Command c = this.world.getAllCommands().get(0);
         Command newCommand = changeBitwidth(bitwidth, c.change(scopeChange, false, maxTraceLength));
         Global.log.accept("Bitwidth: " + newCommand.bitwidth);

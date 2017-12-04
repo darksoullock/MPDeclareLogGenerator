@@ -45,7 +45,7 @@ public class StatementIdTest {
             "trace Enum: enum, values, v2, v3");
 
     @Test
-    public void testIsTask() {
+    public void testIsActivity() {
         testIsX(tasks, true, false, false, false, false, false);
     }
 
@@ -76,7 +76,7 @@ public class StatementIdTest {
 
     private void testIsX(List<String> items, boolean task, boolean constraint, boolean data, boolean dataBinding, boolean dataConstraint, boolean traceAttribute) {
         for (String item : items) {
-            Assert.assertEquals(parser.isTask(item), task);
+            Assert.assertEquals(parser.isActivity(item), task);
             Assert.assertEquals(parser.isConstraint(item), constraint);
             Assert.assertEquals(parser.isData(item), data);
             Assert.assertEquals(parser.isDataBinding(item), dataBinding);

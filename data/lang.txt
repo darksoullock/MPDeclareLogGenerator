@@ -10,7 +10,7 @@ The names containing only digits should be inside quotemarks.
 	
 ------------------
 task definition
-activity TaskName
+activity ActivityName
 
 example:
 
@@ -47,9 +47,9 @@ supported:
 	NotChainPrecedence[taskA, taskB]
 
 Syntax:
-	Constraint[Task]
-	Constraint[Task, int]
-	Constraint[Task, Task2]
+	Constraint[Activity]
+	Constraint[Activity, int]
+	Constraint[Activity, Activity2]
 
 example:
 
@@ -89,8 +89,8 @@ trace Angle: float between 0.01 and 179.99
 ------------------
 data binding
 Syntax:
-	bind Task: Attribute
-	bind Task: Attribute1, Attribute2, ...
+	bind Activity: Attribute
+	bind Activity: Attribute1, Attribute2, ...
 
 example:
 	
@@ -101,8 +101,8 @@ bind UseTransport: TransportType, Something
 data constraints
 
 Syntax:
-	Constraint[Task Name] | function
-	Constraint[Task Name, Task2 Name2] | function | function
+	Constraint[Activity Name] | function
+	Constraint[Activity Name, Activity2 Name2] | function | function
 
 Operators:
 binary:

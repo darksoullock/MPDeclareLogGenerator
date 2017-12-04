@@ -8,7 +8,7 @@ import core.alloy.integration.AlloyPMSolutionBrowser;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.Payload;
-import core.models.serialization.TaskEventAdapter;
+import core.models.serialization.EventAdapter;
 import core.models.serialization.trace.AbstractTraceAttribute;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
@@ -85,7 +85,7 @@ public class AlloyLogExtractor {
     }
 
     private XTrace composeTrace(AlloyPMSolutionBrowser browser, int number) throws Err, IOException, BadSolutionException {
-        List<TaskEventAdapter> orderedStateEvents = browser.orderPEvents();
+        List<EventAdapter> orderedStateEvents = browser.orderPEvents();
         XTraceImpl oneTrace = new XTraceImpl(new XAttributeMapImpl());
         oneTrace.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + ++number));
         handleTraceAttributes(oneTrace);
@@ -94,12 +94,12 @@ public class AlloyLogExtractor {
         StatisticsHelper.trace = number;
 
         equalizeSameTokens(orderedStateEvents);
-        for (TaskEventAdapter oneStateEvent : orderedStateEvents) {
+        for (EventAdapter oneStateEvent : orderedStateEvents) {
             if (oneStateEvent == null)
                 break;
 
             XAttributeMapImpl attributes = new XAttributeMapImpl();
-            String name = unqualifyLabel(oneStateEvent.getTaskName());
+            String name = unqualifyLabel(oneStateEvent.getActivityName());
             if (Global.encodeNames)
                 name = nameEncoding.get(name);
             attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", name));
@@ -119,16 +119,16 @@ public class AlloyLogExtractor {
      * if we have A==B and B==C and C==D then
      * this function will also add A==C and A==D and B==D (in terms of matching pairs of tokens)
      */
-    public void equalizeSameTokens(List<TaskEventAdapter> orderedStateEvents) {
-        for (TaskEventAdapter oneStateEvent : orderedStateEvents)
+    public void equalizeSameTokens(List<EventAdapter> orderedStateEvents) {
+        for (EventAdapter oneStateEvent : orderedStateEvents)
             for (Payload p : oneStateEvent.getPayload())
                 if (numericMap.containsKey(unqualifyLabel(p.getValue())) &&
                         p.getTokens().stream().filter(i -> i.getType() == NumericToken.Type.Same).count() > 1)
                     addSameSame(orderedStateEvents, p);
     }
 
-    private void addSameSame(List<TaskEventAdapter> orderedStateEvents, Payload p) {
-        for (TaskEventAdapter ite : orderedStateEvents)
+    private void addSameSame(List<EventAdapter> orderedStateEvents, Payload p) {
+        for (EventAdapter ite : orderedStateEvents)
             for (Payload ip : ite.getPayload())
                 if (ip.getName().equals(p.getName()))
                     addIfMatch(p, ip);

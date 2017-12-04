@@ -1,14 +1,14 @@
-abstract sig Task {}
+abstract sig Activity {}
 abstract sig Payload {}
 
-abstract sig TaskEvent{	// One event in trace
-	task: one Task,		// Name of task
+abstract sig Event{	// One event in trace
+	task: one Activity,		// Name of task
 	data: set Payload,
 	tokens: set Token	// Used only for 'same' or 'different' constraints on numeric data
 }
 
 one sig DummyPayload extends Payload {}
-fact { no te:TaskEvent | DummyPayload in te.data }
+fact { no te:Event | DummyPayload in te.data }
 
 abstract sig Token {}
 abstract sig SameToken extends Token {}
@@ -18,92 +18,92 @@ lone sig DummyDToken extends DiffToken{}
 fact { 
 	no DummySToken
 	no DummyDToken
-	all te:TaskEvent| no (te.tokens & SameToken) or no (te.tokens & DiffToken)
+	all te:Event| no (te.tokens & SameToken) or no (te.tokens & DiffToken)
 }
 
 pred True[]{some TE0}
 
 // declare templates
 
-pred Init(taskA: Task) { 
+pred Init(taskA: Activity) {
 	taskA = TE0.task
 }
 
-pred Existence(taskA: Task) { 
-	some te: TaskEvent | te.task = taskA
+pred Existence(taskA: Activity) {
+	some te: Event | te.task = taskA
 }
 
-pred Existence(taskA: Task, n: Int) {
-	#{ te: TaskEvent | taskA in te.task } >= n
+pred Existence(taskA: Activity, n: Int) {
+	#{ te: Event | taskA in te.task } >= n
 }
 
-pred Absence(taskA: Task) { 
-	no te: TaskEvent | te.task = taskA
+pred Absence(taskA: Activity) {
+	no te: Event | te.task = taskA
 }
 
-pred Absence(taskA: Task, n: Int) {
-	#{ te: TaskEvent | taskA in te.task } <= n
+pred Absence(taskA: Activity, n: Int) {
+	#{ te: Event | taskA in te.task } <= n
 }
 
-pred Exactly(taskA: Task, n: Int) {
-	#{ te: TaskEvent | taskA in te.task } = n
+pred Exactly(taskA: Activity, n: Int) {
+	#{ te: Event | taskA in te.task } = n
 }
 
-pred Choice(taskA, taskB: Task) { 
-	some te: TaskEvent | te.task = taskA or te.task = taskB
+pred Choice(taskA, taskB: Activity) {
+	some te: Event | te.task = taskA or te.task = taskB
 }
 
-pred ExclusiveChoice(taskA, taskB: Task) { 
-	some te: TaskEvent | te.task = taskA or te.task = taskB
-	(no te: TaskEvent | taskA = te.task) or (no te: TaskEvent | taskB = te.task )
+pred ExclusiveChoice(taskA, taskB: Activity) {
+	some te: Event | te.task = taskA or te.task = taskB
+	(no te: Event | taskA = te.task) or (no te: Event | taskB = te.task )
 }
 
-pred RespondedExistence(taskA, taskB: Task) {
-	(some te: TaskEvent | taskA = te.task) implies (some ote: TaskEvent | taskB = ote.task)
+pred RespondedExistence(taskA, taskB: Activity) {
+	(some te: Event | taskA = te.task) implies (some ote: Event | taskB = ote.task)
 }
 
-pred Response(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte])
+pred Response(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[te, fte])
 }
 
-pred AlternateResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[te, fte] and (no ite: TaskEvent | taskA = ite.task and After[te, ite] and After[ite, fte]))
+pred AlternateResponse(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[te, fte] and (no ite: Event | taskA = ite.task and After[te, ite] and After[ite, fte]))
 }
 
-pred ChainResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[te, fte])
+pred ChainResponse(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and Next[te, fte])
 }
 
-pred Precedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te])
+pred Precedence(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[fte, te])
 }
 
-pred AlternatePrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and After[fte, te] and (no ite: TaskEvent | taskA = ite.task and After[fte, ite] and After[ite, te]))
+pred AlternatePrecedence(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and After[fte, te] and (no ite: Event | taskA = ite.task and After[fte, ite] and After[ite, te]))
 }
 
-pred ChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (some fte: TaskEvent | taskB = fte.task and Next[fte, te])
+pred ChainPrecedence(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (some fte: Event | taskB = fte.task and Next[fte, te])
 }
 
-pred NotRespondedExistence(taskA, taskB: Task) {
-	(some te: TaskEvent | taskA = te.task) implies (no te: TaskEvent | taskB = te.task)
+pred NotRespondedExistence(taskA, taskB: Activity) {
+	(some te: Event | taskA = te.task) implies (no te: Event | taskB = te.task)
 }
 
-pred NotResponse(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[te, fte])
+pred NotResponse(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and After[te, fte])
 }
 
-pred NotPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and After[fte, te])
+pred NotPrecedence(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and After[fte, te])
 }
 
-pred NotChainResponse(taskA, taskB: Task) { 
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[te, fte])
+pred NotChainResponse(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[te, fte])
 }
 
-pred NotChainPrecedence(taskA, taskB: Task) {
-	all te: TaskEvent | taskA = te.task implies (no fte: TaskEvent | taskB = fte.task and Next[fte, te])
+pred NotChainPrecedence(taskA, taskB: Activity) {
+	all te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[fte, te])
 }
 //-
 

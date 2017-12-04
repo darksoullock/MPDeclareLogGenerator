@@ -3,10 +3,10 @@ package core.models.declare;
 /**
  * Created by Vasiliy on 2017-10-17.
  */
-public class Task {
+public class Activity {
     String name;
 
-    public Task(String name) {
+    public Activity(String name) {
         this.name = name;
     }
 

@@ -77,7 +77,7 @@ and task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;
 						<message state="SATISFIED">&lt;html&gt;&lt;p&gt; There are  two options when this constraint is satisfied:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Either task &amp;quot;A&amp;quot; has not been executed yet, or&lt;/li&gt;
-&lt;li&gt;Task &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
+&lt;li&gt;Activity &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
 &lt;/ul&gt;&lt;/html&gt;</message>
 						<message state="VIOLATED">&lt;html&gt;&lt;p&gt;This constraint is (permanently) violated when the instance is closed 
 such that task &amp;quot;A&amp;quot; was executed, 
@@ -311,7 +311,7 @@ and task &amp;quot;B&amp;quot; was not executed after task &amp;quot;A&amp;quot;
 						<message state="SATISFIED">&lt;html&gt;&lt;p&gt; There are  two options when this constraint is satisfied:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Either task &amp;quot;A&amp;quot; has not been executed yet, or&lt;/li&gt;
-&lt;li&gt;Task &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
+&lt;li&gt;Activity &amp;quot;A&amp;quot; has been executed, and task &amp;quot;B&amp;quot; has been executed at least once after task &amp;quot;A&amp;quot;.&lt;/li&gt;
 &lt;/ul&gt;&lt;/html&gt;</message>
 						<message state="VIOLATED">&lt;html&gt;&lt;p&gt;This constraint is (permanently) violated when the instance is closed 
 such that task &amp;quot;A&amp;quot; was executed, 

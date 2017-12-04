@@ -30,7 +30,7 @@ public class FunctionGenerator {
 
     public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
         init(function, map, argTypes);
-        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
+        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set Event) { { ");
         String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
         alloy.append(" } }\n");
         alloy.append(continuation);
@@ -39,7 +39,7 @@ public class FunctionGenerator {
 
     public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
         init(function, map, argTypes);
-        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set TaskEvent) { { ");
+        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set Event) { { ");
         DataExpression expr = handleNegativeNumericComparison(function.getExpression());
         expr = inverseNotConstraintNumericComparison(expr);
         String continuation = generateExpression(expr);
@@ -148,7 +148,7 @@ public class FunctionGenerator {
 
     private String handleValueExpression(ValueExpression expression) {
         Token node = expression.getNode();
-        if (node.getType() == Token.Type.Set) {   // (Task1, Task2, ... TaskN)
+        if (node.getType() == Token.Type.Set) {   // (Activity1, Activity2, ... ActivityN)
             alloy.append(node.getValue().replace(',', '+'));
             return "";
         }
@@ -257,13 +257,13 @@ public class FunctionGenerator {
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
-            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\nall te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens implies (one ote: TaskEvent | not ote = te and ").append(ast).append(" in ote.tokens)\n}\n");
+            tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n").append("fact {\nall te: Event | ")
+                    .append(ast).append(" in te.tokens implies (one ote: Event | not ote = te and ").append(ast).append(" in ote.tokens)\n}\n");
         }
 
-        tc.append("fact {\nall te: TaskEvent | (te.task = ").append(argTypes.get(0)).append(" or te.task = ")
-                .append(argTypes.get(1)).append(" or no (").append(token).append(" & te.tokens))\nsome te: TaskEvent | ")
-                .append(token).append(" in te.tokens implies (all ote: TaskEvent| ").append(token)
+        tc.append("fact {\nall te: Event | (te.task = ").append(argTypes.get(0)).append(" or te.task = ")
+                .append(argTypes.get(1)).append(" or no (").append(token).append(" & te.tokens))\nsome te: Event | ")
+                .append(token).append(" in te.tokens implies (all ote: Event| ").append(token)
                 .append(" in ote.tokens implies ote.data&").append(value).append(" = te.data&").append(value).append(")\n}\n");
 
         return tc.toString();
@@ -271,18 +271,18 @@ public class FunctionGenerator {
 
     private String generateDifferentTokens(String value, String token) {
         StringBuilder tc = new StringBuilder();
-        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:TaskEvent | (some ")
+        tc.append("abstract sig ").append(token).append(" extends DiffToken {}\n").append("fact { all te:Event | (some ")
                 .append(token).append(" & te.tokens) implies (some ").append(value).append("&te.data) and not Single[")
                 .append(value).append("&te.data] }\n");
 
-        tc.append("fact { all te:TaskEvent| some (te.data&").append(value).append(") implies #{te.tokens&").append(token)
+        tc.append("fact { all te:Event| some (te.data&").append(value).append(") implies #{te.tokens&").append(token)
                 .append("}<Amount[te.data&").append(value).append("]}\n");
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;
             tc.append("one sig ").append(ast).append(" extends ").append(token).append(" {}\n")
-                    .append("fact { all te: TaskEvent | ")
-                    .append(ast).append(" in te.tokens implies (one ote: TaskEvent | not ote = te and ").append(ast).append(" in ote.tokens) }\n");
+                    .append("fact { all te: Event | ")
+                    .append(ast).append(" in te.tokens implies (one ote: Event | not ote = te and ").append(ast).append(" in ote.tokens) }\n");
         }
 
         return tc.toString();
