@@ -3,12 +3,12 @@ package core.alloy.serialization;
 import core.Exceptions.BadSolutionException;
 import core.Global;
 import core.StatisticsHelper;
-import core.TimestampComposer;
+import core.TimestampGenerator;
 import core.alloy.integration.AlloyPMSolutionBrowser;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
-import core.models.serialization.Payload;
 import core.models.serialization.EventAdapter;
+import core.models.serialization.Payload;
 import core.models.serialization.trace.AbstractTraceAttribute;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
@@ -20,6 +20,8 @@ import org.deckfour.xes.model.impl.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,12 +32,19 @@ public class AlloyLogExtractor {
     private Map<String, Interval> numericMap;
     private List<AbstractTraceAttribute> traceAttributes;
     private Map<String, String> nameEncoding;
+    private TimestampGenerator timeGen;
 
-    public AlloyLogExtractor(Module module, Map<String, Interval> numericMap, List<AbstractTraceAttribute> traceAttributes, Map<String, String> nameEncoding) {
+    public AlloyLogExtractor(Module module,
+                             Map<String, Interval> numericMap,
+                             List<AbstractTraceAttribute> traceAttributes,
+                             Map<String, String> nameEncoding,
+                             LocalDateTime start,
+                             Duration duration) {
         this.module = module;
         this.numericMap = numericMap;
         this.traceAttributes = traceAttributes;
         this.nameEncoding = nameEncoding;
+        this.timeGen = new TimestampGenerator(start, duration);
     }
 
     public XLog extract(A4Solution alloySolution, int nTraces, int l) throws IOException, Err, BadSolutionException {
@@ -64,6 +73,8 @@ public class AlloyLogExtractor {
 
     private XLog initLog() {
         XLogImpl log = new XLogImpl(new XAttributeMapImpl());
+        if (Global.noExtensions)
+            return log;
 
         try {
             log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/lifecycle.xesext")));
@@ -92,8 +103,8 @@ public class AlloyLogExtractor {
 
         StatisticsHelper.add((int) orderedStateEvents.stream().filter(Objects::nonNull).count());
         StatisticsHelper.trace = number;
-
         equalizeSameTokens(orderedStateEvents);
+        timeGen.setForTrace(orderedStateEvents);
         for (EventAdapter oneStateEvent : orderedStateEvents) {
             if (oneStateEvent == null)
                 break;
@@ -104,7 +115,7 @@ public class AlloyLogExtractor {
                 name = nameEncoding.get(name);
             attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", name));
             attributes.put("lifecycle:transition", new XAttributeLiteralImpl("lifecycle:transition", "complete"));
-            attributes.put("time:timestamp", new XAttributeTimestampImpl("time:timestamp", TimestampComposer.composeForEvent(oneStateEvent.getPosition())));
+            attributes.put("time:timestamp", new XAttributeTimestampImpl("time:timestamp", oneStateEvent.getTimestamp()));
             handlePayload(oneStateEvent.getPayload(), attributes);
             XEventImpl oneEvent = new XEventImpl();
             oneEvent.setAttributes(attributes);

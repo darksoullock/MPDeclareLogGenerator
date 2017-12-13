@@ -21,21 +21,21 @@ public class FunctionGeneratorTest {
     public void testActivity() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { Activity } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { Activity } }\n");
     }
 
     @Test
     public void testArgs() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { Activity } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: Event) { { Activity } }\n");
     }
 
     @Test
     public void testVariable() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { A.data&Value } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { A.data&Value } }\n");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FunctionGeneratorTest {
                         new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")),
                         new ValueExpression(new Token(0, Token.Type.Variable, "B.Value"))));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { (A.data&Value and B.data&Value) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { (A.data&Value and B.data&Value) } }\n");
     }
 
     @Test
@@ -59,14 +59,14 @@ public class FunctionGeneratorTest {
                                 new ValueExpression(new Token(0, Token.Type.Variable, "A.Value")),
                                 new ValueExpression(new Token(0, Token.Type.Variable, "B.Value")))));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { (not (A.data&Value) and not (B.data&Value)) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { (not (A.data&Value) and not (B.data&Value)) } }\n");
     }
 
     @Test
     public void testNumber() throws DeclareParserException {
         DataFunction fn = new DataFunction(Arrays.asList("A"), new ValueExpression(new Token(0, Token.Type.Variable, "20")));
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { 20 } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { 20 } }\n");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class FunctionGeneratorTest {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
-        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { (A.data&Activity=B.data&Activity) } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: Event) { { (A.data&Activity=B.data&Activity) } }\n");
     }
 
     @Test
@@ -82,7 +82,7 @@ public class FunctionGeneratorTest {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         String afn = gen.generateFunction("fn", fn, new HashMap<>(), null);
-        Assert.assertEquals(afn, "pred fn(A, B: set Event) { { not (A.data&Activity=B.data&Activity) } }\n");
+        Assert.assertEquals(afn, "pred fn(A, B: Event) { { not (A.data&Activity=B.data&Activity) } }\n");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class FunctionGeneratorTest {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "not"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A"), expr);
         String afn = gen.generateFunction("fn", fn, null, null);
-        Assert.assertEquals(afn, "pred fn(A: set Event) { { not (Activity) } }\n");
+        Assert.assertEquals(afn, "pred fn(A: Event) { { not (Activity) } }\n");
     }
 
     @Test

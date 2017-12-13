@@ -66,7 +66,7 @@ public class DeclareParser {
         return code.replace("\r\n", "\n").split("\n");
     }
 
-    public List<Activity> parseActivitys(List<String> tasksCode) {
+    public List<Activity> parseActivities(List<String> tasksCode) {
         ArrayList<Activity> data = new ArrayList<>();
         for (String i : tasksCode) {
             String name = i.substring(9); // syntax: 'activity ActivityName'

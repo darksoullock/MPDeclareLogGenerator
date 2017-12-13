@@ -12,6 +12,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,7 +72,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -100,7 +104,9 @@ public class GenerationWithData {
                 3,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -135,7 +141,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -159,6 +167,43 @@ public class GenerationWithData {
     }
 
     @Test
+    public void testExistenceAndNotChainResponse2() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|\n" +
+                "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
+                "Existence[UseTransport, 10]\n";
+
+        XLog log = Evaluator.getLog(
+                25,
+                5,
+                250,
+                2,
+                declare,
+                "./data/temp.als",
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        for (int i = 0; i < log.size(); ++i) {
+            XTrace trace = log.get(i);
+            int counter = 0;
+            for (int j = 0; j < trace.size(); ++j) {
+                XEvent event = trace.get(j);
+                if (getEventAttributeValue(event, "concept:name").equals("BookTransport")
+                        && getEventAttributeValue(event, "TransportType").equals("Train")) {
+                    ++counter;
+                    Assert.assertTrue(j == trace.size() - 1
+                                    || !getEventAttributeValue(event, "concept:name").equals("UseTransport"),
+                            "NotChainResponse constraint violated.");
+                }
+            }
+
+            Assert.assertTrue(counter >= 3, "Existence[3] violated");
+        }
+    }
+
+    @Test
     public void testExistenceAndNotChainResponseWithDifferent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|different Price\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n";
@@ -170,7 +215,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -206,7 +253,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -242,7 +291,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -257,6 +308,44 @@ public class GenerationWithData {
                     ++counter;
                     Assert.assertTrue(!getEventAttributeValue(trace.get(j - 1), "concept:name").equals("BookTransport")
                                     || getEventAttributeValue(trace.get(j - 1), "TransportType").equals("Car"),
+                            "NotChainPrecedence constraint violated.");
+                }
+            }
+
+            Assert.assertTrue(counter >= 3, "Existence[3] violated");
+        }
+    }
+
+    @Test
+    public void testExactlyAndNotChainPrecedence2() throws
+            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = baseDeclare + "NotChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|\n" +
+                "Existence[UseTransport U, 3]|U.TransportType is Car\n" +
+                "Existence[BookTransport, 3]\n";
+
+        XLog log = Evaluator.getLog(
+                24,
+                2,
+                250,
+                2,
+                declare,
+                "./data/temp.als",
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        for (int i = 0; i < log.size(); ++i) {
+            XTrace trace = log.get(i);
+            int counter = 0;
+            for (int j = 0; j < trace.size(); ++j) {
+                XEvent event = trace.get(j);
+                if (getEventAttributeValue(event, "concept:name").equals("UseTransport")
+                        && getEventAttributeValue(event, "TransportType").equals("Car")
+                        && j > 0) {
+                    ++counter;
+                    Assert.assertTrue(!getEventAttributeValue(trace.get(j - 1), "concept:name").equals("BookTransport"),
                             "NotChainPrecedence constraint violated.");
                 }
             }
@@ -284,7 +373,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -324,7 +415,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -361,7 +454,9 @@ public class GenerationWithData {
                 3,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -402,7 +497,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -439,7 +536,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
         for (int i = 0; i < log.size(); ++i) {
@@ -469,7 +568,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -504,7 +605,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -534,7 +637,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -564,7 +669,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -595,7 +702,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -631,7 +740,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -667,7 +778,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -705,7 +818,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -741,7 +856,9 @@ public class GenerationWithData {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -761,6 +878,46 @@ public class GenerationWithData {
                 }
             }
         }
+    }
+
+    @Test
+    public void testSameDifferentForOneEvent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = "activity A\n" +
+                "activity B\n" +
+                "C: integer between 0 and 100\n" +
+                "bind A: C\n" +
+                "bind B: C\n" +
+                "Init[A]\n" +
+                "Response[A A,B B]||different C \n" +
+                "ChainResponse[A A,B B]||same C \n";
+
+        XLog log = Evaluator.getLog(
+                3,
+                3,
+                50,
+                2,
+                declare,
+                "./data/temp.als",
+                2,
+                false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        log = Evaluator.getLog(
+                3,
+                3,
+                50,
+                2,
+                declare,
+                "./data/temp.als",
+                1,
+                false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() == 0, "Solution found, but it shouldn't exist");
     }
 }
 

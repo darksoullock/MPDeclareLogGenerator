@@ -43,7 +43,8 @@ trace Enum: enum, values, v2, v3
 Exactly[book transport, 2]
 Exactly[use transport, 2]
 ChainResponse[book transport A, use transport B] || same price $
-NotResponse[book transport A, book transport B] || same price $
+
+NotResponse[book transport A, book transport B] || not same price $
 
 
 

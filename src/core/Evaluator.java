@@ -14,7 +14,9 @@ import org.deckfour.xes.out.XesXmlSerializer;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Evaluator {
 
@@ -28,14 +30,24 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 13;
-        int maxLength = 20;
+        int minLength = 3;
+        int maxLength = 3;
         int nTraces = 100;
         String inFilename = "./data/example1.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
-        XLog plog = getLog(maxLength, minLength, nTraces, 4, GetDeclare(inFilename), alsFilename, intervalSplits, true);
+        XLog plog = getLog(
+                maxLength,
+                minLength,
+                nTraces,
+                4,
+                GetDeclare(inFilename),
+                alsFilename,
+                intervalSplits,
+                true,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Global.log.accept("Writing XES for: " + outFilename + plog.size() + ".xes");
         FileOutputStream fileOS = new FileOutputStream(outFilename + plog.size() + ".xes");
@@ -55,7 +67,9 @@ public class Evaluator {
                               String declare,
                               String alsFilename,
                               int intervalSplits,
-                              boolean vacuity)
+                              boolean vacuity,
+                              LocalDateTime start,
+                              Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
 
         Global.log.accept("Maximum no of traces: " + numberOfTraces);
@@ -73,8 +87,8 @@ public class Evaluator {
 
         Global.log.accept("Found Solution: " + (solution != null && solution.satisfiable()));
 
-        AlloyLogExtractor serializer = new AlloyLogExtractor(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding());
-        return serializer.extract(solution, numberOfTraces, maxTraceLength);
+        AlloyLogExtractor ale = new AlloyLogExtractor(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding(), start, duration);
+        return ale.extract(solution, numberOfTraces, maxTraceLength);
     }
 
     private static String GetDeclare(String file) throws FileNotFoundException {

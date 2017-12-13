@@ -1,16 +1,17 @@
 import core.alloy.serialization.AlloyLogExtractor;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
-import core.models.serialization.Payload;
 import core.models.serialization.EventAdapter;
+import core.models.serialization.Payload;
 import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -115,7 +116,7 @@ public class Serializer {
         EventAdapter d = new EventAdapter(0, "", Arrays.asList(pd));
         Map<String, Interval> map = new HashMap<>();
         map.put("b", null);
-        AlloyLogExtractor ser = new AlloyLogExtractor(new ModuleStub(), map, new ArrayList<>(), new HashMap<>());
+        AlloyLogExtractor ser = new AlloyLogExtractor(new ModuleStub(), map, new ArrayList<>(), new HashMap<>(), LocalDateTime.now(), Duration.ofHours(5));
         orderedStateEvents.add(a);
         orderedStateEvents.add(b);
         orderedStateEvents.add(c);

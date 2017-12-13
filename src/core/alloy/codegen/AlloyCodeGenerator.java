@@ -62,7 +62,7 @@ public class AlloyCodeGenerator {
         GenerateNextPredicate(maxTraceLength);
         GenerateAfterPredicate(maxTraceLength);
         SortInput(parser.splitStatements(declare));
-        List<Activity> tasks = parser.parseActivitys(tasksCode);
+        List<Activity> tasks = parser.parseActivities(tasksCode);
         generateActivities(tasks);
         List<EnumeratedData> data = parser.parseData(dataCode, numericData);
         ParseAndGenerateDataBindings();
@@ -108,6 +108,7 @@ public class AlloyCodeGenerator {
         numericExpressions = new HashMap<>();
 
         alloy = new StringBuilder(GetBase());
+        //IOHelper.writeAllText("./data/base.als", GetBase());
     }
 
     public Map<String, String> getNamesEncoding() {
@@ -268,9 +269,9 @@ public class AlloyCodeGenerator {
     private void GenerateEvents(int length) {
         for (int i = 0; i < length; i++) {
             if (i < minTraceLength)
-                alloy.append("one sig TE").append(i).append(" extends Event {}\n");
+                alloy.append("one sig TE").append(i).append(" extends Event {}{not task=DummyActivity}\n");
             else
-                alloy.append("lone sig TE").append(i).append(" extends Event {}{ one TE").append(i - 1).append("}\n");
+                alloy.append("one sig TE").append(i).append(" extends Event {}\n");
         }
     }
 
@@ -321,7 +322,7 @@ public class AlloyCodeGenerator {
 
         for (String payload : dataToActivity.keySet()) {
             alloy.append("fact { all te: Event | lone(").append(payload).append(" & te.data) }\n");
-            alloy.append("fact { all te: Event | one (")
+            alloy.append("fact { all te: Event | some (")
                     .append(payload)
                     .append(" & te.data) implies te.task in (")
                     .append(String.join(" + ", dataToActivity.get(payload)))
@@ -333,14 +334,16 @@ public class AlloyCodeGenerator {
         return "abstract sig Activity {}\n" +
                 "abstract sig Payload {}\n" +
                 "\n" +
-                "abstract sig Event{\t// One event in trace\n" +
-                "\ttask: one Activity,\t\t// Name of task\n" +
+                "abstract sig Event{\n" +
+                "\ttask: one Activity,\n" +
                 "\tdata: set Payload,\n" +
-                "\ttokens: set Token\t// Used only for 'same' or 'different' constraints on numeric data\n" +
+                "\ttokens: set Token\n" +
                 "}\n" +
                 "\n" +
                 "one sig DummyPayload extends Payload {}\n" +
                 "fact { no te:Event | DummyPayload in te.data }\n" +
+                "\n" +
+                "one sig DummyActivity extends Activity {}\n" +
                 "\n" +
                 "abstract sig Token {}\n" +
                 "abstract sig SameToken extends Token {}\n" +
@@ -366,7 +369,7 @@ public class AlloyCodeGenerator {
                 "}\n" +
                 "\n" +
                 "pred Existence(taskA: Activity, n: Int) {\n" +
-                "\t#{ te: Event | taskA in te.task } >= n\n" +
+                "\t#{ te: Event | taskA = te.task } >= n\n" +
                 "}\n" +
                 "\n" +
                 "pred Absence(taskA: Activity) { \n" +
@@ -374,11 +377,11 @@ public class AlloyCodeGenerator {
                 "}\n" +
                 "\n" +
                 "pred Absence(taskA: Activity, n: Int) {\n" +
-                "\t#{ te: Event | taskA in te.task } <= n\n" +
+                "\t#{ te: Event | taskA = te.task } <= n\n" +
                 "}\n" +
                 "\n" +
                 "pred Exactly(taskA: Activity, n: Int) {\n" +
-                "\t#{ te: Event | taskA in te.task } = n\n" +
+                "\t#{ te: Event | taskA = te.task } = n\n" +
                 "}\n" +
                 "\n" +
                 "pred Choice(taskA, taskB: Activity) { \n" +
@@ -431,17 +434,18 @@ public class AlloyCodeGenerator {
                 "}\n" +
                 "\n" +
                 "pred NotChainResponse(taskA, taskB: Activity) { \n" +
-                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[te, fte])\n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | (DummyActivity = fte.task or taskB = fte.task) and Next[te, fte])\n" +
                 "}\n" +
                 "\n" +
                 "pred NotChainPrecedence(taskA, taskB: Activity) {\n" +
-                "\tall te: Event | taskA = te.task implies (no fte: Event | taskB = fte.task and Next[fte, te])\n" +
+                "\tall te: Event | taskA = te.task implies (no fte: Event | (DummyActivity = fte.task or taskB = fte.task) and Next[fte, te])\n" +
                 "}\n" +
                 "//-\n" +
                 "\n" +
                 "pred example { }\n" +
                 "run example\n" +
-                "\n";
+                "\n---------------------- end of static code block ----------------------\n" +
+                "\n--------------------- generated code starts here ---------------------\n\n";
         //return IOHelper.readAllText("./data/base.als");
     }
 }

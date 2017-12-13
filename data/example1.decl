@@ -50,3 +50,5 @@ ChainResponse[DoSomething, UseTransport]
 Absence[UseTransport, 3]
 Exactly[DoSomething, 3]
 
+NotResponse[BookTransport A, BookTransport B] || same Price
+

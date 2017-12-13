@@ -30,7 +30,7 @@ public class FunctionGenerator {
 
     public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
         init(function, map, argTypes);
-        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set Event) { { ");
+        alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": Event) { { ");
         String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
         alloy.append(" } }\n");
         alloy.append(continuation);

@@ -1,12 +1,14 @@
 package core.models.serialization;
 
 
+import java.util.Date;
 import java.util.List;
 
 public class EventAdapter {
     private int position;
     private String taskName;
     private List<Payload> payload;
+    private Date timestamp;
 
     public EventAdapter(int position, String taskName, List<Payload> payload) {
         this.position = position;
@@ -24,5 +26,13 @@ public class EventAdapter {
 
     public List<Payload> getPayload() {
         return payload;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

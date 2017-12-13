@@ -8,11 +8,15 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.function.BiFunction;
 
 /**
@@ -73,7 +77,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -105,7 +111,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -135,7 +143,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -168,8 +178,34 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
+        testExactlyAndNotChainResponsePartial(log);
+    }
+
+    @Test
+    public void testExactlyAndNotChainResponse2() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = baseDeclare + "NotChainResponse[DoSomething, UseTransport]\n" +
+                "Existence[UseTransport, 10]\n" +
+                "Exactly[DoSomething, 3]\n";
+
+        XLog log = Evaluator.getLog(
+                25,
+                5,
+                250,
+                2,
+                declare,
+                "./data/temp.als",
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        testExactlyAndNotChainResponsePartial(log);
+    }
+
+    private void testExactlyAndNotChainResponsePartial(XLog log) throws NoSuchFieldException, IllegalAccessException {
         Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
@@ -191,6 +227,7 @@ public class Generation {
         }
     }
 
+
     @Test
     public void testExactlyAndChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ChainPrecedence[DoSomething, UseTransport]\n" +
@@ -204,7 +241,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -237,8 +276,34 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
+        testExactlyAndNotChainPrecedencePartial(log);
+    }
+
+    @Test
+    public void testExactlyAndNotChainPrecedence2() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = baseDeclare + "NotChainPrecedence[DoSomething, UseTransport]\n" +
+                "Existence[UseTransport, 10]\n" +
+                "Exactly[DoSomething, 3]\n";
+
+        XLog log = Evaluator.getLog(
+                25,
+                5,
+                250,
+                2,
+                declare,
+                "./data/temp.als",
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        testExactlyAndNotChainPrecedencePartial(log);
+    }
+
+    private void testExactlyAndNotChainPrecedencePartial(XLog log) throws NoSuchFieldException, IllegalAccessException {
         Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
@@ -279,7 +344,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -315,7 +382,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -350,7 +419,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -385,7 +456,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -419,7 +492,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -477,7 +552,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -499,7 +576,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -521,7 +600,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -551,7 +632,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -580,7 +663,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -609,7 +694,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -632,7 +719,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -672,7 +761,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -706,7 +797,9 @@ public class Generation {
                 2,
                 declare,
                 "./data/temp.als",
-                2, false);
+                2, false,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 

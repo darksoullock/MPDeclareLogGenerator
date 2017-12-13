@@ -52,8 +52,8 @@ public class AlloyPMSolutionBrowser {
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
             String name = retrieveAtomLabel(taskExpr);
-            if (name == null)  // end of trace with length<max
-                break;
+            if (name == null || name.equals("this/DummyActivity"))  // end of trace with length<max
+                continue;
 
             List<Payload> payload = retrievePayload(i);
             orderedPEvents.add(new EventAdapter(i, name, payload));
