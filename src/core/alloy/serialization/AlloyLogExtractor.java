@@ -187,6 +187,8 @@ public class AlloyLogExtractor {
             if (Global.encodeNames)
                 dataKey = nameEncoding.get(dataKey);
 
+            if (dataValue.length() > dataKey.length() && dataValue.charAt(dataKey.length()) == '.' && dataValue.startsWith(dataKey))
+                dataValue = dataValue.substring(dataKey.length()+1);
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
         }
     }

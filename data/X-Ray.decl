@@ -1,0 +1,17 @@
+activity examine patient
+activity perform X ray
+activity check X ray risk
+activity perform reposition
+activity apply cast
+activity remove cast
+activity perform surgery
+activity prescribe rehabilitation
+
+Init[examine patient]
+AlternatePrecedence[perform X ray, check X ray risk]
+Precedence[perform reposition, perform X ray]
+Precedence[apply cast, perform X ray]
+Response[apply cast, remove cast]
+Precedence[remove cast, apply cast]
+Precedence[perform surgery, perform X ray]
+Response[perform surgery,prescribe rehabilitation]

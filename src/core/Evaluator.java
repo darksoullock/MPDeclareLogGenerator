@@ -30,10 +30,10 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 3;
-        int maxLength = 3;
-        int nTraces = 100;
-        String inFilename = "./data/example1.decl";
+        int minLength = 13;
+        int maxLength = 20;
+        int nTraces = 30;
+        String inFilename = "./data/acme.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -45,7 +45,7 @@ public class Evaluator {
                 GetDeclare(inFilename),
                 alsFilename,
                 intervalSplits,
-                true,
+                false,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 

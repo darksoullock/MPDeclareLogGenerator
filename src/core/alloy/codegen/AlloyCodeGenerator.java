@@ -120,7 +120,12 @@ public class AlloyCodeGenerator {
             try {
                 alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
             } catch (DeclareParserException ex) {
-                throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
+                Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
+                throw ex;
+            } catch (IndexOutOfBoundsException ex){
+                Global.log.accept("Did you define variable for data constraint (e.g. Existence[Task A]|A.value>1 instead of Existence[Task]|A.value>1)");
+                Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
+                throw ex;
             }
         }
     }
@@ -142,7 +147,10 @@ public class AlloyCodeGenerator {
         for (Constraint i : constraints) {
             if (!supported.contains(i.getName()))
                 throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
-                        "' is not supported. Supported constraints are: " + String.join(", ", supported));
+                        "' is not supported. Supported constraints are: " + String.join(", ", supported) +
+                        "\nIf the name in error different from the model source code, and part of it replaced with random sequence, " +
+                        "then some of the short names you used might be part of keywords (like the name of constraint). " +
+                        "Try to enclose such names in single quotes, 'like this'");
             alloy.append(i.getName()).append('[').append(i.taskA());
             if (i.isBinary())
                 alloy.append(',').append(i.taskB());

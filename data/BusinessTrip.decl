@@ -1,0 +1,40 @@
+activity Apply for Trip 
+activity Approve application
+activity Book means of transport 
+activity Book accommodation 
+activity Collect tickets 
+activity Archive documents 
+
+Application: Application.written
+TicketCollection: TicketCollection.written
+org::resource: Alice, Bob
+
+bind Apply for Trip: Application
+bind Collect tickets: TicketCollection
+
+bind Book means of transport: org::resource
+bind Book accommodation: org::resource
+bind Collect tickets: org::resource
+bind Archive documents: org::resource
+bind Apply for Trip: org::resource
+
+Precedence[Approve application, Apply for Trip B]||B.Application is Application.written
+Precedence[Archive documents, Apply for Trip B]||B.Application is Application.written
+Precedence[Archive documents, Collect tickets B]||B.TicketCollection is TicketCollection.written
+
+Precedence[Book means of transport, Approve application] 
+Precedence[Book accommodation, Approve application]
+Precedence[Collect tickets, Book means of transport] 
+Precedence[Collect tickets, Book accommodation]
+
+Existence[Apply for Trip]
+Existence[Approve application]
+Existence[Collect tickets]
+Existence[Archive documents]
+
+NotRespondedExistence[Book means of transport, Apply for Trip]||different org::resource
+NotRespondedExistence[Book accommodation, Apply for Trip]||different org::resource
+NotRespondedExistence[Collect tickets, Apply for Trip]||different org::resource
+NotRespondedExistence[Archive documents, Apply for Trip]||different org::resource
+
+/ Who are Administrators? Why we need group name if it isn't appear in log?

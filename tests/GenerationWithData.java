@@ -1,6 +1,7 @@
 import core.Evaluator;
 import core.Exceptions.BadSolutionException;
 import core.Exceptions.DeclareParserException;
+import core.Global;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
@@ -891,6 +892,7 @@ public class GenerationWithData {
                 "Response[A A,B B]||different C \n" +
                 "ChainResponse[A A,B B]||same C \n";
 
+        Global.encodeNames = false;
         XLog log = Evaluator.getLog(
                 3,
                 3,

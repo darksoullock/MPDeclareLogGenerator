@@ -290,7 +290,14 @@ public class FunctionGenerator {
 
     private String handleBinaryExpression(BinaryExpression bex) throws DeclareParserException {
         if (bex.getNode().getType() == Token.Type.Comparator) {
-            handleNumericComparison(bex);
+            try {
+                handleNumericComparison(bex);
+            }
+            catch (NullPointerException ex){
+                if (bex.getNode().getValue().equals("="))
+                    Global.log.accept("Did you mean 'is' instead of '='?");
+                throw ex;
+            }
             return "";
         }
 

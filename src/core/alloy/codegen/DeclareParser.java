@@ -6,9 +6,9 @@ import core.RandomHelper;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.DataFunction;
+import core.models.declare.Activity;
 import core.models.declare.DataConstraint;
 import core.models.declare.Statement;
-import core.models.declare.Activity;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.FloatData;
 import core.models.declare.data.IntegerData;
@@ -103,17 +103,24 @@ public class DeclareParser {
             String[] lr = st.getCode().split("\\|", -1);
             String activity = lr[0].substring(0, lr[0].indexOf('['));
             List<String[]> args = Arrays.stream(getActivityArgsFromConstraintText(lr[0]).split(",\\s*"))
-                    .map(i -> i.split("\\s+"))
+                    .map(i -> (i + " A").split("\\s+"))
                     .collect(Collectors.toList());
+
+            if (args.size() > 1) {
+                args.get(1)[args.get(1).length - 1] = "B";
+            }
+
             List<DataFunction> fns = new ArrayList<>();
             for (int i = 1; i < lr.length; ++i) {
                 DataExpression expr = expressionParser.parse(lr[i]);
                 expressionParser.retrieveNumericExpressions(numericExpressions, expr);
-                DataFunction fn = new DataFunction(args.stream().filter(x -> x.length == 2).map(x -> x[1]).limit(i).collect(Collectors.toList()), expr);
+                DataFunction fn = new DataFunction(args.stream().filter(x -> x.length >= 2).map(x -> x[1]).limit(i).collect(Collectors.toList()), expr);
                 fns.add(fn);
             }
 
             DataConstraint c = new DataConstraint(activity, args.stream().map(i -> i[0]).collect(Collectors.toList()), fns, st);
+
+
             dataConstraints.add(c);
         }
 
@@ -157,7 +164,7 @@ public class DeclareParser {
                 continue;
 
             if (isActivity(i))
-                names.add(i.substring(9));
+                names.add(i.substring(9).trim());
 
             if (isTraceAttribute(i))
                 names.addAll(getTraceAttributeNamesFromRawCode(i));
@@ -170,7 +177,7 @@ public class DeclareParser {
     }
 
     private List<String> getTraceAttributeNamesFromRawCode(String taCode) {
-        return getDataNamesFromRawCode(taCode.substring(6));    // now syntax is the same with 'trace ' prefix
+        return getDataNamesFromRawCode(taCode.substring(6).trim());    // now syntax is the same with 'trace ' prefix
     }
 
     private List<String> getDataNamesFromRawCode(String dataCode) {
@@ -182,10 +189,10 @@ public class DeclareParser {
         String[] a = dataCode.split("(?<=([^:](::){0," + scc + "})):(?!:)\\s*|(?<=([^,](,,){0," + cc + "})),(?!,)\\s*");
 
         if (a[1].startsWith("integer"))
-            return Arrays.asList(a[0]);
+            return Arrays.asList(a[0].trim());
 
         if (a[1].startsWith("float"))
-            return Arrays.asList(a[0]);
+            return Arrays.asList(a[0].trim());
 
         return Arrays.asList(a);
     }
