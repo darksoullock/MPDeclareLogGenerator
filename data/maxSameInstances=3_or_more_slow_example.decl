@@ -1,0 +1,51 @@
+activity apply for trip
+activity approve application
+activity book transport
+activity book accomodation
+activity collect tickets
+activity archive documents,, close application
+activity use transport
+activity do something
+
+/constraints
+Init[apply for trip]
+Response[collect tickets, archive documents,, close application]
+Precedence[book transport, approve application]
+Precedence[book accomodation, approve application]
+Precedence[collect tickets, book transport]
+Precedence[collect tickets, book accomodation] 
+Absence[book accomodation, 2]
+Existence[do something]
+Absence[apply for trip, 1]
+Existence[collect tickets]
+Existence[archive documents,, close application]
+Absence[archive documents,, close application, 1]
+Absence[approve application, 1]
+
+/data definition
+something: one, none, another
+transport type: car, plane, train, bus
+price $: integer between 0 and 100
+speed: integer between 0 and 100
+
+/data binding
+bind book transport: transport type, price $
+bind use transport: transport type, something, price $
+bind do something: something
+
+/trace attributes
+trace AlwaysSame: '42'
+trace RandomNumber: integer between 42 and 422
+trace RandomFloatNumber: float between 42 and 422
+trace Enum: enum, values, v2, v3
+
+/data constraints
+Exactly[book transport, 2]
+Exactly[use transport, 2]
+ChainResponse[book transport A, use transport B] || same price $
+
+NotResponse[book transport A, book transport B] || not same price $
+
+
+
+

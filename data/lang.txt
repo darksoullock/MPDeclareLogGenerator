@@ -78,7 +78,7 @@ Angle float between 0 and 180
 trace attributes
 Syntax:
 	trace Attribute: Value1, Value2, ...
-	trace Attribute type between Number and Number
+	trace Attribute: type between Number and Number
 
 example:
 

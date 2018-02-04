@@ -21,8 +21,13 @@ public class StatisticsHelper {
     }
 
     public static void print() {
+        int total = 0;
+        int traces = 0;
         for (Integer i : lengthsMap.keySet()) {
             System.out.println(i + ": " + lengthsMap.get(i));
+            total+=i*lengthsMap.get(i);
+            traces+=lengthsMap.get(i);
         }
+        System.out.println(((double)total)/traces);
     }
 }

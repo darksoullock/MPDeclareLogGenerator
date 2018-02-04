@@ -1,0 +1,26 @@
+/task definition
+activity ApplyForTrip
+activity ApproveApplication
+activity BookTransport
+activity BookAccomodation
+activity CollectTickets
+activity ArchiveDocuments
+activity UseTransport
+activity DoSomething
+
+/constraints
+Init[ApplyForTrip]
+Response[CollectTickets, ArchiveDocuments]
+Precedence[BookTransport, ApproveApplication]
+Precedence[BookAccomodation, ApproveApplication]
+Precedence[CollectTickets, BookTransport]
+Precedence[CollectTickets, BookAccomodation] 
+Absence[BookAccomodation, 2]
+Absence[BookTransport, 3]
+ChainResponse[UseTransport, DoSomething]
+Existence[DoSomething]
+Absence[ApplyForTrip, 1]
+Existence[CollectTickets]
+Existence[ArchiveDocuments]
+Absence[ArchiveDocuments, 1]
+Absence[ApproveApplication, 1]

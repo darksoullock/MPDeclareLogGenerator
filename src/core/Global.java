@@ -21,7 +21,7 @@ public class Global {
     public static boolean singleFirstForSame = false;
     public static boolean deepNamingCheck = false;  // increase execution time by ~1s. but can show errors
     public static boolean encodeNames = !true;  // set to false only if you want to debug intermediate .als
-    public static boolean noExtensions = true;
+    public static boolean noExtensions = true;  //disable xml extensions in .xes file (log attributes)
 
     public static Consumer<String> log = System.out::println;
 

@@ -74,7 +74,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -106,7 +106,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -143,7 +143,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -181,7 +181,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -217,7 +217,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -255,7 +255,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -293,7 +293,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -332,7 +332,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -375,7 +375,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -417,7 +417,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -456,7 +456,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -499,7 +499,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -538,7 +538,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -570,7 +570,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -607,7 +607,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -639,7 +639,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -671,7 +671,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -704,7 +704,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -742,7 +742,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -780,7 +780,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -820,7 +820,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -858,7 +858,7 @@ public class GenerationWithData {
                 declare,
                 "./data/temp.als",
                 2, false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -902,7 +902,7 @@ public class GenerationWithData {
                 "./data/temp.als",
                 2,
                 false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -916,10 +916,60 @@ public class GenerationWithData {
                 "./data/temp.als",
                 1,
                 false,
-                LocalDateTime.now(),
+                false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() == 0, "Solution found, but it shouldn't exist");
+    }
+
+    @Test
+    public void testNegativeTracesOrJoined() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = "activity A\n" +
+                "activity B\n" +
+                "activity C\n" +
+                "D: val1, val2\n" +
+                "bind C: D\n" +
+                "Init[A]\n" +
+                "Response[A,B]\n" +
+                "ChainResponse[C c1,C c2]| c1.D is val1 | c2.D is val2\n" +
+                "Existence[C]\n";
+
+        Global.encodeNames = false;
+        XLog log = Evaluator.getLog(
+                5,
+                3,
+                250,
+                1,
+                declare,
+                "./data/temp.als",
+                1,
+                false,
+                true,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        for (int i = 0; i < log.size(); ++i) {
+            XTrace trace = log.get(i);
+            boolean initViolated = !getEventAttributeValue(trace.get(0), "concept:name").equals("A");
+            boolean responseViolated = false;
+            boolean chainResponseViolated = false;
+            boolean existenceViolated = true;
+
+            for (int j = 0; j < trace.size(); ++j) {
+                XEvent event = trace.get(j);
+                responseViolated = (responseViolated || getEventAttributeValue(event, "concept:name").equals("A"))
+                        && !getEventAttributeValue(event, "concept:name").equals("B");
+                chainResponseViolated = chainResponseViolated
+                        || getEventAttributeValue(event, "concept:name").equals("C") && getEventAttributeValue(event, "D").equals("val1")
+                        && (j==trace.size()-1 || !(getEventAttributeValue(trace.get(j + 1), "concept:name").equals("C") && getEventAttributeValue(trace.get(j + 1), "D").equals("val1")));
+                existenceViolated = existenceViolated && !getEventAttributeValue(event, "concept:name").equals("C");
+            }
+
+            Assert.assertTrue(initViolated || responseViolated || chainResponseViolated || existenceViolated,
+                    "positive trace found, trace #" + (i + 1) + "\n");
+        }
     }
 }
 

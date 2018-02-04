@@ -119,49 +119,24 @@ run example
 one sig TE0 extends Event {}{not task=DummyActivity}
 one sig TE1 extends Event {}{not task=DummyActivity}
 one sig TE2 extends Event {}{not task=DummyActivity}
-pred Next(pre, next: Event){pre=TE0 and next=TE1 or pre=TE1 and next=TE2}
+one sig TE3 extends Event {}
+one sig TE4 extends Event {}
+pred Next(pre, next: Event){pre=TE0 and next=TE1 or pre=TE1 and next=TE2 or pre=TE2 and next=TE3 or pre=TE3 and next=TE4}
 pred After(b, a: Event){// b=before, a=after
-b=TE0 or a=TE2}
+b=TE0 or a=TE4 or b=TE1 and not (a=TE0) or b=TE2 and (a=TE4 or a=TE3)}
 one sig A extends Activity {}
 one sig B extends Activity {}
-fact { all te: Event | te.task = A implies (one C & te.data)}
-fact { all te: Event | te.task = B implies (one C & te.data)}
-fact { all te: Event | lone(C & te.data) }
-fact { all te: Event | some (C & te.data) implies te.task in (A + B) }
+one sig C extends Activity {}
+fact { all te: Event | te.task = C implies (one D & te.data)}
+fact { all te: Event | lone(D & te.data) }
+fact { all te: Event | some (D & te.data) implies te.task in (C) }
+abstract sig D extends Payload {}
+fact { all te: Event | (lone D & te.data)}
+one sig val1 extends D{}
+one sig val2 extends D{}
+pred p100000(c1: Event) { { (c1.data&D=val1) } }
+pred p100000c(c1, c2: Event) { { (c2.data&D=val2) } }
 fact {
-Init[A]
-}
-abstract sig C extends Payload {
-amount: Int
-}
-fact { all te: Event | (lone C & te.data) }
-pred Single(pl: C) {{pl.amount=1}}
-fun Amount(pl: C): one Int {{pl.amount}}
-one sig intBetweenm1and101r100006 extends C{}{amount=15}
-fact { all te: Event | (A = te.task and p100007[te]) implies (some fte: Event | B = fte.task and p100007c[te, fte] and After[te, fte])}
-pred p100007(A: Event) { { True[] } }
-pred p100007c(A, B: Event) { { (not A.data&C=B.data&C) or (A.data&C=B.data&C and one (DiffC100008 & B.tokens) and (DiffC100008 & A.tokens) = (DiffC100008 & B.tokens))  } }
-abstract sig DiffC100008 extends DiffToken {}
-fact { all te:Event | (some DiffC100008 & te.tokens) implies (some C&te.data) and not Single[C&te.data] }
-fact { all te:Event| some (te.data&C) implies #{te.tokens&DiffC100008}<Amount[te.data&C]}
-one sig DiffC100008i0 extends DiffC100008 {}
-fact { all te: Event | DiffC100008i0 in te.tokens implies (one ote: Event | not ote = te and DiffC100008i0 in ote.tokens) }
-one sig DiffC100008i1 extends DiffC100008 {}
-fact { all te: Event | DiffC100008i1 in te.tokens implies (one ote: Event | not ote = te and DiffC100008i1 in ote.tokens) }
-fact { all te: Event | (A = te.task and p100009[te]) implies (some fte: Event | B = fte.task and Next[te, fte] and p100009c[te, fte])}
-pred p100009(A: Event) { { True[] } }
-pred p100009c(A, B: Event) { { (A.data&C=B.data&C and ((one (SameC100010 & A.tokens)  and (SameC100010 & A.tokens) = (SameC100010 & B.tokens)) )) } }
-abstract sig SameC100010 extends SameToken {}
-one sig SameC100010i0 extends SameC100010 {}
-fact {
-all te: Event | SameC100010i0 in te.tokens implies (one ote: Event | not ote = te and SameC100010i0 in ote.tokens)
-}
-one sig SameC100010i1 extends SameC100010 {}
-fact {
-all te: Event | SameC100010i1 in te.tokens implies (one ote: Event | not ote = te and SameC100010i1 in ote.tokens)
-}
-fact {
-all te: Event | (te.task = A or te.task = B or no (SameC100010 & te.tokens))
-some te: Event | SameC100010 in te.tokens implies (all ote: Event| SameC100010 in ote.tokens implies ote.data&C = te.data&C)
+(not Init[A]) or not (Response[A,B]) or not (Existence[C]) or not (all te: Event | (C = te.task and p100000[te]) implies (some fte: Event | C = fte.task and Next[te, fte] and p100000c[te, fte]))
 }
 

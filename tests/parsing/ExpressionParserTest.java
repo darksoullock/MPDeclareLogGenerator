@@ -95,11 +95,11 @@ public class ExpressionParserTest {
 
     @Test(expectedExceptions = DeclareParserException.class)
     public void testSpellingError() throws DeclareParserException {
-        gen.Run("Choiced[A,B]\n");
+        gen.Run("Choiced[A,B]\n", false);
     }
 
     @Test(expectedExceptions = DeclareParserException.class)
     public void testSpellingErrorWithData() throws DeclareParserException {
-        gen.Run("Choise[A,B]||\n");
+        gen.Run("Choise[A,B]||\n", false);
     }
 }

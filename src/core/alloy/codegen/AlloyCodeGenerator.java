@@ -28,6 +28,7 @@ public class AlloyCodeGenerator {
     boolean vacuity;
 
     StringBuilder alloy;
+    List<String> alloyConstraints;
 
     List<AbstractTraceAttribute> traceAttributes;
 
@@ -54,7 +55,7 @@ public class AlloyCodeGenerator {
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
-    public void Run(String declare) throws DeclareParserException {
+    public void Run(String declare, boolean negativeTraces) throws DeclareParserException {
         Init();
         if (Global.encodeNames)
             declare = parser.encodeNames(declare);
@@ -74,7 +75,15 @@ public class AlloyCodeGenerator {
         ExtendNumericData();
         GenerateData(data);
         GenerateDataConstraints(dataConstraints);
+        AttachConstraints(negativeTraces);
         traceAttributes = parser.parseTraceAttributes(traceAttributesCode);
+    }
+
+    private void AttachConstraints(boolean negativeTraces) {
+        if (negativeTraces)
+            alloy.append("fact {\n").append("(not ").append(String.join(") or not (", alloyConstraints)).append(")\n}\n");
+        else
+            alloy.append("fact {\n").append(String.join("\n", alloyConstraints)).append("\n}\n");
     }
 
     public String getAlloyCode() {
@@ -108,6 +117,7 @@ public class AlloyCodeGenerator {
         numericExpressions = new HashMap<>();
 
         alloy = new StringBuilder(GetBase());
+        alloyConstraints = new ArrayList<>();
         //IOHelper.writeAllText("./data/base.als", GetBase());
     }
 
@@ -118,11 +128,11 @@ public class AlloyCodeGenerator {
     private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws DeclareParserException {
         for (DataConstraint i : dataConstraints) {
             try {
-                alloy.append(gen.Generate(i, getRandomFunctionName(), numericData));
+                alloy.append(gen.Generate(i, getRandomFunctionName(), numericData, alloyConstraints));
             } catch (DeclareParserException ex) {
                 Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
                 throw ex;
-            } catch (IndexOutOfBoundsException ex){
+            } catch (IndexOutOfBoundsException ex) {
                 Global.log.accept("Did you define variable for data constraint (e.g. Existence[Task A]|A.value>1 instead of Existence[Task]|A.value>1)");
                 Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
                 throw ex;
@@ -142,28 +152,25 @@ public class AlloyCodeGenerator {
 
     private void generateConstraints(List<Constraint> constraints) throws DeclareParserException {
         Set<String> supported = Global.getSupportedConstraints();
-
-        alloy.append("fact {\n");
         for (Constraint i : constraints) {
             if (!supported.contains(i.getName()))
                 throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
-                        "' is not supported. Supported constraints are: " + String.join(", ", supported) +
+                        "' is not supported. \nSupported constraints are: " + String.join(", ", supported) +
                         "\nIf the name in error different from the model source code, and part of it replaced with random sequence, " +
                         "then some of the short names you used might be part of keywords (like the name of constraint). " +
                         "Try to enclose such names in single quotes, 'like this'");
-            alloy.append(i.getName()).append('[').append(i.taskA());
-            if (i.isBinary())
-                alloy.append(',').append(i.taskB());
-            alloy.append("]\n");
-        }
 
-        alloy.append("}\n");
+            if (i.isBinary())
+                alloyConstraints.add(String.format("%s[%s,%s]", i.getName(), i.taskA(), i.taskB()));
+            else
+                alloyConstraints.add(String.format("%s[%s]", i.getName(), i.taskA()));
+        }
     }
 
 
     private void generateVacuity(List<Constraint> constraints) {
         alloy.append("fact {\n");
-        for (String i : constraints.stream().filter(i -> i.supportsVacuity()).map(i -> i.taskA()).distinct().collect(Collectors.toList()))
+        for (String i : constraints.stream().filter(x -> x.supportsVacuity()).map(x -> x.taskA()).distinct().collect(Collectors.toList()))
             alloy.append("Existence[").append(i).append("]\n");
 
         alloy.append("}\n");

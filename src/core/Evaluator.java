@@ -30,10 +30,10 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 13;
-        int maxLength = 20;
-        int nTraces = 30;
-        String inFilename = "./data/acme.decl";
+        int minLength = 38;
+        int maxLength = 40;
+        int nTraces = 10;
+        String inFilename = "./data/bt_for_test_smv_data.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -41,10 +41,11 @@ public class Evaluator {
                 maxLength,
                 minLength,
                 nTraces,
-                4,
+                2,
                 GetDeclare(inFilename),
                 alsFilename,
                 intervalSplits,
+                false,
                 false,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
@@ -63,11 +64,12 @@ public class Evaluator {
     public static XLog getLog(int maxTraceLength,
                               int minTraceLength,
                               int numberOfTraces,
-                              int maxSameInstances,
+                              int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
                               String declare,
                               String alsFilename,
                               int intervalSplits,
                               boolean vacuity,
+                              boolean negativeTraces,
                               LocalDateTime start,
                               Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
@@ -76,7 +78,7 @@ public class Evaluator {
 
         int bitwidth = 5;
         AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits, vacuity);
-        gen.Run(declare);
+        gen.Run(declare, negativeTraces);
 
         String alloyCode = gen.getAlloyCode();
         IOHelper.writeAllText(alsFilename, alloyCode);
