@@ -2,7 +2,7 @@ package core.alloy.serialization;
 
 import core.Exceptions.BadSolutionException;
 import core.Global;
-import core.StatisticsHelper;
+import core.helpers.StatisticsHelper;
 import core.TimestampGenerator;
 import core.alloy.integration.AlloyPMSolutionBrowser;
 import core.models.declare.data.NumericToken;
@@ -71,7 +71,7 @@ public class AlloyLogExtractor {
         }
     }
 
-    private XLog initLog() {
+    public XLog initLog() {
         XLogImpl log = new XLogImpl(new XAttributeMapImpl());
         if (Global.noExtensions)
             return log;

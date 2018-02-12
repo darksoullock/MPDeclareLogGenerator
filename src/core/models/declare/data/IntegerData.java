@@ -1,7 +1,7 @@
 package core.models.declare.data;
 
 import core.Exceptions.DeclareParserException;
-import core.RandomHelper;
+import core.helpers.RandomHelper;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
 

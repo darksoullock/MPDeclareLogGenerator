@@ -2,6 +2,7 @@ import core.Evaluator;
 import core.Exceptions.BadSolutionException;
 import core.Exceptions.DeclareParserException;
 import core.Global;
+import core.helpers.XesHelper;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
@@ -86,10 +87,10 @@ public class Generation {
             XTrace trace = log.get(i);
             Assert.assertEquals(trace.getAttributes().size(), 5);
 
-            Assert.assertEquals(getAttributeValue(trace.getAttributes().get("one")), "42");
-            int intv = Integer.parseInt(getAttributeValue(trace.getAttributes().get("num")));
-            float floatv = Float.parseFloat(getAttributeValue(trace.getAttributes().get("floatnum")));
-            String enumv = getAttributeValue(trace.getAttributes().get("enum"));
+            Assert.assertEquals(XesHelper.getAttributeValue(trace.getAttributes().get("one")), "42");
+            int intv = Integer.parseInt(XesHelper.getAttributeValue(trace.getAttributes().get("num")));
+            float floatv = Float.parseFloat(XesHelper.getAttributeValue(trace.getAttributes().get("floatnum")));
+            String enumv = XesHelper.getAttributeValue(trace.getAttributes().get("enum"));
 
             Assert.assertTrue(intv >= -42 && intv <= 42, "integer trace attribute is out of declared range. value: " + intv);
             Assert.assertTrue(floatv >= -1 && floatv <= 1, "float trace attribute is out of declared range. value: " + floatv);
@@ -118,14 +119,8 @@ public class Generation {
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             XEvent event = trace.get(0);
-            Assert.assertEquals(getAttributeValue(event.getAttributes().get("concept:name")), "ApplyForTrip");
+            Assert.assertEquals(XesHelper.getAttributeValue(event.getAttributes().get("concept:name")), "ApplyForTrip");
         }
-    }
-
-    private String getAttributeValue(XAttribute xAttribute) throws NoSuchFieldException, IllegalAccessException {
-        Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
-        valueField.setAccessible(true);
-        return valueField.get(xAttribute).toString();
     }
 
     @Test
@@ -815,6 +810,51 @@ public class Generation {
                 }
             }
         }
+    }
+
+    @Test
+    public void testNoisyGeneration() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+        String declare = "activity A\n" +
+                "activity B\n" +
+                "activity C\n" +
+                "Existence[A]\n";
+
+        Global.encodeNames = false;
+        XLog log = Evaluator.getLogWithNoise(
+                5,
+                1,
+                100,
+                1,
+                declare,
+                "./data/temp.als",
+                1,
+                false,
+                40,
+                LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        int satisfied = 0;
+        int violated = 0;
+        for (int i = 0; i < log.size(); ++i) {
+            XTrace trace = log.get(i);
+            boolean ok = false;
+
+            for (int j = 0; j < trace.size(); ++j) {
+                XEvent event = trace.get(j);
+                ok = ok || getEventAttributeValue(event, "concept:name").equals("A");
+            }
+
+            if (ok)
+                ++satisfied;
+            else
+                ++violated;
+        }
+
+        Assert.assertEquals(satisfied, 60);
+        Assert.assertEquals(violated, 40);
+
     }
 }
 

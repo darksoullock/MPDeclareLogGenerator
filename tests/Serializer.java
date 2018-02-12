@@ -1,10 +1,18 @@
+import core.Evaluator;
 import core.alloy.serialization.AlloyLogExtractor;
+import core.helpers.XesHelper;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.EventAdapter;
 import core.models.serialization.Payload;
 import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.deckfour.xes.model.impl.XAttributeMapImpl;
+import org.deckfour.xes.model.impl.XLogImpl;
+import org.deckfour.xes.model.impl.XTraceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -133,5 +141,36 @@ public class Serializer {
         Assert.assertTrue(bs.contains(ta));
         Assert.assertTrue(bs.contains(tb));
         Assert.assertTrue(cs.contains(tc));
+    }
+
+    @Test
+    public void shuffleTest() throws NoSuchFieldException, IllegalAccessException {
+        XLog log1 = new XLogImpl(new XAttributeMapImpl());
+        XLog log2 = new XLogImpl(new XAttributeMapImpl());
+        for (int i = 0; i < 50; ++i) {
+            addTraceDummy(log1, i);
+            addTraceDummy(log2, i + 50);
+        }
+
+        XLog mixed = Evaluator.shuffle(log1, log2);
+        Set<String> present = new HashSet<>();
+        for (int i=0;i<100;++i) {
+            Assert.assertEquals(XesHelper.getAttributeValue(mixed.get(i).getAttributes().get("concept:name")), "Case No. " + (1 + i));
+            present.add(XesHelper.getAttributeValue(mixed.get(i).getAttributes().get("n")));
+        }
+
+        Assert.assertEquals(mixed.size(), 100);
+        Assert.assertEquals(present.size(), 100);
+        Assert.assertTrue(present.contains("0"));
+        Assert.assertTrue(present.contains("1"));
+        Assert.assertTrue(present.contains("42"));
+        Assert.assertTrue(present.contains("56"));
+        Assert.assertTrue(present.contains("99"));
+    }
+
+    private void addTraceDummy(XLog log1, int i) {
+        XTraceImpl trace = new XTraceImpl(new XAttributeMapImpl());
+        trace.getAttributes().put("n", new XAttributeLiteralImpl("n", String.valueOf(i)));
+        log1.add(trace);
     }
 }

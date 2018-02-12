@@ -2,7 +2,7 @@ package core.alloy.codegen;
 
 import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.RandomHelper;
+import core.helpers.RandomHelper;
 import core.alloy.codegen.fnparser.*;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;

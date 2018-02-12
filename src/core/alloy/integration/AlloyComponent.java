@@ -2,7 +2,6 @@ package core.alloy.integration;
 
 
 import core.Global;
-import core.IOHelper;
 import edu.mit.csail.sdg.alloy4.A4Reporter;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4.ErrorWarning;

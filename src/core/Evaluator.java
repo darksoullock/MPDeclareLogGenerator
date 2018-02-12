@@ -5,10 +5,14 @@ import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.AlloyCodeGenerator;
 import core.alloy.integration.AlloyComponent;
 import core.alloy.serialization.AlloyLogExtractor;
+import core.helpers.IOHelper;
+import core.helpers.StatisticsHelper;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.deckfour.xes.model.impl.XLogImpl;
 import org.deckfour.xes.out.XesXmlSerializer;
 
 import java.io.FileNotFoundException;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class Evaluator {
 
@@ -59,6 +64,51 @@ public class Evaluator {
         Global.log.accept(((end - start) / 1_000_000) + "");
 
         StatisticsHelper.print();
+    }
+
+    public static XLog getLogWithNoise(int maxTraceLength,
+                                       int minTraceLength,
+                                       int numberOfTraces,
+                                       int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
+                                       String declare,
+                                       String alsFilename,
+                                       int intervalSplits,
+                                       boolean vacuity,
+                                       int noisePercentage,
+                                       LocalDateTime start,
+                                       Duration duration)
+            throws Err, IOException, DeclareParserException, BadSolutionException {
+
+        int negativeN = numberOfTraces * noisePercentage / 100;
+        int positiveN = numberOfTraces - negativeN;
+        XLog positive = getLog(maxTraceLength, minTraceLength, positiveN, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, false, start, duration);
+        XLog negative = getLog(maxTraceLength, minTraceLength, negativeN, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, true, start, duration);
+        return shuffle(positive, negative);
+    }
+
+    public static XLog shuffle(XLog positive, XLog negative) {
+        int n = positive.size() + negative.size();
+        int i = 0;
+        int j = 0;
+        Random rnd = new Random();
+        XLog result = new XLogImpl(positive.getAttributes());
+        while (i < positive.size() && j < negative.size()) {
+            if (rnd.nextInt(n) >= positive.size())
+                result.add(negative.get(j++));
+            else
+                result.add(positive.get(i++));
+        }
+
+        while (i < positive.size())
+            result.add(positive.get(i++));
+
+        while (j < negative.size())
+            result.add(negative.get(j++));
+
+        for (i = 0; i < n; ++i)
+            result.get(i).getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + (i + 1)));
+
+        return result;
     }
 
     public static XLog getLog(int maxTraceLength,
