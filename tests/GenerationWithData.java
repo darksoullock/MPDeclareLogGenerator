@@ -963,7 +963,7 @@ public class GenerationWithData {
                         && !getEventAttributeValue(event, "concept:name").equals("B");
                 chainResponseViolated = chainResponseViolated
                         || getEventAttributeValue(event, "concept:name").equals("C") && getEventAttributeValue(event, "D").equals("val1")
-                        && (j==trace.size()-1 || !(getEventAttributeValue(trace.get(j + 1), "concept:name").equals("C") && getEventAttributeValue(trace.get(j + 1), "D").equals("val1")));
+                        && (j == trace.size() - 1 || !(getEventAttributeValue(trace.get(j + 1), "concept:name").equals("C") && getEventAttributeValue(trace.get(j + 1), "D").equals("val1")));
                 existenceViolated = existenceViolated && !getEventAttributeValue(event, "concept:name").equals("C");
             }
 

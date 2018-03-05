@@ -1,0 +1,33 @@
+activity SubmitLoanApplication
+activity AssessApplication
+activity CheckCareer
+activity CheckMedicalHistory
+activity NotifyOutcome
+
+Salary: integer between 1000 and 100000
+Amount: integer between 10000 and 500000
+AssessmentType: Simple, Complex
+AssessmentCost: integer between 0 and 500
+Result: Accepted, Rejected
+
+bind SubmitLoanApplication: Salary, Amount
+bind AssessApplication: AssessmentType, AssessmentCost
+bind NotifyOutcome: Result
+
+/Response[SubmitLoanApplication,AssessApplication]| A.Salary<=24000 and A.Amount>50000 |B.AssessmentType is Complex and B.AssessmentCost > 100
+/Response[SubmitLoanApplication,AssessApplication]| A.Amount>100000 | B.AssessmentType is Complex and B.AssessmentCost > 100
+Response[SubmitLoanApplication,AssessApplication]| not (A.Salary<=24000 and A.Amount>50000 or A.Amount>100000 or A.Salary<10000) | B.AssessmentType is Simple and B.AssessmentCost <=100
+
+NotResponse[SubmitLoanApplication,AssessApplication]| A.Salary<10000 |
+
+
+!TE0.task = SubmitLoanApplication
+!TE1.task = AssessApplication or TE1.task = DummyActivity
+!TE2.task = CheckCareer
+!TE3.task = CheckMedicalHistory
+!TE4.task = NotifyOutcome
+
+/ csv postprocessing:
+/ \(^.*?;.*?;.*?;.*?;\d+?)\d\d;\$100;\
+/ \(^.*?;.*?;.*?;\d+?)\d\d;\$100;\
+

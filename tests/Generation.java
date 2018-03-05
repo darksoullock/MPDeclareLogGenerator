@@ -823,17 +823,18 @@ public class Generation {
         XLog log = Evaluator.getLogWithNoise(
                 5,
                 1,
-                100,
+                30,
+                30,
+                40,
                 1,
                 declare,
                 "./data/temp.als",
                 1,
-                false,
-                40,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
+        Assert.assertTrue(log.size() ==100, "100 traces expected");
 
         int satisfied = 0;
         int violated = 0;

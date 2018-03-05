@@ -35,10 +35,10 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 38;
-        int maxLength = 40;
-        int nTraces = 10;
-        String inFilename = "./data/bt_for_test_smv_data.decl";
+        int minLength = 0;
+        int maxLength = 5;
+        int nTraces = 500;
+        String inFilename = "./data/sampleModel.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -68,47 +68,67 @@ public class Evaluator {
 
     public static XLog getLogWithNoise(int maxTraceLength,
                                        int minTraceLength,
-                                       int numberOfTraces,
+                                       int numberOfPositiveTracesWithoutVacuity,
+                                       int numberOfPositiveTracesWithVacuity,
+                                       int numberOfNegativeTraces,
                                        int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
                                        String declare,
                                        String alsFilename,
                                        int intervalSplits,
-                                       boolean vacuity,
-                                       int noisePercentage,
                                        LocalDateTime start,
                                        Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
 
-        int negativeN = numberOfTraces * noisePercentage / 100;
-        int positiveN = numberOfTraces - negativeN;
-        XLog positive = getLog(maxTraceLength, minTraceLength, positiveN, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, false, start, duration);
-        XLog negative = getLog(maxTraceLength, minTraceLength, negativeN, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, true, start, duration);
-        return shuffle(positive, negative);
+        XLog positive = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithVacuity, maxSameInstances, declare, alsFilename, intervalSplits, true, false, start, duration);
+        XLog positiveV = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithoutVacuity, maxSameInstances, declare, alsFilename, intervalSplits, false, false, start, duration);
+        XLog negative = getLog(maxTraceLength, minTraceLength, numberOfNegativeTraces, maxSameInstances, declare, alsFilename, intervalSplits, false, true, start, duration);
+        return shuffle(positive, positiveV, negative);
     }
 
-    public static XLog shuffle(XLog positive, XLog negative) {
-        int n = positive.size() + negative.size();
-        int i = 0;
-        int j = 0;
+    public static XLog shuffle(XLog positive, XLog positiveV, XLog negative) {
+        int n = positive.size() + positiveV.size() + negative.size();
+        int i = positive.size();
+        int j = positiveV.size();
+        int k = negative.size();
         Random rnd = new Random();
         XLog result = new XLogImpl(positive.getAttributes());
-        while (i < positive.size() && j < negative.size()) {
-            if (rnd.nextInt(n) >= positive.size())
-                result.add(negative.get(j++));
+        while (i + j + k > 0) {
+            int val = rnd.nextInt(n);
+            if (i > 0 && (val < positive.size() || j == 0 && k == 0))
+                result.add(positive.get(--i));
+            else if (j > 0 && (val < positive.size() + positiveV.size() || k == 0))
+                result.add(positiveV.get(--j));
             else
-                result.add(positive.get(i++));
+                result.add(negative.get(--k));
         }
-
-        while (i < positive.size())
-            result.add(positive.get(i++));
-
-        while (j < negative.size())
-            result.add(negative.get(j++));
 
         for (i = 0; i < n; ++i)
             result.get(i).getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + (i + 1)));
 
         return result;
+    }
+
+    public static XLog getLogEvenTraceLengthDistribution(int maxTraceLength,
+                                                         int minTraceLength,
+                                                         int numberOfTraces,
+                                                         int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
+                                                         String declare,
+                                                         String alsFilename,
+                                                         int intervalSplits,
+                                                         boolean vacuity,
+                                                         boolean negativeTraces,
+                                                         LocalDateTime start,
+                                                         Duration duration)
+            throws Err, IOException, DeclareParserException, BadSolutionException {
+        int n = numberOfTraces / (maxTraceLength - minTraceLength + 1);
+        XLog log = getLog(maxTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, start, duration);
+        for (int i = minTraceLength; i < maxTraceLength; ++i) {
+            Global.log.accept("\ngeneration for length " + i);
+            XLog log2 = getLog(i, i, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, start, duration);
+            log.addAll(log2);
+        }
+
+        return log;
     }
 
     public static XLog getLog(int maxTraceLength,

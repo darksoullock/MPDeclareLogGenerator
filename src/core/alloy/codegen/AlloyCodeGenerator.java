@@ -261,6 +261,11 @@ public class AlloyCodeGenerator {
             if (i.isEmpty() || i.startsWith("/"))
                 continue;
 
+            if (i.startsWith("!") && Global.rawAlloyAllowed) {
+                alloyConstraints.add(i.substring(1));
+                continue;
+            }
+
             if (parser.isActivity(i))
                 tasksCode.add(i);
 
