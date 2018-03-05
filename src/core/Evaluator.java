@@ -26,8 +26,7 @@ import java.util.Random;
 public class Evaluator {
 
     public static void main(String[] args) throws Exception {
-        long start = System.nanoTime();
-
+        //setting default parameters
         /*
         should be 1 if 'same' or 'different' constraints
         not used or used at most once for any task.
@@ -42,6 +41,17 @@ public class Evaluator {
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
+        if (args.length > 4) {
+            minLength = Integer.parseInt(args[0]);
+            maxLength = Integer.parseInt(args[1]);
+            nTraces = Integer.parseInt(args[2]);
+            inFilename = args[3];
+            outFilename = args[4];
+        } else {
+            System.out.println("usage: java -jar AlloyToLog.jar minLength maxLength NTraces input output");
+        }
+
+        long start = System.nanoTime();
         XLog plog = getLog(
                 maxLength,
                 minLength,
