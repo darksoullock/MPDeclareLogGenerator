@@ -53,7 +53,7 @@ public class IntegerData extends NumericData {
 
     private void addBetweenInterval(int a, int b) {
         ++a;
-        float step = (b - a) / intervalSplits * 1.001f;  // to ensure that a/n*n>=a
+        float step = (b - a) / intervalSplits;  // TODO: check this func.
         if (step < 1) { // to avoid empty intervals -- doesn't split small intervals. can be done other way splitting it by less fractions
             intervals.put(formatBetween(a, b), new IntegerInterval(a, b));
             return;

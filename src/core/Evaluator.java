@@ -34,10 +34,10 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 2;
-        int minLength = 0;
-        int maxLength = 5;
-        int nTraces = 500;
-        String inFilename = "./data/sampleModel.decl";
+        int minLength = 10;
+        int maxLength = 10;
+        int nTraces = 100;
+        String inFilename = "./data/requires_check.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
