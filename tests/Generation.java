@@ -77,7 +77,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
 
@@ -111,7 +111,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -137,7 +137,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -172,7 +172,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         testExactlyAndNotChainResponsePartial(log);
@@ -192,7 +192,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         testExactlyAndNotChainResponsePartial(log);
@@ -235,7 +235,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -270,7 +270,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         testExactlyAndNotChainPrecedencePartial(log);
@@ -290,7 +290,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         testExactlyAndNotChainPrecedencePartial(log);
@@ -338,7 +338,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -376,7 +376,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -413,7 +413,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -450,7 +450,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -486,7 +486,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -546,7 +546,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -570,7 +570,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -594,7 +594,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -626,7 +626,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -657,7 +657,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -688,7 +688,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -713,7 +713,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -755,7 +755,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -791,7 +791,7 @@ public class Generation {
                 declare,
                 "./data/temp.als",
                 2, false,
-                false, LocalDateTime.now(),
+                false, false, LocalDateTime.now(),
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");

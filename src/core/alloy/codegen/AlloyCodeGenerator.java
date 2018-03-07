@@ -26,6 +26,7 @@ public class AlloyCodeGenerator {
     int minTraceLength;
     int bitwidth;
     boolean vacuity;
+    boolean shuffleConstraints;
 
     StringBuilder alloy;
     List<String> alloyConstraints;
@@ -45,11 +46,13 @@ public class AlloyCodeGenerator {
     DeclareParser parser;
     DataConstraintGenerator gen;
 
-    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth, int maxSameInstances, int intervalSplits, boolean vacuity) {
+    public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth,
+                              int maxSameInstances, int intervalSplits, boolean vacuity, boolean shuffleConstraints) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
         this.vacuity = vacuity;
+        this.shuffleConstraints = shuffleConstraints;
         this.parser = new DeclareParser(intervalSplits);
         maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
@@ -75,6 +78,8 @@ public class AlloyCodeGenerator {
         ExtendNumericData();
         GenerateData(data);
         GenerateDataConstraints(dataConstraints);
+        if (shuffleConstraints)
+            Collections.shuffle(alloyConstraints);
         AttachConstraints(negativeTraces);
         traceAttributes = parser.parseTraceAttributes(traceAttributesCode);
     }

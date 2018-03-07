@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by Vasiliy on 2017-10-24.
  */
-public class IntegerInterval extends Interval {
+public class IntegerInterval extends Interval { //does not include min and max values
 
     int min;
     int max;
@@ -95,5 +95,13 @@ public class IntegerInterval extends Interval {
     public int getValueCount(int limit) {
         int values = max - min - 1;
         return values < limit ? values : -1;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public int getMax() {
+        return max;
     }
 }

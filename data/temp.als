@@ -116,90 +116,69 @@ run example
 
 --------------------- generated code starts here ---------------------
 
-one sig TE0 extends Event {}
-one sig TE1 extends Event {}
-one sig TE2 extends Event {}
-one sig TE3 extends Event {}
-one sig TE4 extends Event {}
-pred Next(pre, next: Event){pre=TE0 and next=TE1 or pre=TE1 and next=TE2 or pre=TE2 and next=TE3 or pre=TE3 and next=TE4}
+one sig TE0 extends Event {}{not task=DummyActivity}
+one sig TE1 extends Event {}{not task=DummyActivity}
+one sig TE2 extends Event {}{not task=DummyActivity}
+one sig TE3 extends Event {}{not task=DummyActivity}
+one sig TE4 extends Event {}{not task=DummyActivity}
+one sig TE5 extends Event {}{not task=DummyActivity}
+one sig TE6 extends Event {}{not task=DummyActivity}
+one sig TE7 extends Event {}{not task=DummyActivity}
+one sig TE8 extends Event {}{not task=DummyActivity}
+one sig TE9 extends Event {}{not task=DummyActivity}
+pred Next(pre, next: Event){pre=TE0 and next=TE1 or pre=TE1 and next=TE2 or pre=TE2 and next=TE3 or pre=TE3 and next=TE4 or pre=TE4 and next=TE5 or pre=TE5 and next=TE6 or pre=TE6 and next=TE7 or pre=TE7 and next=TE8 or pre=TE8 and next=TE9}
 pred After(b, a: Event){// b=before, a=after
-b=TE0 or a=TE4 or b=TE1 and not (a=TE0) or b=TE2 and (a=TE4 or a=TE3)}
+b=TE0 or a=TE9 or b=TE1 and not (a=TE0) or b=TE2 and not (a=TE0 or a=TE1) or b=TE3 and not (a=TE0 or a=TE1 or a=TE2) or b=TE4 and not (a=TE0 or a=TE1 or a=TE2 or a=TE3) or b=TE5 and (a=TE9 or a=TE8 or a=TE7 or a=TE6) or b=TE6 and (a=TE9 or a=TE8 or a=TE7) or b=TE7 and (a=TE9 or a=TE8)}
 one sig SubmitLoanApplication extends Activity {}
 one sig AssessApplication extends Activity {}
 one sig CheckCareer extends Activity {}
 one sig CheckMedicalHistory extends Activity {}
 one sig NotifyOutcome extends Activity {}
-fact { all te: Event | te.task = NotifyOutcome implies (one Result & te.data)}
-fact { all te: Event | te.task = SubmitLoanApplication implies (one Salary & te.data and one Amount & te.data)}
-fact { all te: Event | te.task = AssessApplication implies (one AssessmentType & te.data and one AssessmentCost & te.data)}
-fact { all te: Event | lone(Salary & te.data) }
-fact { all te: Event | some (Salary & te.data) implies te.task in (SubmitLoanApplication) }
-fact { all te: Event | lone(AssessmentCost & te.data) }
-fact { all te: Event | some (AssessmentCost & te.data) implies te.task in (AssessApplication) }
-fact { all te: Event | lone(Amount & te.data) }
-fact { all te: Event | some (Amount & te.data) implies te.task in (SubmitLoanApplication) }
-fact { all te: Event | lone(AssessmentType & te.data) }
-fact { all te: Event | some (AssessmentType & te.data) implies te.task in (AssessApplication) }
-fact { all te: Event | lone(Result & te.data) }
-fact { all te: Event | some (Result & te.data) implies te.task in (NotifyOutcome) }
-abstract sig Salary extends Payload {
+fact { all te: Event | te.task = CheckCareer implies (one Coverage & te.data)}
+fact { all te: Event | te.task = CheckMedicalHistory implies (one Cost & te.data)}
+fact { all te: Event | lone(Coverage & te.data) }
+fact { all te: Event | some (Coverage & te.data) implies te.task in (CheckCareer) }
+fact { all te: Event | lone(Cost & te.data) }
+fact { all te: Event | some (Cost & te.data) implies te.task in (CheckMedicalHistory) }
+abstract sig Coverage extends Payload {
 amount: Int
 }
-fact { all te: Event | (lone Salary & te.data) }
-pred Single(pl: Salary) {{pl.amount=1}}
-fun Amount(pl: Salary): one Int {{pl.amount}}
-one sig intBetween17005and24012r100004 extends Salary{}{amount=15}
-one sig intEqualsTo24000r100005 extends Salary{}{amount=1}
-one sig intBetween24000and62039r100006 extends Salary{}{amount=15}
-one sig intEqualsTo10000r100002 extends Salary{}{amount=1}
-one sig intBetween999and5504r100000 extends Salary{}{amount=15}
-one sig intBetween62038and100077r100007 extends Salary{}{amount=15}
-one sig intBetween5503and10009r100001 extends Salary{}{amount=15}
-one sig intBetween10000and17006r100003 extends Salary{}{amount=15}
-abstract sig Amount extends Payload {
+fact { all te: Event | (lone Coverage & te.data) }
+pred Single(pl: Coverage) {{pl.amount=1}}
+fun Amount(pl: Coverage): one Int {{pl.amount}}
+one sig intBetweenm1and2r100036 extends Coverage{}{amount=2}
+one sig intBetween1and5r100037 extends Coverage{}{amount=3}
+one sig intBetween17and31r100040 extends Coverage{}{amount=13}
+one sig intEqualsTo5r100038 extends Coverage{}{amount=1}
+one sig intBetween5and18r100039 extends Coverage{}{amount=12}
+abstract sig Cost extends Payload {
 amount: Int
 }
-fact { all te: Event | (lone Amount & te.data) }
-pred Single(pl: Amount) {{pl.amount=1}}
-fun Amount(pl: Amount): one Int {{pl.amount}}
-one sig intBetween30019and50040r100009 extends Amount{}{amount=15}
-one sig intEqualsTo50000r100010 extends Amount{}{amount=1}
-one sig intBetween75024and100049r100012 extends Amount{}{amount=15}
-one sig intEqualsTo100000r100013 extends Amount{}{amount=1}
-one sig intBetween9999and30020r100008 extends Amount{}{amount=15}
-one sig intBetween100000and300201r100014 extends Amount{}{amount=15}
-one sig intBetween50000and75025r100011 extends Amount{}{amount=15}
-one sig intBetween300200and500401r100015 extends Amount{}{amount=15}
-abstract sig AssessmentType extends Payload {}
-fact { all te: Event | (lone AssessmentType & te.data)}
-one sig Simple extends AssessmentType{}
-one sig Complex extends AssessmentType{}
-abstract sig AssessmentCost extends Payload {
-amount: Int
-}
-fact { all te: Event | (lone AssessmentCost & te.data) }
-pred Single(pl: AssessmentCost) {{pl.amount=1}}
-fun Amount(pl: AssessmentCost): one Int {{pl.amount}}
-one sig intBetween49and100r100017 extends AssessmentCost{}{amount=15}
-one sig intEqualsTo100r100018 extends AssessmentCost{}{amount=1}
-one sig intBetween100and301r100019 extends AssessmentCost{}{amount=15}
-one sig intBetween300and501r100020 extends AssessmentCost{}{amount=15}
-one sig intBetweenm1and50r100016 extends AssessmentCost{}{amount=15}
-abstract sig Result extends Payload {}
-fact { all te: Event | (lone Result & te.data)}
-one sig Accepted extends Result{}
-one sig Rejected extends Result{}
-pred p100021(A: Event) { { ((not (A.data&Salary in (intEqualsTo24000r100005 + intEqualsTo10000r100002 + intBetween999and5504r100000 + intBetween5503and10009r100001 + intBetween10000and17006r100003)) or not (A.data&Amount in (intBetween75024and100049r100012 + intEqualsTo100000r100013 + intBetween100000and300201r100014 + intBetween50000and75025r100011 + intBetween300200and500401r100015))) and (not (A.data&Amount in (intBetween100000and300201r100014 + intBetween300200and500401r100015)) and not (A.data&Salary in (intBetween999and5504r100000)))) } }
-pred p100021c(A, B: Event) { { ((B.data&AssessmentType=Simple) and B.data&AssessmentCost in (intBetween49and100r100017 + intEqualsTo100r100018 + intBetweenm1and50r100016)) } }
-pred p100022(A: Event) { { A.data&Salary in (intBetween999and5504r100000) } }
-pred p100022c(A, B: set Event) { { True[] } }
+fact { all te: Event | (lone Cost & te.data) }
+pred Single(pl: Cost) {{pl.amount=1}}
+fun Amount(pl: Cost): one Int {{pl.amount}}
+one sig intBetween53and99r100042 extends Cost{}{amount=15}
+one sig intBetween9and54r100041 extends Cost{}{amount=15}
+one sig intEqualsTo100r100043 extends Cost{}{amount=1}
+one sig intBetween149and200r100045 extends Cost{}{amount=15}
+one sig intBetween100and150r100044 extends Cost{}{amount=15}
+pred p100046(A: Event) { { A.data&Coverage in (intBetweenm1and2r100036 + intBetween1and5r100037 + intEqualsTo5r100038) } }
+pred p100046c(A, B: Event) { { B.data&Cost in (intBetween53and99r100042 + intBetween9and54r100041 + intEqualsTo100r100043) } }
+pred p100047(A: Event) { { A.data&Coverage in (intBetween17and31r100040 + intBetween5and18r100039) } }
+pred p100047c(A, B: Event) { { B.data&Cost in (intBetween149and200r100045 + intBetween100and150r100044) } }
 fact {
-TE0.task = SubmitLoanApplication
-TE1.task = AssessApplication or TE1.task = DummyActivity
-TE2.task = CheckCareer
-TE3.task = CheckMedicalHistory
-TE4.task = NotifyOutcome
-all te: Event | (SubmitLoanApplication = te.task and p100021[te]) implies (some fte: Event | AssessApplication = fte.task and p100021c[te, fte] and After[te, fte])
-all te: Event | (SubmitLoanApplication = te.task and p100022[te]) implies (no fte: Event | AssessApplication = fte.task and p100022c[te, fte] and After[te, fte])
+Response[CheckCareer,CheckMedicalHistory]
+Response[SubmitLoanApplication,AssessApplication]
+Response[CheckMedicalHistory,NotifyOutcome]
+Absence[AssessApplication,3]
+Absence[CheckMedicalHistory,3]
+all te: Event | (CheckCareer = te.task and p100046[te]) implies (some fte: Event | CheckMedicalHistory = fte.task and Next[te, fte] and p100046c[te, fte])
+Absence[SubmitLoanApplication,3]
+Response[AssessApplication,CheckCareer]
+Absence[CheckMedicalHistory,1]
+Absence[NotifyOutcome,3]
+Absence[CheckCareer,3]
+Exactly[CheckCareer,1]
+all te: Event | (CheckCareer = te.task and p100047[te]) implies (some fte: Event | CheckMedicalHistory = fte.task and Next[te, fte] and p100047c[te, fte])
 }
 

@@ -37,7 +37,7 @@ public class Evaluator {
         int minLength = 10;
         int maxLength = 10;
         int nTraces = 100;
-        String inFilename = "./data/requires_check.decl";
+        String inFilename = "./data/sampleModel.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -52,7 +52,7 @@ public class Evaluator {
         }
 
         long start = System.nanoTime();
-        XLog plog = getLog(
+        XLog plog = getLogFairConstraintsPriority(
                 maxLength,
                 minLength,
                 nTraces,
@@ -62,6 +62,7 @@ public class Evaluator {
                 intervalSplits,
                 false,
                 false,
+                4,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 
@@ -89,9 +90,9 @@ public class Evaluator {
                                        Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
 
-        XLog positive = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithVacuity, maxSameInstances, declare, alsFilename, intervalSplits, true, false, start, duration);
-        XLog positiveV = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithoutVacuity, maxSameInstances, declare, alsFilename, intervalSplits, false, false, start, duration);
-        XLog negative = getLog(maxTraceLength, minTraceLength, numberOfNegativeTraces, maxSameInstances, declare, alsFilename, intervalSplits, false, true, start, duration);
+        XLog positive = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithVacuity, maxSameInstances, declare, alsFilename, intervalSplits, true, false, false, start, duration);
+        XLog positiveV = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithoutVacuity, maxSameInstances, declare, alsFilename, intervalSplits, false, false, false, start, duration);
+        XLog negative = getLog(maxTraceLength, minTraceLength, numberOfNegativeTraces, maxSameInstances, declare, alsFilename, intervalSplits, false, true, false, start, duration);
         return shuffle(positive, positiveV, negative);
     }
 
@@ -131,10 +132,34 @@ public class Evaluator {
                                                          Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
         int n = numberOfTraces / (maxTraceLength - minTraceLength + 1);
-        XLog log = getLog(maxTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, start, duration);
+        XLog log = getLog(maxTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, false, start, duration);
         for (int i = minTraceLength; i < maxTraceLength; ++i) {
             Global.log.accept("\ngeneration for length " + i);
-            XLog log2 = getLog(i, i, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, start, duration);
+            XLog log2 = getLog(i, i, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, false, start, duration);
+            log.addAll(log2);
+        }
+
+        return log;
+    }
+
+    public static XLog getLogFairConstraintsPriority(int maxTraceLength,
+                                                     int minTraceLength,
+                                                     int numberOfTraces,
+                                                     int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
+                                                     String declare,
+                                                     String alsFilename,
+                                                     int intervalSplits,
+                                                     boolean vacuity,
+                                                     boolean negativeTraces,
+                                                     int iterations,
+                                                     LocalDateTime start,
+                                                     Duration duration)
+            throws Err, IOException, DeclareParserException, BadSolutionException {
+        int n = numberOfTraces / iterations;
+        XLog log = getLog(minTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, true, start, duration);
+        for (int i = 1; i < iterations; ++i) {
+            Global.log.accept("\ngeneration step " + i);
+            XLog log2 = getLog(minTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, true, start, duration);
             log.addAll(log2);
         }
 
@@ -150,6 +175,7 @@ public class Evaluator {
                               int intervalSplits,
                               boolean vacuity,
                               boolean negativeTraces,
+                              boolean shuffleConstraints,
                               LocalDateTime start,
                               Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
@@ -157,7 +183,7 @@ public class Evaluator {
         Global.log.accept("Maximum no of traces: " + numberOfTraces);
 
         int bitwidth = 5;
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits, vacuity);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, intervalSplits, vacuity, shuffleConstraints);
         gen.Run(declare, negativeTraces);
 
         String alloyCode = gen.getAlloyCode();

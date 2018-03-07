@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
  * Created by Vasiliy on 2017-11-24.
  */
 public class VacuityTest {
-    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, 1, true);
+    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, 1, true, false);
 
     @Test
     public void testChoice() throws FileNotFoundException, DeclareParserException {

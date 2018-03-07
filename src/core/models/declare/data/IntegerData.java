@@ -52,18 +52,23 @@ public class IntegerData extends NumericData {
     }
 
     private void addBetweenInterval(int a, int b) {
-        ++a;
-        float step = (b - a) / intervalSplits;  // TODO: check this func.
+        float step = (b - a) / intervalSplits;
         if (step < 1) { // to avoid empty intervals -- doesn't split small intervals. can be done other way splitting it by less fractions
             intervals.put(formatBetween(a, b), new IntegerInterval(a, b));
             return;
         }
 
         for (int j = 0; j < intervalSplits; ++j) {
-            int start = a + (int) (step * j) - 1;
-            int end = a + (int) (step * (j + 1));
+            int start = a + round((step * j) - (j == 0 ? 0 : 1));
+            int end = a + round(step * (j + 1));
             intervals.put(formatBetween(start, end), new IntegerInterval(start, end));
         }
+    }
+
+    private int round(double v) {
+        int sign = v < 0 ? -1 : 1;
+        int value = (int) ((v+0.1) * sign);
+        return value * sign;
     }
 
     @Override

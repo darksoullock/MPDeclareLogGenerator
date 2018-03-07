@@ -23,6 +23,7 @@ public class Global {
     public static boolean encodeNames = !true;  // set to false only if you want to debug intermediate .als
     public static boolean noExtensions = true;  // disable xml extensions in .xes file (log attributes)
     public static boolean rawAlloyAllowed = true; // should be false
+    public static boolean dummyActivitiesAllowed = false; // should be false; for debug only
 
     public static Consumer<String> log = System.out::println;
 

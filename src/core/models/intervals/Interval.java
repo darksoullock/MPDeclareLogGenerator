@@ -54,4 +54,6 @@ public abstract class Interval {
     }
 
     public abstract int getValueCount(int limit);
+
+
 }

@@ -1,8 +1,12 @@
 package core.helpers;
 
 import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
+import org.deckfour.xes.out.XesXmlSerializer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 
 /**
@@ -15,4 +19,14 @@ public class XesHelper {
         return valueField.get(xAttribute).toString();
     }
 
+    public  static void saveLog(XLog log, String outFilename){
+        FileOutputStream fileOS = null;
+        try {
+            fileOS = new FileOutputStream(outFilename + log.size() + ".xes");
+            new XesXmlSerializer().serialize(log, fileOS);
+            fileOS.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
