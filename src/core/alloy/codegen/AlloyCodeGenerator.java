@@ -2,10 +2,10 @@ package core.alloy.codegen;
 
 import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.helpers.RandomHelper;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import core.helpers.RandomHelper;
 import core.models.declare.Activity;
 import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
@@ -76,7 +76,7 @@ public class AlloyCodeGenerator {
             generateVacuity(constraints);
         List<DataConstraint> dataConstraints = parser.parseDataConstraints(dataConstraintsCode, numericExpressions);
         ExtendNumericData();
-        GenerateData(data);
+        GenerateData(data, shuffleConstraints);
         GenerateDataConstraints(dataConstraints);
         if (shuffleConstraints)
             Collections.shuffle(alloyConstraints);
@@ -224,7 +224,10 @@ public class AlloyCodeGenerator {
         throw new DeclareParserException("No number in comparison operator: " + ex.toString());
     }
 
-    private void GenerateData(List<EnumeratedData> data) {
+    private void GenerateData(List<EnumeratedData> data, boolean shuffle) {
+        if (shuffle)
+            Collections.shuffle(data);
+
         for (EnumeratedData item : data) {
             if (item instanceof NumericData) {
                 GenerateNumericDataItem((NumericData) item);
@@ -232,6 +235,10 @@ public class AlloyCodeGenerator {
             }
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
             alloy.append("fact { all te: Event | (lone ").append(item.getType()).append(" & te.data)}\n");
+
+            if (shuffle)
+                Collections.shuffle(item.getValues());
+
             for (String value : item.getValues()) {
                 alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}\n");
             }
@@ -254,6 +261,9 @@ public class AlloyCodeGenerator {
     }
 
     private void generateActivities(List<Activity> tasks) {
+        if (shuffleConstraints)
+            Collections.shuffle(tasks);
+
         for (Activity i : tasks)
             alloy.append("one sig ").append(i.getName()).append(" extends Activity {}\n");
     }

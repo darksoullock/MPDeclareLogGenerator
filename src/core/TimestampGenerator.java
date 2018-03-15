@@ -22,7 +22,7 @@ public class TimestampGenerator {
 
     public void setForTrace(List<EventAdapter> trace) {
         long s = duration.getSeconds();
-        List<Long> offsets = new ArrayList<>();
+        List<Long> offsets = new ArrayList<>(trace.size());
         for (int i = 0; i < trace.size(); ++i)
             offsets.add(Math.abs(rnd.nextLong()) % s);
         offsets.sort(Long::compareTo);

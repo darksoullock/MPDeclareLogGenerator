@@ -69,9 +69,8 @@ public class Generation {
                 "trace floatnum: float between -1 and 1\n" +
                 "trace enum: val1, val2, val3\n";
 
-        XLog log = Evaluator.getLog(
-                10,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 10,
                 50,
                 2,
                 declare,
@@ -103,9 +102,8 @@ public class Generation {
     public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare;
 
-        XLog log = Evaluator.getLog(
-                10,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 10,
                 50,
                 2,
                 declare,
@@ -129,9 +127,8 @@ public class Generation {
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -164,9 +161,8 @@ public class Generation {
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -184,9 +180,8 @@ public class Generation {
                 "Existence[UseTransport, 10]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                25,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 25,
                 250,
                 2,
                 declare,
@@ -227,9 +222,8 @@ public class Generation {
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -262,9 +256,8 @@ public class Generation {
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -282,9 +275,8 @@ public class Generation {
                 "Existence[UseTransport, 10]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                25,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 25,
                 250,
                 2,
                 declare,
@@ -330,9 +322,8 @@ public class Generation {
         String declare = baseDeclare + "Response[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -368,9 +359,8 @@ public class Generation {
         String declare = baseDeclare + "NotResponse[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -405,9 +395,8 @@ public class Generation {
         String declare = baseDeclare + "Precedence[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -442,9 +431,8 @@ public class Generation {
         String declare = baseDeclare + "NotPrecedence[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -478,9 +466,8 @@ public class Generation {
     public void testDataBinding() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare;
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 100,
                 2,
                 declare,
@@ -538,9 +525,8 @@ public class Generation {
     public void testChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Choice[DoSomething, UseTransport]\n";
 
-        XLog log = Evaluator.getLog(
-                8,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 8,
                 50,
                 2,
                 declare,
@@ -562,9 +548,8 @@ public class Generation {
     public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ExclusiveChoice[DoSomething, UseTransport]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -586,9 +571,8 @@ public class Generation {
     public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Existence[DoSomething]\n";
 
-        XLog log = Evaluator.getLog(
-                7,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 7,
                 50,
                 2,
                 declare,
@@ -618,9 +602,8 @@ public class Generation {
         String declare = baseDeclare + "Absence[DoSomething, 3]\n" +
                 "Existence[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -649,9 +632,8 @@ public class Generation {
     public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Absence[DoSomething]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -680,9 +662,8 @@ public class Generation {
     public void testRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "RespondedExistence[DoSomething, UseTransport]\n";
 
-        XLog log = Evaluator.getLog(
-                8,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 8,
                 50,
                 2,
                 declare,
@@ -705,9 +686,8 @@ public class Generation {
     public void testNotRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "NotRespondedExistence[DoSomething, UseTransport]\n";
 
-        XLog log = Evaluator.getLog(
-                8,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 8,
                 50,
                 2,
                 declare,
@@ -747,9 +727,8 @@ public class Generation {
         String declare = baseDeclare + "AlternateResponse[DoSomething, UseTransport]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -783,9 +762,8 @@ public class Generation {
         String declare = baseDeclare + "AlternatePrecedence[DoSomething, UseTransport]\n" +
                 "Exactly[DoSomething, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -813,23 +791,25 @@ public class Generation {
     }
 
     @Test
-    public void testNoisyGeneration() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testNoisyGeneration() throws Exception {
         String declare = "activity A\n" +
                 "activity B\n" +
                 "activity C\n" +
                 "Existence[A]\n";
 
         Global.encodeNames = false;
-        XLog log = Evaluator.getLogWithNoise(
-                5,
+        XLog log = Evaluator.getLog(
                 1,
+                5,
                 30,
                 30,
                 40,
+                0,
+                false,
+                1,
                 1,
                 declare,
                 "./data/temp.als",
-                1,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 

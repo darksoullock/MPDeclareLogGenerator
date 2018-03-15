@@ -2,7 +2,6 @@ import core.Evaluator;
 import core.Exceptions.BadSolutionException;
 import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.helpers.XesHelper;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
@@ -67,9 +66,8 @@ public class GenerationWithData {
                 + "Init[ApplyForTrip A]|A.Something is One\n"
                 + "bind ApplyForTrip: Something\n";
 
-        XLog log = Evaluator.getLog(
-                6,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 6,
                 100,
                 2,
                 declare,
@@ -99,9 +97,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "ChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|same Price\n" +
                 "Exactly[BookTransport A, 3]|A.TransportType is Train\n";
 
-        XLog log = Evaluator.getLog(
-                18,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 18,
                 50,
                 3,
                 declare,
@@ -136,9 +133,8 @@ public class GenerationWithData {
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
                 "ChainResponse[BookTransport, UseTransport]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -174,9 +170,8 @@ public class GenerationWithData {
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
                 "Existence[UseTransport, 10]\n";
 
-        XLog log = Evaluator.getLog(
-                25,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 25,
                 250,
                 2,
                 declare,
@@ -210,9 +205,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|different Price\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -248,9 +242,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "ChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|different TransportType\n" +
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -286,9 +279,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "NotChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|different TransportType\n" +
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -325,9 +317,8 @@ public class GenerationWithData {
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n" +
                 "Existence[BookTransport, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                24,
-                2,
+        XLog log = Evaluator.getLogSingleRun(
+                2, 24,
                 250,
                 2,
                 declare,
@@ -367,9 +358,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "Response[BookTransport A, UseTransport B]|A.Price<10|10<B.Price\n" +
                 "Existence[BookTransport A, 3]|A.Price<10\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -409,9 +399,8 @@ public class GenerationWithData {
                 "Existence[UseTransport A]|A.Price>10\n";
 
         XLog log;
-        log = Evaluator.getLog(
-                20,
-                5,
+        log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -448,9 +437,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "Precedence[UseTransport A, BookTransport B]|A.Price>10|same Price\n" +
                 "Existence[UseTransport A, 3]|A.Price>10\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 3,
                 declare,
@@ -491,9 +479,8 @@ public class GenerationWithData {
                 "Existence[UseTransport A, 3]|A.Price>10\n" +
                 "Existence[BookTransport, 3]\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -530,9 +517,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "Choice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
 
         XLog log;
-        log = Evaluator.getLog(
-                8,
-                5,
+        log = Evaluator.getLogSingleRun(
+                5, 8,
                 50,
                 2,
                 declare,
@@ -562,9 +548,8 @@ public class GenerationWithData {
     public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "ExclusiveChoice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
 
-        XLog log = Evaluator.getLog(
-                18,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 18,
                 50,
                 2,
                 declare,
@@ -599,9 +584,8 @@ public class GenerationWithData {
     public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Existence[DoSomething A]|A.Something is not One\n";
 
-        XLog log = Evaluator.getLog(
-                7,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 7,
                 50,
                 2,
                 declare,
@@ -631,9 +615,8 @@ public class GenerationWithData {
     public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Absence[DoSomething A, 3]|A.Something is not One\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -663,9 +646,8 @@ public class GenerationWithData {
     public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
         String declare = baseDeclare + "Absence[DoSomething A]|A.Something is not One\n";
 
-        XLog log = Evaluator.getLog(
-                15,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
                 50,
                 2,
                 declare,
@@ -696,9 +678,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "RespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|different TransportType\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
-        XLog log = Evaluator.getLog(
-                8,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 8,
                 50,
                 2,
                 declare,
@@ -734,9 +715,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "NotRespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|same TransportType\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -772,9 +752,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "NotRespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|same Price\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -812,9 +791,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "AlternateResponse[BookTransport A, UseTransport B]|A.TransportType is Plane|B.TransportType is Plane\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Plane\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -850,9 +828,8 @@ public class GenerationWithData {
         String declare = baseDeclare + "AlternatePrecedence[UseTransport A, BookTransport B]|A.TransportType is Plane|B.TransportType is Plane\n" +
                 "Existence[UseTransport A, 3]|A.TransportType is Plane\n";
 
-        XLog log = Evaluator.getLog(
-                20,
-                5,
+        XLog log = Evaluator.getLogSingleRun(
+                5, 20,
                 50,
                 2,
                 declare,
@@ -893,9 +870,8 @@ public class GenerationWithData {
                 "ChainResponse[A A,B B]||same C \n";
 
         Global.encodeNames = false;
-        XLog log = Evaluator.getLog(
-                3,
-                3,
+        XLog log = Evaluator.getLogSingleRun(
+                3, 3,
                 50,
                 2,
                 declare,
@@ -907,9 +883,8 @@ public class GenerationWithData {
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
-        log = Evaluator.getLog(
-                3,
-                3,
+        log = Evaluator.getLogSingleRun(
+                3, 3,
                 50,
                 2,
                 declare,
@@ -935,9 +910,8 @@ public class GenerationWithData {
                 "Existence[C]\n";
 
         Global.encodeNames = false;
-        XLog log = Evaluator.getLog(
-                5,
-                3,
+        XLog log = Evaluator.getLogSingleRun(
+                3, 5,
                 250,
                 1,
                 declare,

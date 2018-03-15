@@ -4,8 +4,8 @@ package core.alloy.integration;
 import core.Exceptions.BadSolutionException;
 import core.Global;
 import core.models.declare.data.NumericToken;
-import core.models.serialization.Payload;
 import core.models.serialization.EventAdapter;
+import core.models.serialization.Payload;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Expr;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
@@ -47,8 +47,13 @@ public class AlloyPMSolutionBrowser {
         return atomToSig.get(atom);
     }
 
+    List<EventAdapter> orderedPEvents = null;
+
     public List<EventAdapter> orderPEvents() throws Err, IOException, BadSolutionException {
-        List<EventAdapter> orderedPEvents = new ArrayList<>();
+        if (orderedPEvents != null)
+            return orderedPEvents;
+
+        orderedPEvents = new ArrayList<>(length);
         for (int i = 0; i < length; ++i) {
             Expr taskExpr = exprFromString("TE" + i + ".task");
             String name = retrieveAtomLabel(taskExpr);

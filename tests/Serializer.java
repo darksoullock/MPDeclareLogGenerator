@@ -8,7 +8,6 @@ import core.models.serialization.Payload;
 import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.deckfour.xes.model.impl.XLogImpl;
@@ -154,7 +153,7 @@ public class Serializer {
             addTraceDummy(log2, i + 50);
         }
 
-        XLog mixed = Evaluator.shuffle(log0, log1, log2);
+        XLog mixed = Evaluator.merge(log0, log1, log2);
         Assert.assertEquals(mixed.size(), 100);
         Set<String> present = new HashSet<>();
         for (int i=0;i<100;++i) {

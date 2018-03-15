@@ -37,7 +37,8 @@ public abstract class Interval {
     }
 
     public void resetCaches() {
-        sameCache = new HashMap<>();
+        if (sameCache == null || sameCache.size() > 0)
+            sameCache = new HashMap<>();
     }
 
     public abstract String getDifferent(List<String> tokens) throws BadSolutionException;

@@ -7,6 +7,8 @@ import core.alloy.integration.AlloyComponent;
 import core.alloy.serialization.AlloyLogExtractor;
 import core.helpers.IOHelper;
 import core.helpers.StatisticsHelper;
+import core.interfaces.Function2;
+import core.interfaces.Function3;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
@@ -25,6 +27,8 @@ import java.util.Random;
 
 public class Evaluator {
 
+    static int reuse = 1;
+
     public static void main(String[] args) throws Exception {
         //setting default parameters
         /*
@@ -33,11 +37,18 @@ public class Evaluator {
         should be <=N if 'same'/'different' constraint
         used more than once and solution not found (or found few)
          */
-        int intervalSplits = 2;
-        int minLength = 10;
-        int maxLength = 10;
-        int nTraces = 100;
-        String inFilename = "./data/sampleModel.decl";
+        int intervalSplits = 1;
+        int minLength = 5;
+        int maxLength = 5;
+        int nTraces = 1000;
+        int maxSameInstances = 2;
+        int shuffleConstraintsIterations = 0;
+        boolean vacuity = false;
+        boolean negativeTraces = false;
+        boolean evenLengthsDistribution = false;
+
+        //String inFilename = "./data/bt_for_test_smv_data.decl";
+        String inFilename = "./data/loanApplication.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
@@ -52,17 +63,21 @@ public class Evaluator {
         }
 
         long start = System.nanoTime();
-        XLog plog = getLogFairConstraintsPriority(
-                maxLength,
+        StatisticsHelper.time.add(start);
+        String declare = GetDeclare(inFilename);
+
+        XLog plog = getLog(
                 minLength,
-                nTraces,
-                2,
-                GetDeclare(inFilename),
-                alsFilename,
+                maxLength,
+                !(vacuity || negativeTraces) ? nTraces : 0, //positive non-vacuity traces
+                vacuity ? nTraces : 0,
+                negativeTraces ? nTraces : 0,
+                shuffleConstraintsIterations,
+                evenLengthsDistribution,
+                maxSameInstances,
                 intervalSplits,
-                false,
-                false,
-                4,
+                declare,
+                alsFilename,
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 
@@ -75,28 +90,85 @@ public class Evaluator {
         Global.log.accept(((end - start) / 1_000_000) + "");
 
         StatisticsHelper.print();
+
+        System.out.println();
+        //StatisticsHelper.printTime();
     }
 
-    public static XLog getLogWithNoise(int maxTraceLength,
-                                       int minTraceLength,
-                                       int numberOfPositiveTracesWithoutVacuity,
-                                       int numberOfPositiveTracesWithVacuity,
-                                       int numberOfNegativeTraces,
-                                       int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
-                                       String declare,
-                                       String alsFilename,
-                                       int intervalSplits,
-                                       LocalDateTime start,
-                                       Duration duration)
-            throws Err, IOException, DeclareParserException, BadSolutionException {
+    public static XLog getLog(int minTraceLength,
+                              int maxTraceLength,
+                              int numberOfPositiveTracesWithoutVacuity,
+                              int numberOfPositiveTracesWithVacuity,
+                              int numberOfNegativeTraces,
+                              int shuffleConstraintsIterations, // If some constraints are rarely activated, different order (different priority) may fix this problem. value 0 means that order is as it is in input .decl file
+                              boolean evenLengthsDistribution,
+                              int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
+                              int intervalSplits,
+                              String declare,
+                              String alsFilename,
+                              LocalDateTime start,
+                              Duration duration)
+            throws Exception {
 
-        XLog positive = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithVacuity, maxSameInstances, declare, alsFilename, intervalSplits, true, false, false, start, duration);
-        XLog positiveV = getLog(maxTraceLength, minTraceLength, numberOfPositiveTracesWithoutVacuity, maxSameInstances, declare, alsFilename, intervalSplits, false, false, false, start, duration);
-        XLog negative = getLog(maxTraceLength, minTraceLength, numberOfNegativeTraces, maxSameInstances, declare, alsFilename, intervalSplits, false, true, false, start, duration);
-        return shuffle(positive, positiveV, negative);
+        Function3<Boolean, Boolean, Integer, XLog> getLogNow;
+
+        if (evenLengthsDistribution)
+            getLogNow =
+                    (vacuity2, negative, nTraces) -> getLogEvenTraceLengthDistribution(
+                            minTraceLength,
+                            maxTraceLength,
+                            nTraces,
+                            (length, amount) -> getLogFairConstraintsPriority(
+                                    amount,
+                                    shuffleConstraintsIterations,
+                                    (amount2, shuffle) -> getLogSingleRun(
+                                            length,
+                                            length,
+                                            amount2,
+                                            maxSameInstances,
+                                            declare,
+                                            alsFilename,
+                                            intervalSplits,
+                                            vacuity2,
+                                            negative,
+                                            shuffle,
+                                            start,
+                                            duration)));
+        else
+            getLogNow =
+                    (vacuity2, negative, nTraces) -> getLogFairConstraintsPriority(
+                            nTraces,
+                            shuffleConstraintsIterations,
+                            (amount2, shuffle) -> getLogSingleRun(
+                                    minTraceLength,
+                                    maxTraceLength,
+                                    amount2,
+                                    maxSameInstances,
+                                    declare,
+                                    alsFilename,
+                                    intervalSplits,
+                                    vacuity2,
+                                    negative,
+                                    shuffle,
+                                    start,
+                                    duration));
+
+        XLog positive = getLogNow.invoke(false, false, numberOfPositiveTracesWithoutVacuity);
+        XLog positiveV = getLogNow.invoke(true, false, numberOfPositiveTracesWithVacuity);
+        XLog negative = getLogNow.invoke(false, true, numberOfNegativeTraces);
+        return merge(positive, positiveV, negative);
     }
 
-    public static XLog shuffle(XLog positive, XLog positiveV, XLog negative) {
+    public static XLog merge(XLog positive, XLog positiveV, XLog negative) {
+        if (!positive.isEmpty() && positiveV.isEmpty() && negative.isEmpty())
+            return positive;
+
+        if (positive.isEmpty() && !positiveV.isEmpty() && negative.isEmpty())
+            return positiveV;
+
+        if (positive.isEmpty() && positiveV.isEmpty() && !negative.isEmpty())
+            return negative;
+
         int n = positive.size() + positiveV.size() + negative.size();
         int i = positive.size();
         int j = positiveV.size();
@@ -119,66 +191,62 @@ public class Evaluator {
         return result;
     }
 
-    public static XLog getLogEvenTraceLengthDistribution(int maxTraceLength,
-                                                         int minTraceLength,
+    public static XLog getLogEvenTraceLengthDistribution(int minTraceLength,
+                                                         int maxTraceLength,
                                                          int numberOfTraces,
-                                                         int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
-                                                         String declare,
-                                                         String alsFilename,
-                                                         int intervalSplits,
-                                                         boolean vacuity,
-                                                         boolean negativeTraces,
-                                                         LocalDateTime start,
-                                                         Duration duration)
-            throws Err, IOException, DeclareParserException, BadSolutionException {
+                                                         Function2<Integer, Integer, XLog> getLogForN)
+            throws Exception {
         int n = numberOfTraces / (maxTraceLength - minTraceLength + 1);
-        XLog log = getLog(maxTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, false, start, duration);
+        XLog log = getLogForN.invoke(maxTraceLength, n);
+        StatisticsHelper.time.add(System.nanoTime());
         for (int i = minTraceLength; i < maxTraceLength; ++i) {
             Global.log.accept("\ngeneration for length " + i);
-            XLog log2 = getLog(i, i, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, false, start, duration);
+            XLog log2 = getLogForN.invoke(i, n);
             log.addAll(log2);
         }
 
         return log;
     }
 
-    public static XLog getLogFairConstraintsPriority(int maxTraceLength,
-                                                     int minTraceLength,
-                                                     int numberOfTraces,
-                                                     int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
-                                                     String declare,
-                                                     String alsFilename,
-                                                     int intervalSplits,
-                                                     boolean vacuity,
-                                                     boolean negativeTraces,
-                                                     int iterations,
-                                                     LocalDateTime start,
-                                                     Duration duration)
-            throws Err, IOException, DeclareParserException, BadSolutionException {
-        int n = numberOfTraces / iterations;
-        XLog log = getLog(minTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, true, start, duration);
-        for (int i = 1; i < iterations; ++i) {
+    public static XLog getLogFairConstraintsPriority(
+            int numberOfTraces,
+            int shuffleConstraintsIterations,
+            Function2<Integer, Boolean, XLog> getLog) // int N, bool shuffle
+            throws Exception {
+
+        if (numberOfTraces == 0)
+            return new XLogImpl(null);
+
+        int n = numberOfTraces;
+        if (shuffleConstraintsIterations > 0)
+            n /= shuffleConstraintsIterations;
+
+        XLog log = getLog.invoke(n, shuffleConstraintsIterations > 0);
+        for (int i = 1; i < shuffleConstraintsIterations; ++i) {
             Global.log.accept("\ngeneration step " + i);
-            XLog log2 = getLog(minTraceLength, maxTraceLength, n, maxSameInstances, declare, alsFilename, intervalSplits, vacuity, negativeTraces, true, start, duration);
+            XLog log2 = getLog.invoke(n, true);
             log.addAll(log2);
         }
 
         return log;
     }
 
-    public static XLog getLog(int maxTraceLength,
-                              int minTraceLength,
-                              int numberOfTraces,
-                              int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
-                              String declare,
-                              String alsFilename,
-                              int intervalSplits,
-                              boolean vacuity,
-                              boolean negativeTraces,
-                              boolean shuffleConstraints,
-                              LocalDateTime start,
-                              Duration duration)
+    public static XLog getLogSingleRun(int minTraceLength,
+                                       int maxTraceLength,
+                                       int numberOfTraces,
+                                       int maxSameInstances, // higher values of this parameter can have significant performance impact for some models. Keep it 1 unless you use same/different constraints for numbers. Otherwise recommended to increment by 1
+                                       String declare,
+                                       String alsFilename,
+                                       int intervalSplits,
+                                       boolean vacuity,
+                                       boolean negativeTraces,
+                                       boolean shuffleConstraints,
+                                       LocalDateTime start,
+                                       Duration duration)
             throws Err, IOException, DeclareParserException, BadSolutionException {
+
+        if (numberOfTraces == 0)
+            return new XLogImpl(null);
 
         Global.log.accept("Maximum no of traces: " + numberOfTraces);
 
@@ -196,7 +264,7 @@ public class Evaluator {
         Global.log.accept("Found Solution: " + (solution != null && solution.satisfiable()));
 
         AlloyLogExtractor ale = new AlloyLogExtractor(world, gen.generateNumericMap(), gen.getTraceAttr(), gen.getNamesEncoding(), start, duration);
-        return ale.extract(solution, numberOfTraces, maxTraceLength);
+        return ale.extract(solution, numberOfTraces, maxTraceLength, reuse);
     }
 
     private static String GetDeclare(String file) throws FileNotFoundException {

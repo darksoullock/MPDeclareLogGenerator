@@ -66,7 +66,8 @@ public class IntegerInterval extends Interval { //does not include min and max v
     @Override
     public void resetCaches() {
         super.resetCaches();
-        differentCache = new HashMap<>();
+        if (differentCache == null || differentCache.size() > 0)
+            differentCache = new HashMap<>();
     }
 
     @Override

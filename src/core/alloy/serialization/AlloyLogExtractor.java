@@ -2,9 +2,9 @@ package core.alloy.serialization;
 
 import core.Exceptions.BadSolutionException;
 import core.Global;
-import core.helpers.StatisticsHelper;
 import core.TimestampGenerator;
 import core.alloy.integration.AlloyPMSolutionBrowser;
+import core.helpers.StatisticsHelper;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.EventAdapter;
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,22 +48,26 @@ public class AlloyLogExtractor {
         this.timeGen = new TimestampGenerator(start, duration);
     }
 
-    public XLog extract(A4Solution alloySolution, int nTraces, int l) throws IOException, Err, BadSolutionException {
+    public XLog extract(A4Solution alloySolution, int nTraces, int length, int reuseSolutionCount) throws IOException, Err, BadSolutionException {
         Global.log.accept("Serialization..");
-
-        XLog plog = this.initLog();
+        List<XTrace> plog = new ArrayList<>(nTraces*reuseSolutionCount);
         int t;
         for (t = 0; t < nTraces && alloySolution.satisfiable(); ++t) {
-            resetIntervalCaches();
-            AlloyPMSolutionBrowser browser = new AlloyPMSolutionBrowser(alloySolution, module, l);
-            plog.add(composeTrace(browser, t));
+            AlloyPMSolutionBrowser browser = new AlloyPMSolutionBrowser(alloySolution, module, length);
+            for (int i = 0; i < reuseSolutionCount; ++i) {
+                resetIntervalCaches();
+                plog.add(composeTrace(browser, t));
+            }
+
             alloySolution = alloySolution.next();
             if (nTraces % (t + 1) == 0 || t % 100 == 0) {
                 System.out.print("... " + (nTraces - t));
             }
         }
 
-        return plog;
+        XLog xlog = this.initLog();
+        xlog.addAll(plog);
+        return xlog;
     }
 
     private void resetIntervalCaches() {
@@ -100,8 +105,7 @@ public class AlloyLogExtractor {
         XTraceImpl oneTrace = new XTraceImpl(new XAttributeMapImpl());
         oneTrace.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Case No. " + ++number));
         handleTraceAttributes(oneTrace);
-
-        StatisticsHelper.add((int) orderedStateEvents.stream().filter(Objects::nonNull).count());
+        StatisticsHelper.addLength((int) orderedStateEvents.stream().filter(Objects::nonNull).count());
         StatisticsHelper.trace = number;
         equalizeSameTokens(orderedStateEvents);
         timeGen.setForTrace(orderedStateEvents);
@@ -119,7 +123,7 @@ public class AlloyLogExtractor {
             handlePayload(oneStateEvent.getPayload(), attributes);
             XEventImpl oneEvent = new XEventImpl();
             oneEvent.setAttributes(attributes);
-            oneTrace.insertOrdered(oneEvent);
+            oneTrace.add(oneEvent);
         }
 
         return oneTrace;
@@ -188,7 +192,7 @@ public class AlloyLogExtractor {
                 dataKey = nameEncoding.get(dataKey);
 
             if (dataValue.length() > dataKey.length() && dataValue.charAt(dataKey.length()) == '.' && dataValue.startsWith(dataKey))
-                dataValue = dataValue.substring(dataKey.length()+1);
+                dataValue = dataValue.substring(dataKey.length() + 1);
             attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
         }
     }

@@ -2,8 +2,8 @@ package core.alloy.codegen;
 
 import core.Exceptions.DeclareParserException;
 import core.Global;
-import core.helpers.RandomHelper;
 import core.alloy.codegen.fnparser.*;
+import core.helpers.RandomHelper;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -292,8 +292,7 @@ public class FunctionGenerator {
         if (bex.getNode().getType() == Token.Type.Comparator) {
             try {
                 handleNumericComparison(bex);
-            }
-            catch (NullPointerException ex){
+            } catch (NullPointerException ex) {
                 if (bex.getNode().getValue().equals("="))
                     Global.log.accept("Did you mean 'is' instead of '='?");
                 throw ex;
@@ -350,6 +349,9 @@ public class FunctionGenerator {
     private void handleNumericComparison(BinaryExpression bex) throws DeclareParserException {
         String var = getVariable(bex);
         String field = getFieldType(var);
+        if (!map.containsKey(field)) {
+            throw new DeclareParserException("Undefined data attribute " + field);
+        }
         Map<String, Interval> intervalsMap = map.get(field).getMapping();
         List<String> intervalsNames = new ArrayList<>();
         for (String i : intervalsMap.keySet())

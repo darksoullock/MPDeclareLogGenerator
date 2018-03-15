@@ -53,7 +53,8 @@ public class FloatInterval extends Interval {
     @Override
     public void resetCaches() {
         super.resetCaches();
-        differentCache = new HashMap<>();
+        if (differentCache == null || differentCache.size() > 0)
+            differentCache = new HashMap<>();
     }
 
     @Override

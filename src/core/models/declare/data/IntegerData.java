@@ -61,13 +61,14 @@ public class IntegerData extends NumericData {
         for (int j = 0; j < intervalSplits; ++j) {
             int start = a + round((step * j) - (j == 0 ? 0 : 1));
             int end = a + round(step * (j + 1));
-            intervals.put(formatBetween(start, end), new IntegerInterval(start, end));
+            if (end - start > 1)
+                intervals.put(formatBetween(start, end), new IntegerInterval(start, end));
         }
     }
 
     private int round(double v) {
         int sign = v < 0 ? -1 : 1;
-        int value = (int) ((v+0.1) * sign);
+        int value = (int) ((v + 0.1) * sign);
         return value * sign;
     }
 
