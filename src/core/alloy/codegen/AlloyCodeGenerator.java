@@ -13,6 +13,7 @@ import core.models.declare.Statement;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
+import core.models.intervals.IntervalSplit;
 import core.models.serialization.trace.AbstractTraceAttribute;
 
 import java.util.*;
@@ -211,17 +212,35 @@ public class AlloyCodeGenerator {
         for (NumericData d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
-                    d.addValue(getNumberFromComparison((BinaryExpression) i));
+                    d.addSplit(getSplitNumberFromComparison((BinaryExpression) i));
     }
 
-    private String getNumberFromComparison(BinaryExpression ex) throws DeclareParserException {
-        if (ex.getLeft().getNode().getType() == Token.Type.Number)
-            return ex.getLeft().getNode().getValue();
+    private IntervalSplit getSplitNumberFromComparison(BinaryExpression ex) throws DeclareParserException {
+        String value = null;
+        boolean numberLeft = false;
+        if (ex.getLeft().getNode().getType() == Token.Type.Number) {
+            value = ex.getLeft().getNode().getValue();
+            numberLeft = true;
+        }
 
-        if (ex.getRight().getNode().getType() == Token.Type.Number)
-            return ex.getRight().getNode().getValue();
+        if (ex.getRight().getNode().getType() == Token.Type.Number) {
+            value = ex.getRight().getNode().getValue();
+        }
 
-        throw new DeclareParserException("No number in comparison operator: " + ex.toString());
+        if (value == null)
+            throw new DeclareParserException("No number in comparison operator: " + ex.toString());
+
+        String token = ex.getNode().getValue();
+        if (token.equals("="))
+            return new IntervalSplit(value);
+
+        if (token.equals("<") || token.equals(">="))
+            return new IntervalSplit(value, numberLeft ? IntervalSplit.SplitSide.RIGHT : IntervalSplit.SplitSide.LEFT);
+
+        if (token.equals(">") || token.equals("<="))
+            return new IntervalSplit(value, numberLeft ? IntervalSplit.SplitSide.LEFT : IntervalSplit.SplitSide.RIGHT);
+
+        throw new DeclareParserException("Unknown token " + token + "\n" + ex.toString());
     }
 
     private void GenerateData(List<EnumeratedData> data, boolean shuffle) {

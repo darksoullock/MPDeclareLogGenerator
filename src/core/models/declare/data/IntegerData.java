@@ -4,7 +4,9 @@ import core.Exceptions.DeclareParserException;
 import core.helpers.RandomHelper;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
+import core.models.intervals.IntervalSplit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class IntegerData extends NumericData {
     int intervalSplits;
 
     public IntegerData(String type, int min, int max, int intervalSplits) {
-        this.min = min - 1;
+        this.min = min - 1; // as constructor parameters min and max are included in range, we move them out
         this.max = max + 1;
         this.type = type;
         this.intervalSplits = intervalSplits;
@@ -28,30 +30,42 @@ public class IntegerData extends NumericData {
     protected void generate() {
         intervals = new HashMap<>();
 
-        if (values.size() == 0) {
+        if (splits.size() == 0) {
             addBetweenInterval(min, max);
             return;
         }
 
-        List<Integer> intValues = values.stream().map(Integer::parseInt).distinct().collect(Collectors.toList());
+        List<Integer> intValues = new ArrayList<>();    // this list contains splits. interval splits between value and value+1
+        for (IntervalSplit i : splits) {
+            int number = i.getParsedValue(Integer::parseInt);
+            if (i.isRight())
+                intValues.add(number);
+
+            if (i.isLeft())
+                intValues.add(--number);
+        }
+
+        intValues = intValues.stream().distinct().collect(Collectors.toList());
         intValues.sort(Integer::compareTo);
 
         if (intValues.get(0) > min)
             intValues.add(0, min);
         if (intValues.get(intValues.size() - 1) < max)
-            intValues.add(intValues.size(), max);
+            intValues.add(intValues.size(), max - 1);   // -1 as max is out of range, and intValues contains right=side splits
 
         for (int i = 1; i < intValues.size(); ++i) {
             int a = intValues.get(i - 1);
             int b = intValues.get(i);
-            if (b - a > 1)  // otherwise no possible values
+            if (b - a > 1) {
+                ++b;
                 addBetweenInterval(a, b);
-            if (i != intValues.size() - 1)
+            } else {
                 intervals.put(formatEquals(b), new IntegerValue(b));
+            }
         }
     }
 
-    private void addBetweenInterval(int a, int b) {
+    private void addBetweenInterval(int a, int b) { // a and b are not included
         float step = (b - a) / intervalSplits;
         if (step < 1) { // to avoid empty intervals -- doesn't split small intervals. can be done other way splitting it by less fractions
             intervals.put(formatBetween(a, b), new IntegerInterval(a, b));
@@ -73,11 +87,11 @@ public class IntegerData extends NumericData {
     }
 
     @Override
-    public void addValue(String value) throws DeclareParserException {
-        int val = Integer.parseInt(value);
+    public void addSplit(IntervalSplit s) throws DeclareParserException {
+        int val = s.getParsedValue(Integer::parseInt);
         if (val <= min || val >= max)
             throw new DeclareParserException(val + " is out of defined interval of " + type);
-        this.values.add(value);
+        this.splits.add(s);
     }
 
     private String formatBetween(int a, int b) {

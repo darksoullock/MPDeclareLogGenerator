@@ -4,6 +4,7 @@ import core.Exceptions.DeclareParserException;
 import core.helpers.RandomHelper;
 import core.models.intervals.FloatInterval;
 import core.models.intervals.FloatValue;
+import core.models.intervals.IntervalSplit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +31,12 @@ public class FloatData extends NumericData {
     protected void generate() {
         intervals = new HashMap<>();
 
-        if (values.size() == 0) {
+        if (splits.size() == 0) {
             addBetweenInterval(min, max);
             return;
         }
 
-        List<Float> floatValues = values.stream().map(Float::parseFloat).distinct().collect(Collectors.toList());
+        List<Float> floatValues = splits.stream().map(i -> i.getParsedValue(Float::parseFloat)).distinct().collect(Collectors.toList());
         floatValues.sort(Float::compareTo);
 
         if (floatValues.get(0) > min)
@@ -66,15 +67,15 @@ public class FloatData extends NumericData {
     }
 
     @Override
-    public void addValue(String value) throws DeclareParserException {
-        float val = Float.parseFloat(value);
+    public void addSplit(IntervalSplit s) throws DeclareParserException {
+        float val = s.getParsedValue(Float::parseFloat);
         if (val < min || val > max)
             throw new DeclareParserException(val + " is out of defined float interval " + min + ".." + max);
         if (val == min)
             includeMin = true;
         if (val == max)
             includeMax = true;
-        this.values.add(value);
+        this.splits.add(s);
     }
 
     private String formatBetween(float a, float b) {

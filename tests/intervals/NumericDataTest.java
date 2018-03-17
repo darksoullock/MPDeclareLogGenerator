@@ -35,27 +35,27 @@ public class NumericDataTest {
     @Test
     public void IntegerDataTest() throws DeclareParserException {
         NumericData data = new IntegerData("idata", 0, 100, 1);
-        data.addValue("30");
-        data.addValue("60");
+        data.addSplit(new IntervalSplit("30"));
+        data.addSplit(new IntervalSplit("60"));
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 5);
         Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerValue));
-        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerInterval));
+        Assert.assertTrue(data.getValues().stream().allMatch(i -> data.getMapping().get(i) instanceof IntegerInterval));
     }
 
     @Test
     public void IntegerDataTest2() throws DeclareParserException {
         int increment = 10_000;
-        NumericData data = new IntegerData("idata", -2000000 + 1, 2000000 - 1, 1);
+        NumericData data = new IntegerData("idata", -2000000+1, 2000000-1, 1);  // -1 and +1 as min and max values in constructor are included in range
         for (int i = 0; i < 100; ++i) {
-            data.addValue(String.valueOf(increment * i));
-            data.addValue(String.valueOf(-increment * i));
+            data.addSplit(new IntervalSplit(String.valueOf(increment * i)));
+            data.addSplit(new IntervalSplit(String.valueOf(-increment * i)));
         }
 
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 399); // 199 (200 minus duplicate zero) values + 200 intervals
         Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerValue));
-        Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof IntegerInterval));
+        Assert.assertTrue(data.getValues().stream().allMatch(i -> data.getMapping().get(i) instanceof IntegerInterval));
         for (String key : data.getMapping().keySet()) {
             Interval intl = data.getMapping().get(key);
             if (intl instanceof IntegerInterval) {
@@ -95,8 +95,8 @@ public class NumericDataTest {
     @Test
     public void FloatDataTest() throws DeclareParserException {
         NumericData data = new FloatData("idata", 0, 100, 1);
-        data.addValue("30");
-        data.addValue("60");
+        data.addSplit(new IntervalSplit("30"));
+        data.addSplit(new IntervalSplit("60"));
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 5);
         Assert.assertTrue(data.getValues().stream().anyMatch(i -> data.getMapping().get(i) instanceof FloatValue));
