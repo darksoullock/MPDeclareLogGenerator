@@ -38,28 +38,60 @@ public class Evaluator {
         used more than once and solution not found (or found few)
          */
         int intervalSplits = 1;
-        int minLength = 5;
-        int maxLength = 5;
-        int nTraces = 1000;
+        int minLength = 7;
+        int maxLength = 26;
+        int nTraces = 5000;
         int maxSameInstances = 2;
-        int shuffleConstraintsIterations = 0;
+        int shuffleConstraintsIterations = 5;
         boolean vacuity = false;
         boolean negativeTraces = false;
-        boolean evenLengthsDistribution = false;
+        boolean evenLengthsDistribution = true;
 
-        //String inFilename = "./data/bt_for_test_smv_data.decl";
-        String inFilename = "./data/loanApplication.decl";
+        String inFilename = "./data/bt_for_test_smv_data.decl";
+        //String inFilename = "./data/loanApplication.decl";
         String alsFilename = "./data/temp.als";
         String outFilename = "./data/" + LocalDate.now() + "-L" + minLength + "-" + maxLength + "-T";
 
-        if (args.length > 4) {
+        if (args.length > 4) {  // todo: extract cli to other class
             minLength = Integer.parseInt(args[0]);
             maxLength = Integer.parseInt(args[1]);
             nTraces = Integer.parseInt(args[2]);
             inFilename = args[3];
             outFilename = args[4];
+            alsFilename = "temp.als";
+            for (int i = 5; i < args.length; ++i) {
+                if (args[i].equals("-vacuity"))
+                    vacuity = true;
+                else if (args[i].equals("-negative"))
+                    negativeTraces = true;
+                else if (args[i].equals("-eld"))
+                    evenLengthsDistribution = true;
+                else if (args[i].equals("-shuffle"))
+                    shuffleConstraintsIterations = Integer.parseInt(getArg(args, ++i, "shuffle"));
+                else if (args[i].equals("-msi"))
+                    shuffleConstraintsIterations = Integer.parseInt(getArg(args, ++i, "msi"));
+                else throw new IllegalArgumentException("Unknown argument '" + args[i] + "'");
+            }
         } else {
-            System.out.println("usage: java -jar AlloyToLog.jar minLength maxLength NTraces input output");
+            System.out.println("\nusage: java -jar AlloyToLog.jar minLength maxLength NTraces input output " +
+                    "[-vacuity] [-negative] [-eld] [-shuffle N] [-msi N]\n\n" +
+                    "example use: java -jar AlloyToLog.jar 5 15 1000 model.decl log.xes -eld -shuffle 2\n\n\n" +
+                    "\targuments:" +
+                    "minLength - integer number, minimal length of trace\n\n" +
+                    "maxLength - integer number, maximal length of trace\n\n" +
+                    "NTraces - integer number, minimal length of trace\n\n" +
+                    "input - name of input file (model); relative or absolute location\n\n" +
+                    "output - name of output file (log)\n\n" +
+                    "\toptional parameters:\n\n" +
+                    "-vacuity - all constraints in the model will be activated at least once for each trace\n\n" +
+                    "-negative - all trace will have at least one constraint violated\n\n" +
+                    "-eld - length of traces between min and max will be evenly distributed between min and max " +
+                    "(actual amount of traces might be lower with this option)\n\n" +
+                    "-shuffle N - reorders constraints priority N times; might improve log quality when two or more " +
+                    "constraints with opposite activation function present in a model. Value more than 1 will " +
+                    "make generation process in N stages. 0 - no shuffle\n\n" +
+                    "-msi N - max. same instances. Don't use\n");
+            //return;
         }
 
         long start = System.nanoTime();
@@ -81,7 +113,8 @@ public class Evaluator {
                 LocalDateTime.now(),
                 Duration.ofHours(4));
 
-        Global.log.accept("Writing XES for: " + outFilename + plog.size() + ".xes");
+        Global.log.accept("Writing XES for: " + outFilename);
+        Global.log.accept(plog.size() + "traces generated");
         FileOutputStream fileOS = new FileOutputStream(outFilename + plog.size() + ".xes");
         new XesXmlSerializer().serialize(plog, fileOS);
         fileOS.close();
@@ -93,6 +126,13 @@ public class Evaluator {
 
         System.out.println();
         //StatisticsHelper.printTime();
+    }
+
+    private static String getArg(String[] args, int i, String name) {
+        if (args.length <= i)
+            throw new IndexOutOfBoundsException("Value for " + name + "required but not found");
+
+        return args[i];
     }
 
     public static XLog getLog(int minTraceLength,

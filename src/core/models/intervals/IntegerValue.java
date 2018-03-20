@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class IntegerValue extends IntegerInterval {
     public IntegerValue(int value) {
-        super(value, value);
+        super(value, value, null);
     }
 
     @Override

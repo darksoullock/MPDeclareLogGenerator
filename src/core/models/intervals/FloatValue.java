@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class FloatValue extends FloatInterval {
     public FloatValue(float value) {
-        super(value, value);
+        super(value, value, null);
     }
 
     @Override

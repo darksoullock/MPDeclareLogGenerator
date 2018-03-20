@@ -82,11 +82,11 @@ public class DeclareParser {
             String[] a = i.split(":\\s*|,?\\s+");
 
             if (a[1].equals("integer")) {
-                IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]), intervalSplits);
+                IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]), intervalSplits, null);
                 data.add(b);
                 numericData.put(b.getType(), b);
             } else if (a[1].equals("float")) {
-                FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]), intervalSplits);
+                FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]), intervalSplits, null);
                 data.add(b);
                 numericData.put(b.getType(), b);
             } else {

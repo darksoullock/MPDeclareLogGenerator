@@ -28,7 +28,7 @@ Absence[ApproveApplication, 1]
 /data definition
 TransportType: Car, Plane, Train, Bus
 Something: One, None, Another
-Price: float between 0 and 100
+Price: float between 0 and 256
 Speed: integer between 0 and 300
 
 /data binding

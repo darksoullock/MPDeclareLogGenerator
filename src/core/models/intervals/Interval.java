@@ -5,6 +5,7 @@ import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import core.interfaces.SafeFunction2;
 
 import java.util.HashMap;
 import java.util.List;

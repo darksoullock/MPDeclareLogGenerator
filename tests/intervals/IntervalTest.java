@@ -25,7 +25,7 @@ public class IntervalTest {
 
     @Test
     public void NegativeIntegerTest() {
-        Interval iv = new IntegerInterval(-11, -1);
+        Interval iv = new IntegerInterval(-11, -1, null);
         Assert.assertEquals(iv.get().charAt(0), '-');
         Assert.assertEquals(iv.getValueCount(10), 9);
     }
@@ -38,7 +38,7 @@ public class IntervalTest {
 
     @Test
     public void IntegerIntervalTest() throws BadSolutionException {
-        Interval iv = new IntegerInterval(0, 10);
+        Interval iv = new IntegerInterval(0, 10, null);
         for (int i = 0; i < 100; ++i) {
             int n = Integer.parseInt(iv.get());
             Assert.assertTrue(n < 10 && n > 0);
@@ -65,7 +65,7 @@ public class IntervalTest {
 
     @Test
     public void IntegerIsCompliantTest() throws DeclareParserException {
-        Interval iv = new IntegerInterval(40, 60);
+        Interval iv = new IntegerInterval(40, 60, null);
         Token moreToken = new Token(0, Token.Type.Comparator, ">");
         Token lessToken = new Token(0, Token.Type.Comparator, "<");
         Token moreEqualsToken = new Token(0, Token.Type.Comparator, ">=");
@@ -108,7 +108,7 @@ public class IntervalTest {
 
     @Test
     public void NegativeFloatTest() {
-        Interval iv = new FloatInterval(-11, -1);
+        Interval iv = new FloatInterval(-11, -1, null);
         Assert.assertEquals(iv.get().charAt(0), '-');
         Assert.assertEquals(iv.getValueCount(10), -1);
     }
@@ -121,7 +121,7 @@ public class IntervalTest {
 
     @Test
     public void FloatIntervalTest() throws BadSolutionException {
-        Interval iv = new FloatInterval(0, 10);
+        Interval iv = new FloatInterval(0, 10, null);
         for (int i = 0; i < 100; ++i) {
             float n = Float.parseFloat(iv.get());
             Assert.assertTrue(n < 10 && n > 0);

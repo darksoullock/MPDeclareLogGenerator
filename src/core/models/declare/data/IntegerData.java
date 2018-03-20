@@ -2,6 +2,7 @@ package core.models.declare.data;
 
 import core.Exceptions.DeclareParserException;
 import core.helpers.RandomHelper;
+import core.interfaces.SafeFunction2;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
 import core.models.intervals.IntervalSplit;
@@ -18,12 +19,14 @@ public class IntegerData extends NumericData {
     int min;
     int max;
     int intervalSplits;
+    SafeFunction2 valueGenerator;
 
-    public IntegerData(String type, int min, int max, int intervalSplits) {
+    public IntegerData(String type, int min, int max, int intervalSplits, SafeFunction2<Integer, Integer, Integer> valueGenerator) {
         this.min = min - 1; // as constructor parameters min and max are included in range, we move them out
         this.max = max + 1;
         this.type = type;
         this.intervalSplits = intervalSplits;
+        this.valueGenerator = valueGenerator;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class IntegerData extends NumericData {
     private void addBetweenInterval(int a, int b) { // a and b are not included
         float step = (b - a) / intervalSplits;
         if (step < 1) { // to avoid empty intervals -- doesn't split small intervals. can be done other way splitting it by less fractions
-            intervals.put(formatBetween(a, b), new IntegerInterval(a, b));
+            intervals.put(formatBetween(a, b), new IntegerInterval(a, b, valueGenerator));
             return;
         }
 
@@ -76,7 +79,7 @@ public class IntegerData extends NumericData {
             int start = a + round((step * j) - (j == 0 ? 0 : 1));
             int end = a + round(step * (j + 1));
             if (end - start > 1)
-                intervals.put(formatBetween(start, end), new IntegerInterval(start, end));
+                intervals.put(formatBetween(start, end), new IntegerInterval(start, end, valueGenerator));
         }
     }
 

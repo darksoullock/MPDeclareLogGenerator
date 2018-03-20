@@ -6,6 +6,7 @@ import core.Global;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.Token;
+import core.interfaces.SafeFunction2;
 
 import java.util.*;
 
@@ -16,15 +17,19 @@ public class IntegerInterval extends Interval { //does not include min and max v
 
     int min;
     int max;
+    SafeFunction2<Integer, Integer, Integer> getValueBetween;
 
-    public IntegerInterval(int min, int max) {
+    public IntegerInterval(int min, int max, SafeFunction2 valueGenerator) {
         this.min = min;
         this.max = max;
+        this.getValueBetween = valueGenerator;
+        if (valueGenerator == null)
+            this.getValueBetween = (amin, amax) -> rnd.nextInt(amax - amin - 1) + amin + 1;
     }
 
     @Override
     public String get() {
-        return String.valueOf(rnd.nextInt(max - min - 1) + min + 1);
+        return String.valueOf(getValueBetween.invoke(min, max));
     }
 
     Map<String, Set<Integer>> differentCache;
@@ -39,7 +44,7 @@ public class IntegerInterval extends Interval { //does not include min and max v
             else
                 differentCache.put(key, new HashSet<>());
 
-        int value = rnd.nextInt(max - min - 1) + min + 1;
+        int value = getValueBetween.invoke(min, max);
 
         int iters = 0;
         int maxIter = getValueCount(max - min);

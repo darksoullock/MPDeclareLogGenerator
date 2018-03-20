@@ -2,6 +2,7 @@ package core.models.declare.data;
 
 import core.Exceptions.DeclareParserException;
 import core.helpers.RandomHelper;
+import core.interfaces.SafeFunction2;
 import core.models.intervals.FloatInterval;
 import core.models.intervals.FloatValue;
 import core.models.intervals.IntervalSplit;
@@ -19,12 +20,14 @@ public class FloatData extends NumericData {
     boolean includeMin;
     boolean includeMax;
     int intervalSplits;
+    SafeFunction2 valueGenerator;
 
-    public FloatData(String type, float min, float max, int intervalSplits) {
+    public FloatData(String type, float min, float max, int intervalSplits, SafeFunction2<Float, Float, Float> valueGenerator) {
         this.min = min;
         this.max = max;
         this.type = type;
         this.intervalSplits = intervalSplits;
+        this.valueGenerator = valueGenerator;
     }
 
     @Override
@@ -37,7 +40,6 @@ public class FloatData extends NumericData {
         }
 
         List<Float> floatValues = splits.stream().map(i -> i.getParsedValue(Float::parseFloat)).distinct().collect(Collectors.toList());
-        floatValues.sort(Float::compareTo);
 
         if (floatValues.get(0) > min)
             floatValues.add(0, min);
@@ -47,13 +49,33 @@ public class FloatData extends NumericData {
         if (includeMin)
             intervals.put(formatEquals(floatValues.get(0)), new FloatValue(floatValues.get(0)));
 
+        if (includeMax)
+            intervals.put(formatEquals(floatValues.get(floatValues.size() - 1)), new FloatValue(floatValues.get(floatValues.size() - 1)));
+
+        addValues(splits);
+        addIntervals(floatValues);
+    }
+
+    private void addValues(List<IntervalSplit> splits) {
+        for (IntervalSplit i : splits.stream().filter(i -> i.isLeft() && i.isRight()).collect(Collectors.toList())) {
+            intervals.put(formatEquals(i.getParsedValue(Float::parseFloat)), new FloatValue(i.getParsedValue(Float::parseFloat)));
+        }
+
+        java.util.Map<Float, Boolean> a = new HashMap<>();
+        for (IntervalSplit i : splits.stream().filter(i -> i.isLeft() ^ i.isRight()).collect(Collectors.toList())) {
+            Float value = i.getParsedValue(Float::parseFloat);
+            if (a.containsKey(value) && a.get(value) == i.isRight())
+                intervals.put(formatEquals(value), new FloatValue(value));
+            else
+                a.put(value, i.isLeft());
+        }
+    }
+
+    private void addIntervals(List<Float> floatValues) {
         for (int i = 1; i < floatValues.size(); ++i) {
             float a = floatValues.get(i - 1);
             float b = floatValues.get(i);
             addBetweenInterval(a, b);
-
-            if (i != floatValues.size() - 1 || includeMax)
-                intervals.put(formatEquals(b), new FloatValue(b));
         }
     }
 
@@ -62,7 +84,7 @@ public class FloatData extends NumericData {
         for (int j = 0; j < intervalSplits; ++j) {
             float start = a + step * j;
             float end = a + step * (j + 1);
-            intervals.put(formatBetween(start, end), new FloatInterval(start, end));
+            intervals.put(formatBetween(start, end), new FloatInterval(start, end, valueGenerator));
         }
     }
 
