@@ -6,7 +6,9 @@ import core.helpers.RandomHelper;
 import core.alloy.codegen.fnparser.DataExpression;
 import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.DataFunction;
+import core.models.DeclareModel;
 import core.models.declare.Activity;
+import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
 import core.models.declare.Statement;
 import core.models.declare.data.EnumeratedData;
@@ -31,11 +33,97 @@ public class DeclareParser {
     Pattern inRectBrackets = Pattern.compile(".*\\[\\s*(.+?)\\s*].*");
     Map<String, String> namesEncoding;
 
+    List<String> tasksCode;
+    List<String> traceAttributesCode;
+    List<String> dataCode;
+    List<String> dataBindingsCode;
+    List<Statement> constraintsCode;
+    List<Statement> dataConstraintsCode;
+
     int intervalSplits;
     DataExpressionParser expressionParser = new DataExpressionParser();
 
     public DeclareParser(int intervalSplits) {
         this.intervalSplits = intervalSplits;
+    }
+
+    public DeclareModel Parse(String declare)
+            throws DeclareParserException {
+        Init();
+        DeclareModel model = new DeclareModel();
+        if (Global.encodeNames)
+            declare = encodeNames(declare);
+        SortInput(splitStatements(declare));
+        model.setActivities(parseActivities(tasksCode));
+        model.setData(parseData(dataCode));
+        ParseDataBindings(model.getActivityToData(), model.getDataToActivity());
+        model.setConstraints(parseConstraints());
+        model.setDataConstraints(parseDataConstraints(dataConstraintsCode));
+        model.setTraceAttributes(parseTraceAttributes(traceAttributesCode));
+        return model;
+    }
+
+    private void Init() {
+        tasksCode = new ArrayList<>();
+        traceAttributesCode = new ArrayList<>();
+        dataCode = new ArrayList<>();
+        dataBindingsCode = new ArrayList<>();
+        constraintsCode = new ArrayList<>();
+        dataConstraintsCode = new ArrayList<>();
+    }
+
+    private void SortInput(String[] st) {
+        int line = 0;
+        for (String i : st) {
+            ++line;
+
+            if (i.isEmpty() || i.startsWith("/"))
+                continue;
+
+            if (isActivity(i))
+                tasksCode.add(i);
+
+            if (isTraceAttribute(i))
+                traceAttributesCode.add(i);
+
+            if (isData(i))
+                dataCode.add(i);
+
+            if (isDataBinding(i))
+                dataBindingsCode.add(i);
+
+            if (isConstraint(i))
+                constraintsCode.add(new Statement(i, line));
+
+            if (isDataConstraint(i))
+                dataConstraintsCode.add(new Statement(i, line));
+        }
+    }
+
+    private void ParseDataBindings(Map<String, List<String>> activityToData, Map<String, List<String>> dataToActivity) {
+        for (String line : dataBindingsCode) {
+            line = line.substring(5);
+            List<String> data = Arrays.stream(line.split("[:,\\s]+")).filter(i -> !i.isEmpty()).collect(Collectors.toList());
+            String activity = data.get(0);
+            if (!activityToData.containsKey(activity))
+                activityToData.put(activity, new ArrayList<>());
+            for (String i : data.stream().skip(1).collect(Collectors.toList())) {
+                activityToData.get(activity).add(i);
+                if (!dataToActivity.containsKey(i))
+                    dataToActivity.put(i, new ArrayList<>());
+                dataToActivity.get(i).add(activity);
+            }
+        }
+    }
+
+    private List<Constraint> parseConstraints() {
+        List<Constraint> constraints = new ArrayList<>();
+        for (Statement s : constraintsCode) {
+            String[] p = s.getCode().split("\\s*[\\[\\],]\\s*");
+            constraints.add(new Constraint(p[0], Arrays.stream(p).skip(1).collect(Collectors.toList()), s));
+        }
+
+        return constraints;
     }
 
     public boolean isActivity(String line) {
@@ -76,7 +164,7 @@ public class DeclareParser {
         return data;
     }
 
-    public List<EnumeratedData> parseData(List<String> dataCode, Map<String, NumericData> numericData) {
+    public List<EnumeratedData> parseData(List<String> dataCode) {
         ArrayList<EnumeratedData> data = new ArrayList<>();
         for (String i : dataCode) {
             String[] a = i.split(":\\s*|,?\\s+");
@@ -84,11 +172,9 @@ public class DeclareParser {
             if (a[1].equals("integer")) {
                 IntegerData b = new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]), intervalSplits, null);
                 data.add(b);
-                numericData.put(b.getType(), b);
             } else if (a[1].equals("float")) {
                 FloatData b = new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]), intervalSplits, null);
                 data.add(b);
-                numericData.put(b.getType(), b);
             } else {
                 data.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList())));
             }
@@ -97,7 +183,7 @@ public class DeclareParser {
         return data;
     }
 
-    public List<DataConstraint> parseDataConstraints(List<Statement> dataConstraintsCode, Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
+    public List<DataConstraint> parseDataConstraints(List<Statement> dataConstraintsCode) throws DeclareParserException {
         List<DataConstraint> dataConstraints = new ArrayList<>();
         for (Statement st : dataConstraintsCode) {
             String[] lr = st.getCode().split("\\|", -1);
@@ -113,7 +199,6 @@ public class DeclareParser {
             List<DataFunction> fns = new ArrayList<>();
             for (int i = 1; i < lr.length; ++i) {
                 DataExpression expr = expressionParser.parse(lr[i]);
-                expressionParser.retrieveNumericExpressions(numericExpressions, expr);
                 DataFunction fn = new DataFunction(args.stream().filter(x -> x.length >= 2).map(x -> x[1]).limit(i).collect(Collectors.toList()), expr);
                 fns.add(fn);
             }

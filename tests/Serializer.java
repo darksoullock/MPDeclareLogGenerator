@@ -142,34 +142,6 @@ public class Serializer {
         Assert.assertTrue(cs.contains(tc));
     }
 
-    @Test
-    public void shuffleTest() throws NoSuchFieldException, IllegalAccessException {
-        XLog log0 = new XLogImpl(new XAttributeMapImpl());
-        XLog log1 = new XLogImpl(new XAttributeMapImpl());
-        XLog log2 = new XLogImpl(new XAttributeMapImpl());
-
-        for (int i = 0; i < 50; ++i) {
-            addTraceDummy(log1, i);
-            addTraceDummy(log2, i + 50);
-        }
-
-        XLog mixed = Evaluator.merge(log0, log1, log2);
-        Assert.assertEquals(mixed.size(), 100);
-        Set<String> present = new HashSet<>();
-        for (int i=0;i<100;++i) {
-            Assert.assertEquals(XesHelper.getAttributeValue(mixed.get(i).getAttributes().get("concept:name")), "Case No. " + (1 + i));
-            present.add(XesHelper.getAttributeValue(mixed.get(i).getAttributes().get("n")));
-        }
-
-        Assert.assertEquals(mixed.size(), 100);
-        Assert.assertEquals(present.size(), 100);
-        Assert.assertTrue(present.contains("0"));
-        Assert.assertTrue(present.contains("1"));
-        Assert.assertTrue(present.contains("42"));
-        Assert.assertTrue(present.contains("56"));
-        Assert.assertTrue(present.contains("99"));
-    }
-
     private void addTraceDummy(XLog log1, int i) {
         XTraceImpl trace = new XTraceImpl(new XAttributeMapImpl());
         trace.getAttributes().put("n", new XAttributeLiteralImpl("n", String.valueOf(i)));

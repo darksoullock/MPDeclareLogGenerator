@@ -23,7 +23,7 @@ public class IOHelper { // TODO: review
 
     public static void writeAllText(String filename, String text) {
         try(  PrintWriter out = new PrintWriter( new FileWriter(filename, false) )  ){
-            out.println( text );
+            out.print( text );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -33,7 +33,7 @@ public class IOHelper { // TODO: review
 
     public static void appendAllText(String filename, String text) {
         try(  PrintWriter out = new PrintWriter( new FileWriter(filename, true) )  ){
-            out.println( text );
+            out.print( text );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

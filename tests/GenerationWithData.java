@@ -1,6 +1,7 @@
 import core.Evaluator;
 import core.Exceptions.BadSolutionException;
 import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.Global;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
@@ -61,7 +62,7 @@ public class GenerationWithData {
             "bind DoSomething: Something\n";
 
     @Test
-    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare
                 + "Init[ApplyForTrip A]|A.Something is One\n"
                 + "bind ApplyForTrip: Something\n";
@@ -93,7 +94,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExactlyAndChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExactlyAndChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "ChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|same Price\n" +
                 "Exactly[BookTransport A, 3]|A.TransportType is Train\n";
 
@@ -128,7 +129,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndNotChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndNotChainResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|B.TransportType in (Car, Bus, Plane)\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
                 "ChainResponse[BookTransport, UseTransport]\n";
@@ -165,7 +166,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndNotChainResponse2() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndNotChainResponse2() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n" +
                 "Existence[UseTransport, 10]\n";
@@ -201,7 +202,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndNotChainResponseWithDifferent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndNotChainResponseWithDifferent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotChainResponse[BookTransport A, UseTransport B]|A.TransportType is Train|different Price\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Train\n";
 
@@ -238,7 +239,7 @@ public class GenerationWithData {
 
     @Test
     public void testChainPrecedence() throws
-            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "ChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|different TransportType\n" +
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n";
 
@@ -275,7 +276,7 @@ public class GenerationWithData {
 
     @Test
     public void testExactlyAndNotChainPrecedence() throws
-            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|different TransportType\n" +
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n";
 
@@ -312,7 +313,7 @@ public class GenerationWithData {
 
     @Test
     public void testExactlyAndNotChainPrecedence2() throws
-            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+            IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotChainPrecedence[UseTransport A, BookTransport B]|A.TransportType is Car|\n" +
                 "Existence[UseTransport U, 3]|U.TransportType is Car\n" +
                 "Existence[BookTransport, 3]\n";
@@ -354,7 +355,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Response[BookTransport A, UseTransport B]|A.Price<10|10<B.Price\n" +
                 "Existence[BookTransport A, 3]|A.Price<10\n";
 
@@ -393,7 +394,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndNotResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndNotResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotResponse[BookTransport A, UseTransport B]|A.Price<10|B.Price>10\n" +
                 "Existence[BookTransport A, 3]|A.Price<10\n" +
                 "Existence[UseTransport A]|A.Price>10\n";
@@ -433,7 +434,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Precedence[UseTransport A, BookTransport B]|A.Price>10|same Price\n" +
                 "Existence[UseTransport A, 3]|A.Price>10\n";
 
@@ -474,7 +475,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistenceAndNotPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistenceAndNotPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotPrecedence[UseTransport A, BookTransport B]|A.Price>10|B.Price>10\n" +
                 "Existence[UseTransport A, 3]|A.Price>10\n" +
                 "Existence[BookTransport, 3]\n";
@@ -513,7 +514,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Choice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
 
         XLog log;
@@ -545,7 +546,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExclusiveChoice() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "ExclusiveChoice[DoSomething A, UseTransport B]|A.Something is One|B.Something is One\n";
 
         XLog log = Evaluator.getLogSingleRun(
@@ -581,7 +582,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Existence[DoSomething A]|A.Something is not One\n";
 
         XLog log = Evaluator.getLogSingleRun(
@@ -612,7 +613,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testAbsenceN() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Absence[DoSomething A, 3]|A.Something is not One\n";
 
         XLog log = Evaluator.getLogSingleRun(
@@ -643,7 +644,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testAbsence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Absence[DoSomething A]|A.Something is not One\n";
 
         XLog log = Evaluator.getLogSingleRun(
@@ -674,7 +675,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "RespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|different TransportType\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
@@ -711,7 +712,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testNotRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testNotRespondedExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotRespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|same TransportType\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
@@ -748,7 +749,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testNotRespondedExistenceWithNumericSame() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testNotRespondedExistenceWithNumericSame() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotRespondedExistence[BookTransport A, UseTransport B]|A.TransportType is Plane|same Price\n" +
                 "Existence[BookTransport A]|A.TransportType is Plane\n";
 
@@ -787,7 +788,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testAlternateResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testAlternateResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "AlternateResponse[BookTransport A, UseTransport B]|A.TransportType is Plane|B.TransportType is Plane\n" +
                 "Existence[BookTransport A, 3]|A.TransportType is Plane\n";
 
@@ -824,7 +825,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testAlternatePrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testAlternatePrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "AlternatePrecedence[UseTransport A, BookTransport B]|A.TransportType is Plane|B.TransportType is Plane\n" +
                 "Existence[UseTransport A, 3]|A.TransportType is Plane\n";
 
@@ -859,7 +860,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testSameDifferentForOneEvent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testSameDifferentForOneEvent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = "activity A\n" +
                 "activity B\n" +
                 "C: integer between 0 and 100\n" +
@@ -898,7 +899,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testNegativeTracesOrJoined() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException {
+    public void testNegativeTracesOrJoined() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = "activity A\n" +
                 "activity B\n" +
                 "activity C\n" +

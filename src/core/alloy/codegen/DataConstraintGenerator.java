@@ -18,7 +18,7 @@ public class DataConstraintGenerator {
     Map<String, NumericData> map;
     StringBuilder alloy;
     FunctionGenerator fnGen;
-    Set<String> supported = Global.getSupportedConstraints();
+    Set<String> supported = Global.getAlloySupportedConstraints();
     List<String> alloyConstraints;
 
     public DataConstraintGenerator(int maxSameInstances, int bitwidth, boolean vacuity) {
@@ -40,14 +40,14 @@ public class DataConstraintGenerator {
             addInitDataConstraint(c, name);
 
         if (c.getName().equals("Absence")) {
-            if (c.getArgs().size() > 1)
+            if (c.isBinary())
                 addAbsenceDataConstraint(c, name, Integer.parseInt(c.taskB()));
             else
                 addAbsenceDataConstraint(c, name);
         }
 
         if (c.getName().equals("Existence")) {
-            if (c.getArgs().size() > 1)
+            if (c.isBinary())
                 addExistenceDataConstraint(c, name, Integer.parseInt(c.taskB()));
             else
                 addExistenceDataConstraint(c, name);

@@ -15,6 +15,10 @@ public class DataConstraint extends Constraint {
         this.functions = functions;
     }
 
+    public boolean hasSecondFunction() {
+        return functions.size() > 1;
+    }
+
     public List<DataFunction> getFunctions() {
         return functions;
     }

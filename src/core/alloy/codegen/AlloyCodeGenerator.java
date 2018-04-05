@@ -4,17 +4,17 @@ import core.Exceptions.DeclareParserException;
 import core.Global;
 import core.alloy.codegen.fnparser.BinaryExpression;
 import core.alloy.codegen.fnparser.DataExpression;
+import core.alloy.codegen.fnparser.DataExpressionParser;
 import core.alloy.codegen.fnparser.Token;
 import core.helpers.RandomHelper;
+import core.models.DeclareModel;
 import core.models.declare.Activity;
 import core.models.declare.Constraint;
 import core.models.declare.DataConstraint;
-import core.models.declare.Statement;
 import core.models.declare.data.EnumeratedData;
 import core.models.declare.data.NumericData;
 import core.models.intervals.Interval;
 import core.models.intervals.IntervalSplit;
-import core.models.serialization.trace.AbstractTraceAttribute;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,58 +31,61 @@ public class AlloyCodeGenerator {
 
     StringBuilder alloy;
     List<String> alloyConstraints;
-
-    List<AbstractTraceAttribute> traceAttributes;
-
-    List<String> tasksCode;
-    List<String> traceAttributesCode;
-    List<String> dataCode;
-    List<String> dataBindingsCode;
-    List<Statement> constraintsCode;
-    List<Statement> dataConstraintsCode;
-
     Map<String, NumericData> numericData;
-    Map<String, List<DataExpression>> numericExpressions;
-
-    DeclareParser parser;
     DataConstraintGenerator gen;
 
     public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth,
-                              int maxSameInstances, int intervalSplits, boolean vacuity, boolean shuffleConstraints) {
+                              int maxSameInstances, boolean vacuity, boolean shuffleConstraints) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
         this.vacuity = vacuity;
         this.shuffleConstraints = shuffleConstraints;
-        this.parser = new DeclareParser(intervalSplits);
         maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
-    public void Run(String declare, boolean negativeTraces) throws DeclareParserException {
-        Init();
-        if (Global.encodeNames)
-            declare = parser.encodeNames(declare);
+    public void Run(DeclareModel model, boolean negativeTraces) throws DeclareParserException {
+
+        alloy = new StringBuilder(GetBase());
+        alloyConstraints = new ArrayList<>();
+        numericData = fillNumericDataMap(model.getData());
+        ExtendNumericData(getNumericExpressionsMap(model.getDataConstraints()));
+
+        generateActivities(model.getActivities());
         GenerateEvents(maxTraceLength);
         GenerateNextPredicate(maxTraceLength);
         GenerateAfterPredicate(maxTraceLength);
-        SortInput(parser.splitStatements(declare));
-        List<Activity> tasks = parser.parseActivities(tasksCode);
-        generateActivities(tasks);
-        List<EnumeratedData> data = parser.parseData(dataCode, numericData);
-        ParseAndGenerateDataBindings();
-        List<Constraint> constraints = parseConstraints();
-        generateConstraints(constraints);
+        GenerateDataBinding(model.getActivityToData(), model.getDataToActivity());
         if (vacuity)
-            generateVacuity(constraints);
-        List<DataConstraint> dataConstraints = parser.parseDataConstraints(dataConstraintsCode, numericExpressions);
-        ExtendNumericData();
-        GenerateData(data, shuffleConstraints);
-        GenerateDataConstraints(dataConstraints);
+            generateVacuity(model.getConstraints());
+        generateConstraints(model.getConstraints());
+        GenerateData(model.getData(), shuffleConstraints);
+        GenerateDataConstraints(model.getDataConstraints());
         if (shuffleConstraints)
             Collections.shuffle(alloyConstraints);
         AttachConstraints(negativeTraces);
-        traceAttributes = parser.parseTraceAttributes(traceAttributesCode);
+    }
+
+    public Map<String, NumericData> fillNumericDataMap(List<EnumeratedData> data) {
+        Map<String, NumericData> map = new HashMap<>();
+        for (EnumeratedData item : data)
+            if (item instanceof NumericData)
+                map.put(item.getType(), (NumericData) item);
+
+        return map;
+    }
+
+    private Map<String, List<DataExpression>> getNumericExpressionsMap(List<DataConstraint> dataConstraints) throws DeclareParserException {
+        Map<String, List<DataExpression>> numericExpressions = new HashMap<>();
+        DataExpressionParser expressionParser = new DataExpressionParser();
+        for (DataConstraint i : dataConstraints) {
+            expressionParser.retrieveNumericExpressions(numericExpressions, i.getFirstFunction().getExpression());
+            if (i.hasSecondFunction())
+                expressionParser.retrieveNumericExpressions(numericExpressions, i.getSecondFunction().getExpression());
+        }
+
+        return numericExpressions;
     }
 
     private void AttachConstraints(boolean negativeTraces) {
@@ -98,10 +101,6 @@ public class AlloyCodeGenerator {
         return null;
     }
 
-    public List<AbstractTraceAttribute> getTraceAttr() {
-        return traceAttributes;
-    }
-
     public Map<String, Interval> generateNumericMap() {
         Map<String, Interval> map = new HashMap<>();
         for (NumericData ed : numericData.values())
@@ -109,26 +108,6 @@ public class AlloyCodeGenerator {
                 map.put(i, ed.getMapping().get(i));
 
         return map;
-    }
-
-    private void Init() {
-        tasksCode = new ArrayList<>();
-        traceAttributesCode = new ArrayList<>();
-        dataCode = new ArrayList<>();
-        dataBindingsCode = new ArrayList<>();
-        constraintsCode = new ArrayList<>();
-        dataConstraintsCode = new ArrayList<>();
-
-        numericData = new HashMap<>();
-        numericExpressions = new HashMap<>();
-
-        alloy = new StringBuilder(GetBase());
-        alloyConstraints = new ArrayList<>();
-        //IOHelper.writeAllText("./data/base.als", GetBase());
-    }
-
-    public Map<String, String> getNamesEncoding() {
-        return parser.getNamesEncoding();
     }
 
     private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws DeclareParserException {
@@ -146,22 +125,12 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private List<Constraint> parseConstraints() {
-        List<Constraint> constraints = new ArrayList<>();
-        for (Statement s : constraintsCode) {
-            String[] p = s.getCode().split("\\s*[\\[\\],]\\s*");
-            constraints.add(new Constraint(p[0], Arrays.stream(p).skip(1).collect(Collectors.toList()), s));
-        }
-
-        return constraints;
-    }
-
     private void generateConstraints(List<Constraint> constraints) throws DeclareParserException {
-        Set<String> supported = Global.getSupportedConstraints();
+        Set<String> supported = Global.getAlloySupportedConstraints();
         for (Constraint i : constraints) {
             if (!supported.contains(i.getName()))
                 throw new DeclareParserException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
-                        "' is not supported. \nSupported constraints are: " + String.join(", ", supported) +
+                        "' is not supported by Alloy. \nSupported constraints are: " + String.join(", ", supported) +
                         "\nIf the name in error different from the model source code, and part of it replaced with random sequence, " +
                         "then some of the short names you used might be part of keywords (like the name of constraint). " +
                         "Try to enclose such names in single quotes, 'like this'");
@@ -186,29 +155,7 @@ public class AlloyCodeGenerator {
         return "p" + RandomHelper.getNext();
     }
 
-    private void ParseAndGenerateDataBindings() {
-        Map<String, List<String>> taskToData = new HashMap<>();
-        Map<String, List<String>> dataToActivity = new HashMap<>();
-
-        for (String line : dataBindingsCode) {
-            line = line.substring(5);
-            List<String> data = Arrays.stream(line.split("[:,\\s]+")).filter(i -> !i.isEmpty()).collect(Collectors.toList());
-            String task = data.get(0);
-            if (!taskToData.containsKey(task))
-                taskToData.put(task, new ArrayList<>());
-            for (String i : data.stream().skip(1).collect(Collectors.toList())) {
-                taskToData.get(task).add(i);
-                if (!dataToActivity.containsKey(i))
-                    dataToActivity.put(i, new ArrayList<>());
-                dataToActivity.get(i).add(task);
-            }
-        }
-
-        WriteDataBinding(taskToData, dataToActivity);
-    }
-
-
-    private void ExtendNumericData() throws DeclareParserException {
+    private void ExtendNumericData(Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
         for (NumericData d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
@@ -287,39 +234,6 @@ public class AlloyCodeGenerator {
             alloy.append("one sig ").append(i.getName()).append(" extends Activity {}\n");
     }
 
-    private void SortInput(String[] st) {
-        int line = 0;
-        for (String i : st) {
-            ++line;
-
-            if (i.isEmpty() || i.startsWith("/"))
-                continue;
-
-            if (i.startsWith("!") && Global.rawAlloyAllowed) {
-                alloyConstraints.add(i.substring(1));
-                continue;
-            }
-
-            if (parser.isActivity(i))
-                tasksCode.add(i);
-
-            if (parser.isTraceAttribute(i))
-                traceAttributesCode.add(i);
-
-            if (parser.isData(i))
-                dataCode.add(i);
-
-            if (parser.isDataBinding(i))
-                dataBindingsCode.add(i);
-
-            if (parser.isConstraint(i))
-                constraintsCode.add(new Statement(i, line));
-
-            if (parser.isDataConstraint(i))
-                dataConstraintsCode.add(new Statement(i, line));
-        }
-    }
-
     private void GenerateEvents(int length) {
         for (int i = 0; i < length; i++) {
             if (i < minTraceLength)
@@ -364,12 +278,12 @@ public class AlloyCodeGenerator {
         alloy.append("}\n");
     }
 
-    private void WriteDataBinding(Map<String, List<String>> taskToData, Map<String, List<String>> dataToActivity) {
-        for (String task : taskToData.keySet()) {
+    private void GenerateDataBinding(Map<String, List<String>> activityToData, Map<String, List<String>> dataToActivity) {
+        for (String activity : activityToData.keySet()) {
             alloy.append("fact { all te: Event | te.task = ")
-                    .append(task)
+                    .append(activity)
                     .append(" implies (one ")
-                    .append(String.join(" & te.data and one ", taskToData.get(task)))
+                    .append(String.join(" & te.data and one ", activityToData.get(activity)))
                     .append(" & te.data")
                     .append(")}\n");
         }

@@ -1,6 +1,7 @@
 package parsing;
 
 import core.Exceptions.DeclareParserException;
+import core.alloy.codegen.AlloyCodeGenerator;
 import core.alloy.codegen.DeclareParser;
 import core.models.declare.DataConstraint;
 import core.models.declare.Statement;
@@ -16,7 +17,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,14 +27,16 @@ import java.util.stream.Stream;
  */
 public class ParserTest {
     DeclareParser parser = new DeclareParser(1);
+    AlloyCodeGenerator gen = new AlloyCodeGenerator(2, 2, 2, 2, false, false);
 
     @Test
     public void testData() {
-        Map<String, NumericData> map = new HashMap<>();
         List<EnumeratedData> data = parser.parseData(Arrays.asList(
                 "TransportType: Car, Plane, Train, Bus",
                 "Price integer between 0 and 300",
-                "Angle float between 0 and 180"), map);
+                "Angle float between 0 and 180"));
+
+        Map<String, NumericData> map = gen.fillNumericDataMap(data);
 
         Assert.assertEquals(data.size(), 3);
         Assert.assertEquals(map.size(), 2);
@@ -102,7 +104,7 @@ public class ParserTest {
         List<Statement> raw = Stream.of("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
                 "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low")
                 .map(i -> new Statement(i, 0)).collect(Collectors.toList());
-        List<DataConstraint> dcs = parser.parseDataConstraints(raw, null);
+        List<DataConstraint> dcs = parser.parseDataConstraints(raw);
         Assert.assertEquals(dcs.size(), 2);
         DataConstraint first = dcs.get(0);
         DataConstraint second = dcs.get(1);
