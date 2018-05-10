@@ -1,10 +1,9 @@
-package core.SMV;
+package core;
 
-import core.Exceptions.GenerationException;
-import core.Global;
 import declare.lang.Constraint;
 import declare.lang.DataConstraint;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ public class LtlGen {
         // F (length < minlength & state = _tail) -- no end until minimum length is reached
         smv.append("LTLSPEC G (state != _tail) | F (state = _tail & X state != _tail) | F (length<minlength & state = _tail) | ");
 
-        Set<String> supported = Global.getAlloySupportedConstraints();
+        Set<String> supported = getSupportedConstraints();
         for (Constraint i : constraints) {
             if (!supported.contains(i.getName()))
                 throw new GenerationException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
@@ -274,5 +273,30 @@ public class LtlGen {
             task = task + dcGen.getLtl(((DataConstraint) c).getSecondFunction());
         }
         return task;
+    }
+
+    public static Set<String> getSupportedConstraints() {
+        Set<String> supported = new HashSet<>();
+        supported.add("Init");
+        supported.add("Existence");
+        supported.add("Existence");
+        supported.add("Absence");
+        supported.add("Absence");
+        supported.add("Exactly");
+        supported.add("Choice");
+        supported.add("ExclusiveChoice");
+        supported.add("RespondedExistence");
+        supported.add("Response");
+        supported.add("AlternateResponse");
+        supported.add("ChainResponse");
+        supported.add("Precedence");
+        supported.add("AlternatePrecedence");
+        supported.add("ChainPrecedence");
+        supported.add("NotRespondedExistence");
+        supported.add("NotResponse");
+        supported.add("NotPrecedence");
+        supported.add("NotChainResponse");
+        supported.add("NotChainPrecedence");
+        return supported;
     }
 }

@@ -1,9 +1,7 @@
-package core.SMV;
+package core;
 
 import com.google.gson.Gson;
-import core.Exceptions.GenerationException;
 import declare.DeclareModel;
-import declare.DeclareParserException;
 import declare.lang.Activity;
 import declare.lang.Constraint;
 import declare.lang.data.EnumeratedData;
@@ -11,7 +9,6 @@ import declare.lang.data.FloatData;
 import declare.lang.data.IntegerData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,21 +20,12 @@ public class SmvCodeGenerator {
     StringBuilder smv;
     private String dataBindingJson;
 
-    public void run(DeclareModel model, int minLength, boolean shuffle) throws GenerationException {
+    public void run(DeclareModel model, int minLength) throws GenerationException {
         smv = new StringBuilder("MODULE main\n");
-        if (shuffle){
-            shuffleModelStatements(model);
-        }
-        generateVariables(model.getActivities(), getData(model, shuffle));
+        generateVariables(model.getActivities(), getData(model));
         generateAssign(minLength);
         generateDataBinding(model.getActivityToData(), model.getDataToActivity());
         new LtlGen(smv).generateConstraints(getAllConstraints(model));
-    }
-
-    private void shuffleModelStatements(DeclareModel model) {
-        Collections.shuffle(model.getActivities());
-        Collections.shuffle(model.getConstraints());
-        Collections.shuffle(model.getDataConstraints());
     }
 
     private ArrayList<Constraint> getAllConstraints(DeclareModel model) throws GenerationException {
@@ -57,24 +45,23 @@ public class SmvCodeGenerator {
         generateData(data);
     }
 
-    private List getData(DeclareModel model, boolean shuffle) {
+    private List getData(DeclareModel model) {
         List<Object> data = new ArrayList<>();
         data.addAll(model.getEnumeratedData());
         data.addAll(model.getIntegerData());
         data.addAll(model.getFloatData());
-        if (shuffle) Collections.shuffle(data);
         return data;
     }
 
     private void generateData(List data) throws GenerationException {
         for (Object item : data) {
             if (item instanceof IntegerData)
-                    smv.append(((IntegerData)item).getType()).append(":integer;\n");
+                smv.append(((IntegerData) item).getType()).append(":integer;\n");
             else if (item instanceof FloatData)
-                    smv.append(((FloatData)item).getType()).append(":real;\n");
+                smv.append(((FloatData) item).getType()).append(":real;\n");
             else if (item instanceof EnumeratedData)
-                smv.append(((EnumeratedData)item).getType()).append(":{")
-                        .append(String.join(", ", ((EnumeratedData)item).getValues())).append("};\n");
+                smv.append(((EnumeratedData) item).getType()).append(":{")
+                        .append(String.join(", ", ((EnumeratedData) item).getValues())).append("};\n");
             else throw new GenerationException("unknown data type");
         }
     }

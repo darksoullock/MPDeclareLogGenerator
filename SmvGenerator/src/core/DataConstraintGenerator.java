@@ -1,6 +1,5 @@
-package core.SMV;
+package core;
 
-import core.Exceptions.GenerationException;
 import declare.fnparser.*;
 import org.apache.commons.lang3.NotImplementedException;
 

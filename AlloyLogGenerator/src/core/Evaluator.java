@@ -3,7 +3,6 @@ package core;
 import core.Exceptions.BadSolutionException;
 import core.Exceptions.DeclareParserException;
 import core.Exceptions.GenerationException;
-import core.SMV.SmvCodeGenerator;
 import core.alloy.codegen.AlloyCodeGenerator;
 import core.alloy.integration.AlloyComponent;
 import core.alloy.serialization.AlloyLogExtractor;
