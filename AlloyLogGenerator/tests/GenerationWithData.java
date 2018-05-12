@@ -1,8 +1,8 @@
 import core.Evaluator;
 import core.Exceptions.BadSolutionException;
-import core.Exceptions.DeclareParserException;
 import core.Exceptions.GenerationException;
 import core.Global;
+import declare.DeclareParserException;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;

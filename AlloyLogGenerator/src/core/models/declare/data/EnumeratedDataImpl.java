@@ -1,22 +1,20 @@
 package core.models.declare.data;
 
-import core.Exceptions.DeclareParserException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Vasiliy on 2017-10-17.
  */
-public class EnumeratedData {
+public class EnumeratedDataImpl {
     String type;
     List<String> values;
 
-    public EnumeratedData() {
+    public EnumeratedDataImpl() {
         values = new ArrayList<>();
     }
 
-    public EnumeratedData(String type, List<String> values) {
+    public EnumeratedDataImpl(String type, List<String> values) {
         this.type = type;
         this.values = new ArrayList<>(values);
     }
@@ -29,7 +27,7 @@ public class EnumeratedData {
         return values;
     }
 
-    public void addValue(String value) throws DeclareParserException {
+    public void addValue(String value) {
         this.values.add(value);
     }
 }

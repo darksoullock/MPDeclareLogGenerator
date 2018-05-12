@@ -1,6 +1,6 @@
 package core.models.declare.data;
 
-import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.helpers.RandomHelper;
 import core.interfaces.SafeFunction2;
 import core.models.intervals.FloatInterval;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Vasiliy on 2017-10-23.
  */
-public class FloatData extends NumericData {
+public class FloatDataImpl extends NumericDataImpl {
     float min;
     float max;
     boolean includeMin;
@@ -22,7 +22,7 @@ public class FloatData extends NumericData {
     int intervalSplits;
     SafeFunction2 valueGenerator;
 
-    public FloatData(String type, float min, float max, int intervalSplits, SafeFunction2<Float, Float, Float> valueGenerator) {
+    public FloatDataImpl(String type, float min, float max, int intervalSplits, SafeFunction2<Float, Float, Float> valueGenerator) {
         this.min = min;
         this.max = max;
         this.type = type;
@@ -89,10 +89,10 @@ public class FloatData extends NumericData {
     }
 
     @Override
-    public void addSplit(IntervalSplit s) throws DeclareParserException {
+    public void addSplit(IntervalSplit s) throws GenerationException {
         float val = s.getParsedValue(Float::parseFloat);
         if (val < min || val > max)
-            throw new DeclareParserException(val + " is out of defined float interval " + min + "" + max);
+            throw new GenerationException(val + " is out of defined float interval " + min + "" + max);
         if (val == min)
             includeMin = true;
         if (val == max)

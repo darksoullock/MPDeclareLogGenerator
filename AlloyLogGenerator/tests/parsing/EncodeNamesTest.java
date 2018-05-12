@@ -1,6 +1,7 @@
 package parsing;
 
-import core.alloy.codegen.DeclareParser;
+import core.alloy.codegen.NameEncoder;
+import declare.DeclareParser;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class EncodeNamesTest {
     @Test
     public void testEncoding() {
-        DeclareParser parser = new DeclareParser(1);
+        DeclareParser parser = new DeclareParser();
         String declare = "activity microscopisch onderzoek - gekleurd en on\n" +
                 "activity sinus\n" +
                 "activity inwend.geneesk.  korte kaart kosten-out\n" +
@@ -50,8 +51,9 @@ public class EncodeNamesTest {
                 "NotRespondedExistence[telefonisch_consult A, alkalische_fosfatase__kinetisch_ T]|((A.Producer code is SGAL ) or ( A.Producer code is SGNA ))| \n" +
                 "Absence[aanname_laboratoriumonderzoek A]|(A.Section is Section_4 ) and (A.SpecialismCode is 86) and (A.org::group is not General_Lab_Clinical_Chemistry)\n";
 
-        String encoded = parser.encodeNames(declare);
-        Map<String, String> encoding = parser.getNamesEncoding();
+        NameEncoder encoder = new NameEncoder(parser);
+        String encoded = encoder.encode(declare);
+        Map<String, String> encoding = encoder.getEncoding();
         String[] keys = new String[encoding.size()];
         String[] values = new String[encoding.size()];
         int i = 0;

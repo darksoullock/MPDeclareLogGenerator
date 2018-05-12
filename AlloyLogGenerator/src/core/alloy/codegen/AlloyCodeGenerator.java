@@ -1,20 +1,26 @@
 package core.alloy.codegen;
 
-import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.Global;
-import core.alloy.codegen.fnparser.BinaryExpression;
-import core.alloy.codegen.fnparser.DataExpression;
-import core.alloy.codegen.fnparser.DataExpressionParser;
-import core.alloy.codegen.fnparser.Token;
 import core.helpers.RandomHelper;
-import core.models.DeclareModel;
-import core.models.declare.Activity;
-import core.models.declare.Constraint;
-import core.models.declare.DataConstraint;
-import core.models.declare.data.EnumeratedData;
-import core.models.declare.data.NumericData;
+import core.models.declare.data.EnumeratedDataImpl;
+import core.models.declare.data.FloatDataImpl;
+import core.models.declare.data.IntegerDataImpl;
+import core.models.declare.data.NumericDataImpl;
 import core.models.intervals.Interval;
 import core.models.intervals.IntervalSplit;
+import declare.DeclareModel;
+import declare.DeclareParserException;
+import declare.fnparser.BinaryExpression;
+import declare.fnparser.DataExpression;
+import declare.fnparser.DataExpressionParser;
+import declare.fnparser.Token;
+import declare.lang.Activity;
+import declare.lang.Constraint;
+import declare.lang.DataConstraint;
+import declare.lang.data.EnumeratedData;
+import declare.lang.data.FloatData;
+import declare.lang.data.IntegerData;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +37,7 @@ public class AlloyCodeGenerator {
 
     StringBuilder alloy;
     List<String> alloyConstraints;
-    Map<String, NumericData> numericData;
+    Map<String, NumericDataImpl> numericData;
     DataConstraintGenerator gen;
 
     public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth,
@@ -45,11 +51,12 @@ public class AlloyCodeGenerator {
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
-    public void Run(DeclareModel model, boolean negativeTraces) throws DeclareParserException {
+    public void Run(DeclareModel model, boolean negativeTraces, int intervalSplits) throws DeclareParserException, GenerationException {
 
         alloy = new StringBuilder(GetBase());
         alloyConstraints = new ArrayList<>();
-        numericData = fillNumericDataMap(model.getData());
+        List<EnumeratedDataImpl> data = collectData(model, intervalSplits);
+        numericData = fillNumericDataMap(data);
         ExtendNumericData(getNumericExpressionsMap(model.getDataConstraints()));
 
         generateActivities(model.getActivities());
@@ -60,18 +67,37 @@ public class AlloyCodeGenerator {
         if (vacuity)
             generateVacuity(model.getConstraints());
         generateConstraints(model.getConstraints());
-        GenerateData(model.getData(), shuffleConstraints);
+        GenerateData(data, shuffleConstraints);
         GenerateDataConstraints(model.getDataConstraints());
         if (shuffleConstraints)
             Collections.shuffle(alloyConstraints);
         AttachConstraints(negativeTraces);
     }
 
-    public Map<String, NumericData> fillNumericDataMap(List<EnumeratedData> data) {
-        Map<String, NumericData> map = new HashMap<>();
-        for (EnumeratedData item : data)
-            if (item instanceof NumericData)
-                map.put(item.getType(), (NumericData) item);
+    public List<EnumeratedDataImpl> collectData(DeclareModel model, int intervalSplits) {
+        List<EnumeratedDataImpl> data = new ArrayList<>(model.getEnumeratedData().size() +
+                model.getIntegerData().size() + model.getFloatData().size());
+
+        for (EnumeratedData i : model.getEnumeratedData()) {
+            data.add(new EnumeratedDataImpl(i.getType(), i.getValues()));
+        }
+
+        for (IntegerData i : model.getIntegerData()) {
+            data.add(new IntegerDataImpl(i.getType(), i.getMin(), i.getMax(), intervalSplits, null));
+        }
+
+        for (FloatData i : model.getFloatData()) {
+            data.add(new FloatDataImpl(i.getType(), i.getMin(), i.getMax(), intervalSplits, null));
+        }
+
+        return data;
+    }
+
+    public Map<String, NumericDataImpl> fillNumericDataMap(List<EnumeratedDataImpl> data) {
+        Map<String, NumericDataImpl> map = new HashMap<>();
+        for (EnumeratedDataImpl item : data)
+            if (item instanceof NumericDataImpl)
+                map.put(item.getType(), (NumericDataImpl) item);
 
         return map;
     }
@@ -103,20 +129,17 @@ public class AlloyCodeGenerator {
 
     public Map<String, Interval> generateNumericMap() {
         Map<String, Interval> map = new HashMap<>();
-        for (NumericData ed : numericData.values())
+        for (NumericDataImpl ed : numericData.values())
             for (String i : ed.getMapping().keySet())
                 map.put(i, ed.getMapping().get(i));
 
         return map;
     }
 
-    private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws DeclareParserException {
+    private void GenerateDataConstraints(List<DataConstraint> dataConstraints) throws GenerationException, DeclareParserException {
         for (DataConstraint i : dataConstraints) {
             try {
                 alloy.append(gen.Generate(i, getRandomFunctionName(), numericData, alloyConstraints));
-            } catch (DeclareParserException ex) {
-                Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
-                throw ex;
             } catch (IndexOutOfBoundsException ex) {
                 Global.log.accept("Did you define variable for data constraint (e.g. Existence[Task A]|A.value>1 instead of Existence[Task]|A.value>1)");
                 Global.log.accept("at line " + i.getStatement().getLine() + ":\n" + ex.getMessage());
@@ -155,8 +178,8 @@ public class AlloyCodeGenerator {
         return "p" + RandomHelper.getNext();
     }
 
-    private void ExtendNumericData(Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException {
-        for (NumericData d : numericData.values())
+    private void ExtendNumericData(Map<String, List<DataExpression>> numericExpressions) throws DeclareParserException, GenerationException {
+        for (NumericDataImpl d : numericData.values())
             if (numericExpressions.containsKey(d.getType()))
                 for (DataExpression i : numericExpressions.get(d.getType()))
                     d.addSplit(getSplitNumberFromComparison((BinaryExpression) i));
@@ -190,13 +213,13 @@ public class AlloyCodeGenerator {
         throw new DeclareParserException("Unknown token " + token + "\n" + ex.toString());
     }
 
-    private void GenerateData(List<EnumeratedData> data, boolean shuffle) {
+    private void GenerateData(List<EnumeratedDataImpl> data, boolean shuffle) {
         if (shuffle)
             Collections.shuffle(data);
 
-        for (EnumeratedData item : data) {
-            if (item instanceof NumericData) {
-                GenerateNumericDataItem((NumericData) item);
+        for (EnumeratedDataImpl item : data) {
+            if (item instanceof NumericDataImpl) {
+                GenerateNumericDataItem((NumericDataImpl) item);
                 continue;
             }
             alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {}\n");
@@ -211,7 +234,7 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void GenerateNumericDataItem(NumericData item) {
+    private void GenerateNumericDataItem(NumericDataImpl item) {
         alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
         alloy.append("fact { all te: Event | (lone ").append(item.getType()).append(" & te.data) }\n");
         alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");

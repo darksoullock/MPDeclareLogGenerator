@@ -1,11 +1,12 @@
 package core.alloy.codegen;
 
-import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.Global;
-import core.alloy.codegen.fnparser.*;
 import core.helpers.RandomHelper;
-import core.models.declare.data.NumericData;
+import core.models.declare.data.NumericDataImpl;
 import core.models.intervals.Interval;
+import declare.DeclareParserException;
+import declare.fnparser.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public class FunctionGenerator {
     StringBuilder alloy;
-    Map<String, NumericData> map;
+    Map<String, NumericDataImpl> map;
     List<String> args;
     List<String> argTypes;
     int maxSameInstances;
@@ -28,7 +29,7 @@ public class FunctionGenerator {
         this.minInt = -(int) Math.pow(2, bitwidth - 1);
     }
 
-    public String generateFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
+    public String generateFunction(String name, DataFunction function, Map<String, NumericDataImpl> map, List<String> argTypes) throws DeclareParserException, GenerationException {
         init(function, map, argTypes);
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": Event) { { ");
         String continuation = generateExpression(handleNegativeNumericComparison(function.getExpression()));
@@ -37,7 +38,7 @@ public class FunctionGenerator {
         return alloy.toString();
     }
 
-    public String generateNotFunction(String name, DataFunction function, Map<String, NumericData> map, List<String> argTypes) throws DeclareParserException {
+    public String generateNotFunction(String name, DataFunction function, Map<String, NumericDataImpl> map, List<String> argTypes) throws DeclareParserException, GenerationException {
         init(function, map, argTypes);
         alloy.append("pred ").append(name).append('(').append(String.join(", ", function.getArgs())).append(": set Event) { { ");
         DataExpression expr = handleNegativeNumericComparison(function.getExpression());
@@ -75,7 +76,7 @@ public class FunctionGenerator {
         return map.containsKey(expression.getValue().getNode().getValue());
     }
 
-    private void init(DataFunction function, Map<String, NumericData> map, List<String> argTypes) {
+    private void init(DataFunction function, Map<String, NumericDataImpl> map, List<String> argTypes) {
         this.alloy = new StringBuilder();
         this.map = map;
         this.args = function.getArgs();
@@ -133,7 +134,7 @@ public class FunctionGenerator {
         return expression.getNode().getValue().equals("not");
     }
 
-    private String generateExpression(DataExpression expression) throws DeclareParserException {
+    private String generateExpression(DataExpression expression) throws DeclareParserException, GenerationException {
         if (expression instanceof ValueExpression)
             return handleValueExpression((ValueExpression) expression);
 
@@ -162,7 +163,7 @@ public class FunctionGenerator {
         return "";
     }
 
-    private String handleUnaryExpression(UnaryExpression uex) throws DeclareParserException {
+    private String handleUnaryExpression(UnaryExpression uex) throws DeclareParserException, GenerationException {
         StringBuilder tc = new StringBuilder();
         if (uex.getNode().getValue().equals("same")) {
             if (map.containsKey(getFieldType(uex.getValue().getNode().getValue()))) {
@@ -288,7 +289,7 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
-    private String handleBinaryExpression(BinaryExpression bex) throws DeclareParserException {
+    private String handleBinaryExpression(BinaryExpression bex) throws DeclareParserException, GenerationException {
         if (bex.getNode().getType() == Token.Type.Comparator) {
             try {
                 handleNumericComparison(bex);
@@ -346,7 +347,7 @@ public class FunctionGenerator {
         return tc.toString();
     }
 
-    private void handleNumericComparison(BinaryExpression bex) throws DeclareParserException {
+    private void handleNumericComparison(BinaryExpression bex) throws DeclareParserException, GenerationException {
         String var = getVariable(bex);
         String field = getFieldType(var);
         if (!map.containsKey(field)) {

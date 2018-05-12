@@ -1,11 +1,11 @@
 package core.models.intervals;
 
 import core.Exceptions.BadSolutionException;
-import core.Exceptions.DeclareParserException;
-import core.alloy.codegen.fnparser.BinaryExpression;
-import core.alloy.codegen.fnparser.DataExpression;
-import core.alloy.codegen.fnparser.Token;
+import core.Exceptions.GenerationException;
 import core.interfaces.SafeFunction2;
+import declare.fnparser.BinaryExpression;
+import declare.fnparser.DataExpression;
+import declare.fnparser.Token;
 
 import java.util.*;
 
@@ -63,9 +63,9 @@ public class FloatInterval extends Interval {
     }
 
     @Override
-    public boolean isCompliant(DataExpression expr) throws DeclareParserException {
+    public boolean isCompliant(DataExpression expr) throws GenerationException {
         if (expr.getNode().getType() != Token.Type.Comparator)
-            throw new DeclareParserException("Interval compliancy can be check only for numeric comparison operations");
+            throw new GenerationException("Interval compliancy can be check only for numeric comparison operations");
 
         BinaryExpression bex = rot((BinaryExpression) expr);
         float number = Float.parseFloat(bex.getRight().getNode().getValue());
@@ -81,7 +81,7 @@ public class FloatInterval extends Interval {
         if (op.equals("="))
             return min == number && max == number;
 
-        throw new DeclareParserException("Unknown operation: " + expr.toString());
+        throw new GenerationException("Unknown operation: " + expr.toString());
     }
 
     @Override

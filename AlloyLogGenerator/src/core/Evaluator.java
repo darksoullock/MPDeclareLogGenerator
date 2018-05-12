@@ -1,9 +1,9 @@
 package core;
 
 import core.Exceptions.BadSolutionException;
-import core.Exceptions.DeclareParserException;
 import core.Exceptions.GenerationException;
 import core.alloy.codegen.AlloyCodeGenerator;
+import core.alloy.codegen.NameEncoder;
 import core.alloy.integration.AlloyComponent;
 import core.alloy.serialization.AlloyLogExtractor;
 import core.helpers.IOHelper;
@@ -11,8 +11,16 @@ import core.helpers.StatisticsHelper;
 import core.interfaces.Function2;
 import core.interfaces.Function3;
 import core.models.AlloyRunConfiguration;
+import core.models.serialization.trace.AbstractTraceAttribute;
+import core.models.serialization.trace.EnumTraceAttributeImpl;
+import core.models.serialization.trace.FloatTraceAttributeImpl;
+import core.models.serialization.trace.IntTraceAttributeImpl;
 import declare.DeclareModel;
 import declare.DeclareParser;
+import declare.DeclareParserException;
+import declare.lang.trace.EnumTraceAttribute;
+import declare.lang.trace.FloatTraceAttribute;
+import declare.lang.trace.IntTraceAttribute;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
@@ -28,6 +36,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Evaluator {
 
@@ -46,9 +56,6 @@ public class Evaluator {
         conf.intervalSplits = 1;
         conf.alsFilename = "./../data/temp.als";
         conf.outFilename = "./data/" + LocalDate.now() + "-L" + conf.minLength + "-" + conf.maxLength + ".xes";
-        conf.saveSmv = false;
-        if (conf.saveSmv)
-            conf.outFilename = "./data/testSMV";
         return conf;
     }
 
@@ -59,11 +66,6 @@ public class Evaluator {
 
         if (config == null)
             return;
-
-        if (config.saveSmv) {
-            saveSmv(config);
-            return;
-        }
 
         long start = System.nanoTime();
         StatisticsHelper.time.add(start);
@@ -100,14 +102,6 @@ public class Evaluator {
         StatisticsHelper.print();
         System.out.println();
         //StatisticsHelper.printTime();
-    }
-
-    private static void saveSmv(AlloyRunConfiguration config) throws GenerationException, DeclareParserException, declare.DeclareParserException {
-        DeclareModel model = new DeclareParser().Parse(IOHelper.readAllText(config.inFilename));
-        SmvCodeGenerator a = new SmvCodeGenerator();
-        a.run(model, config.minLength, config.shuffleStatementsIterations > 0);
-        IOHelper.writeAllText(config.outFilename, a.getSmv());
-        IOHelper.writeAllText(config.outFilename + ".db.json", a.getDataBindingJson());
     }
 
     public static XLog getLog(int minTraceLength,
@@ -242,10 +236,13 @@ public class Evaluator {
 
         int bitwidth = 5;
 
-        DeclareParser parser = new DeclareParser(intervalSplits);
+        DeclareParser parser = new DeclareParser();
+        NameEncoder encoder = new NameEncoder(parser);
+        if (Global.encodeNames)
+            declare = encoder.encode(declare);
         DeclareModel model = parser.Parse(declare);
         AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, vacuity, shuffleConstraints);
-        gen.Run(model, negativeTraces);
+        gen.Run(model, negativeTraces, intervalSplits);
 
         String alloyCode = gen.getAlloyCode();
         IOHelper.writeAllText(alsFilename, alloyCode);
@@ -256,8 +253,27 @@ public class Evaluator {
 
         Global.log.accept("Found Solution: " + (solution != null && solution.satisfiable()));
 
-        AlloyLogExtractor ale = new AlloyLogExtractor(world, gen.generateNumericMap(), model.getTraceAttributes(), parser.getNamesEncoding(), start, duration);
+        AlloyLogExtractor ale = new AlloyLogExtractor(world, gen.generateNumericMap(), getTraceAttributesImpl(model),
+                encoder.getEncoding(), start, duration);
         return ale.extract(solution, numberOfTraces, maxTraceLength, reuse);
+    }
+
+    private static List<AbstractTraceAttribute> getTraceAttributesImpl(DeclareModel model) {
+        List<AbstractTraceAttribute> attributes = new ArrayList<>(model.getEnumTraceAttributes().size() + model.getIntTraceAttributes().size() + model.getFloatTraceAttributes().size());
+
+        for (EnumTraceAttribute i : model.getEnumTraceAttributes()) {
+            attributes.add(new EnumTraceAttributeImpl(i.getName(), i.getParams()));
+        }
+
+        for (IntTraceAttribute i : model.getIntTraceAttributes()) {
+            attributes.add(new IntTraceAttributeImpl(i.getName(), i.getLow(), i.getHigh()));
+        }
+
+        for (FloatTraceAttribute i : model.getFloatTraceAttributes()) {
+            attributes.add(new FloatTraceAttributeImpl(i.getName(), i.getLow(), i.getHigh()));
+        }
+
+        return attributes;
     }
 
     private static String GetDeclare(String file) throws FileNotFoundException {

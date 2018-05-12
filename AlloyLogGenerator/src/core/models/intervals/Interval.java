@@ -1,10 +1,11 @@
 package core.models.intervals;
 
 import core.Exceptions.BadSolutionException;
-import core.Exceptions.DeclareParserException;
-import core.alloy.codegen.fnparser.BinaryExpression;
-import core.alloy.codegen.fnparser.DataExpression;
-import core.alloy.codegen.fnparser.Token;
+import core.Exceptions.GenerationException;
+import declare.DeclareParserException;
+import declare.fnparser.BinaryExpression;
+import declare.fnparser.DataExpression;
+import declare.fnparser.Token;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public abstract class Interval {
 
     public abstract String getDifferent(List<String> tokens) throws BadSolutionException;
 
-    public abstract boolean isCompliant(DataExpression expr) throws DeclareParserException;
+    public abstract boolean isCompliant(DataExpression expr) throws GenerationException, DeclareParserException;
 
     protected BinaryExpression rot(BinaryExpression expr) {   // move number to the right part of expression
         if (expr.getRight().getNode().getType() == Token.Type.Number)

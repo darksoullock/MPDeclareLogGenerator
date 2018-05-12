@@ -1,6 +1,6 @@
 package parsing;
 
-import core.alloy.codegen.DeclareParser;
+import declare.DeclareParser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Vasiliy on 2017-10-19.
  */
 public class StatementIdTest {
-    DeclareParser parser = new DeclareParser(1);
+    DeclareParser parser = new DeclareParser();
 
     List<String> tasks = Arrays.asList(
             "activity ApplyForTrip",

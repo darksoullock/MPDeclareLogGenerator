@@ -1,11 +1,12 @@
 package intervals;
 
 import core.Exceptions.BadSolutionException;
-import core.Exceptions.DeclareParserException;
-import core.alloy.codegen.fnparser.BinaryExpression;
-import core.alloy.codegen.fnparser.Token;
-import core.alloy.codegen.fnparser.ValueExpression;
+import core.Exceptions.GenerationException;
 import core.models.intervals.*;
+import declare.DeclareParserException;
+import declare.fnparser.BinaryExpression;
+import declare.fnparser.Token;
+import declare.fnparser.ValueExpression;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -64,7 +65,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void IntegerIsCompliantTest() throws DeclareParserException {
+    public void IntegerIsCompliantTest() throws DeclareParserException, GenerationException {
         Interval iv = new IntegerInterval(40, 60, null);
         Token moreToken = new Token(0, Token.Type.Comparator, ">");
         Token lessToken = new Token(0, Token.Type.Comparator, "<");
@@ -89,7 +90,7 @@ public class IntervalTest {
     }
 
     @Test
-    public void IntegerValueIsCompliantTest() throws DeclareParserException {
+    public void IntegerValueIsCompliantTest() throws DeclareParserException, GenerationException {
         Interval iv = new IntegerValue(40);
         Token eqToken = new Token(0, Token.Type.Comparator, "=");
         ValueExpression var = new ValueExpression(new Token(0, Token.Type.Variable, "v"));

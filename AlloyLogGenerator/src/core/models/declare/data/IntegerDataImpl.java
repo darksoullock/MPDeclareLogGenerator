@@ -1,11 +1,11 @@
 package core.models.declare.data;
 
-import core.Exceptions.DeclareParserException;
 import core.helpers.RandomHelper;
 import core.interfaces.SafeFunction2;
 import core.models.intervals.IntegerInterval;
 import core.models.intervals.IntegerValue;
 import core.models.intervals.IntervalSplit;
+import declare.DeclareParserException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 /**
  * Created by Vasiliy on 2017-10-23.
  */
-public class IntegerData extends NumericData {
+public class IntegerDataImpl extends NumericDataImpl {
     int min;
     int max;
     int intervalSplits;
     SafeFunction2 valueGenerator;
 
-    public IntegerData(String type, int min, int max, int intervalSplits, SafeFunction2<Integer, Integer, Integer> valueGenerator) {
+    public IntegerDataImpl(String type, int min, int max, int intervalSplits, SafeFunction2<Integer, Integer, Integer> valueGenerator) {
         this.min = min - 1; // as constructor parameters min and max are included in range, we move them out
         this.max = max + 1;
         this.type = type;

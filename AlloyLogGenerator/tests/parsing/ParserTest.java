@@ -1,21 +1,24 @@
 package parsing;
 
-import core.Exceptions.DeclareParserException;
 import core.alloy.codegen.AlloyCodeGenerator;
-import core.alloy.codegen.DeclareParser;
-import core.models.declare.DataConstraint;
-import core.models.declare.Statement;
-import core.models.declare.data.EnumeratedData;
-import core.models.declare.data.FloatData;
-import core.models.declare.data.IntegerData;
-import core.models.declare.data.NumericData;
-import core.models.serialization.trace.AbstractTraceAttribute;
-import core.models.serialization.trace.EnumTraceAttribute;
-import core.models.serialization.trace.FloatTraceAttribute;
-import core.models.serialization.trace.IntTraceAttribute;
+import core.models.declare.data.EnumeratedDataImpl;
+import core.models.declare.data.FloatDataImpl;
+import core.models.declare.data.IntegerDataImpl;
+import core.models.declare.data.NumericDataImpl;
+import declare.DeclareModel;
+import declare.DeclareParser;
+import declare.lang.DataConstraint;
+import declare.lang.Statement;
+import declare.lang.data.EnumeratedData;
+import declare.lang.data.FloatData;
+import declare.lang.data.IntegerData;
+import declare.lang.trace.EnumTraceAttribute;
+import declare.lang.trace.FloatTraceAttribute;
+import declare.lang.trace.IntTraceAttribute;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,41 +29,50 @@ import java.util.stream.Stream;
  * Created by Vasiliy on 2017-10-25.
  */
 public class ParserTest {
-    DeclareParser parser = new DeclareParser(1);
+    DeclareParser parser = new DeclareParser();
     AlloyCodeGenerator gen = new AlloyCodeGenerator(2, 2, 2, 2, false, false);
 
     @Test
     public void testData() {
-        List<EnumeratedData> data = parser.parseData(Arrays.asList(
+        List<EnumeratedData> ed = new ArrayList<>();
+        List<IntegerData> id = new ArrayList<>();
+        List<FloatData> fd = new ArrayList<>();
+        parser.parseData(Arrays.asList(
                 "TransportType: Car, Plane, Train, Bus",
                 "Price integer between 0 and 300",
-                "Angle float between 0 and 180"));
+                "Angle float between 0 and 180"),
+                ed, id, fd);
 
-        Map<String, NumericData> map = gen.fillNumericDataMap(data);
+        DeclareModel model = new DeclareModel();
+        model.setEnumeratedData(ed);
+        model.setIntegerData(id);
+        model.setFloatData(fd);
+        List<EnumeratedDataImpl> data = gen.collectData(model, 1);
+        Map<String, NumericDataImpl> map = gen.fillNumericDataMap(data);
 
         Assert.assertEquals(data.size(), 3);
         Assert.assertEquals(map.size(), 2);
 
-        EnumeratedData d1 = data.get(0);
-        EnumeratedData d2 = data.get(1);
-        EnumeratedData d3 = data.get(2);
+        EnumeratedDataImpl d1 = data.get(0);
+        EnumeratedDataImpl d2 = data.get(1);
+        EnumeratedDataImpl d3 = data.get(2);
 
         Assert.assertEquals(d1.getType(), "TransportType");
         Assert.assertEquals(d1.getValues().size(), 4);
 
-        Assert.assertTrue(d2 instanceof IntegerData);
+        Assert.assertTrue(d2 instanceof IntegerDataImpl);
         Assert.assertEquals(d2.getType(), "Price");
         Assert.assertEquals(d2.getValues().size(), 1);
 
-        Assert.assertTrue(d3 instanceof FloatData);
+        Assert.assertTrue(d3 instanceof FloatDataImpl);
         Assert.assertEquals(d3.getType(), "Angle");
         Assert.assertEquals(d3.getValues().size(), 1);
 
         Assert.assertTrue(map.containsKey(d2.getType()));
         Assert.assertTrue(map.containsKey(d3.getType()));
 
-        NumericData nd1 = map.get(d2.getType());
-        NumericData nd2 = map.get(d3.getType());
+        NumericDataImpl nd1 = map.get(d2.getType());
+        NumericDataImpl nd2 = map.get(d3.getType());
 
         Assert.assertEquals(nd1, d2);
         Assert.assertEquals(nd2, d3);
@@ -71,36 +83,38 @@ public class ParserTest {
 
     @Test
     public void testTraceAttributes() {
-        List<AbstractTraceAttribute> ta = parser.parseTraceAttributes(Arrays.asList(
+        List<EnumTraceAttribute> eta = new ArrayList<>();
+        List<IntTraceAttribute> ita = new ArrayList<>();
+        List<FloatTraceAttribute> fta = new ArrayList<>();
+        parser.parseTraceAttributes(Arrays.asList(
                 "trace AttrName: value1, value2",
                 "trace Age integer between 10 and 100",
-                "trace Angle float between 0.01 and 179.99"));
+                "trace Angle float between 0.01 and 179.99"),
+                eta,
+                ita,
+                fta);
 
-        Assert.assertEquals(ta.size(), 3);
-        AbstractTraceAttribute a1 = ta.get(0);
-        AbstractTraceAttribute a2 = ta.get(1);
-        AbstractTraceAttribute a3 = ta.get(2);
+        Assert.assertEquals(eta.size(), 1);
+        Assert.assertEquals(ita.size(), 1);
+        Assert.assertEquals(fta.size(), 1);
 
-        Assert.assertTrue(a1 instanceof EnumTraceAttribute);
-        Assert.assertEquals(a1.getName(), "AttrName");
-        Assert.assertTrue(a1.getValue().contains("value"));
+        Assert.assertEquals(eta.get(0).getName(), "AttrName");
+        Assert.assertTrue(eta.get(0).getParams().get(0).contains("value"));
 
-        Assert.assertTrue(a2 instanceof IntTraceAttribute);
-        Assert.assertEquals(a2.getName(), "Age");
+        Assert.assertEquals(ita.get(0).getName(), "Age");
 
-        Assert.assertTrue(a3 instanceof FloatTraceAttribute);
-        Assert.assertEquals(a3.getName(), "Angle");
+        Assert.assertEquals(fta.get(0).getName(), "Angle");
 
         for (int i = 0; i < 100; ++i) {
-            int in = Integer.parseInt(a2.getValue());
-            float f = Float.parseFloat(a3.getValue());
-            Assert.assertTrue(in < 100 && in >= 10);
-            Assert.assertTrue(f <= 179.99 && in >= 0.01);
+            Assert.assertEquals(ita.get(0).getLow(), 10);
+            Assert.assertEquals(ita.get(0).getHigh(), 100);
+            Assert.assertTrue(Math.abs(fta.get(0).getLow() - 0.01) < 0.001);
+            Assert.assertTrue(Math.abs(fta.get(0).getHigh() - 179.99) < 0.001);
         }
     }
 
     @Test
-    public void testDataConstraints() throws DeclareParserException {
+    public void testDataConstraints() throws declare.DeclareParserException {
         List<Statement> raw = Stream.of("Absence[BookTransport A] | A.Price is High and A.Speed is Low",
                 "RespondedExistence[BookTransport A, UseTransport B] | A.TransportType is Car | B.Speed is not Low")
                 .map(i -> new Statement(i, 0)).collect(Collectors.toList());

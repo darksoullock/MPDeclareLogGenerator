@@ -1,8 +1,9 @@
 package core.models.declare.data;
 
-import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.models.intervals.Interval;
 import core.models.intervals.IntervalSplit;
+import declare.DeclareParserException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Vasiliy on 2017-10-24.
  */
-public abstract class NumericData extends EnumeratedData {
+public abstract class NumericDataImpl extends EnumeratedDataImpl {
     Map<String, Interval> intervals;
     List<IntervalSplit> splits = new ArrayList<>();
 
@@ -29,11 +30,11 @@ public abstract class NumericData extends EnumeratedData {
     }
 
     @Override
-    public final void addValue(String value) throws DeclareParserException {
+    public final void addValue(String value) {
         throw new UnsupportedOperationException("Use 'addSplit' method for numeric data");
     }
 
-    public abstract void addSplit(IntervalSplit s) throws DeclareParserException;
+    public abstract void addSplit(IntervalSplit s) throws GenerationException, DeclareParserException;
 
     protected abstract void generate();
 

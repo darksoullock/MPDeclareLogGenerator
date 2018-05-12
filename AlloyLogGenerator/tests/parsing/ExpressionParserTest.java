@@ -1,11 +1,12 @@
 package parsing;
 
-import core.Exceptions.DeclareParserException;
+import core.Exceptions.GenerationException;
 import core.alloy.codegen.AlloyCodeGenerator;
-import core.alloy.codegen.DeclareParser;
-import core.alloy.codegen.fnparser.DataExpression;
-import core.alloy.codegen.fnparser.DataExpressionParser;
-import core.models.DeclareModel;
+import declare.DeclareModel;
+import declare.DeclareParser;
+import declare.DeclareParserException;
+import declare.fnparser.DataExpression;
+import declare.fnparser.DataExpressionParser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -96,14 +97,14 @@ public class ExpressionParserTest {
     AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, true, false);
 
     @Test(expectedExceptions = DeclareParserException.class)
-    public void testSpellingError() throws DeclareParserException {
-        DeclareModel model = new DeclareParser(1).Parse("Choiced[A,B]\n");
-        gen.Run(model, false);
+    public void testSpellingError() throws DeclareParserException, GenerationException {
+        DeclareModel model = new DeclareParser().Parse("Choiced[A,B]\n");
+        gen.Run(model, false, 1);
     }
 
     @Test(expectedExceptions = DeclareParserException.class)
-    public void testSpellingErrorWithData() throws DeclareParserException {
-        DeclareModel model = new DeclareParser(1).Parse("Choise[A,B]||\n");
-        gen.Run(model, false);
+    public void testSpellingErrorWithData() throws DeclareParserException, GenerationException {
+        DeclareModel model = new DeclareParser().Parse("Choise[A,B]||\n");
+        gen.Run(model, false, 1);
     }
 }
