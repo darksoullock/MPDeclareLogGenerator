@@ -12,7 +12,6 @@ public class Evaluator {
         RunConfiguration conf = new RunConfiguration();
         conf.minLength = 10;
         conf.maxLength = 10;
-        conf.nPositiveTraces = 50;
         //conf.nNegativeVacuousTraces = 10;
         conf.inFilename = "./../data/bt_nodata.decl";
         //conf.inFilename = "./../data/loanApplication.decl";
@@ -22,8 +21,8 @@ public class Evaluator {
 
     public static void main(String[] args) throws DeclareParserException, GenerationException, IOException {
         RunConfiguration config;
-        config = debugConf();
-        //config = CLI.getConfigFromArgs(args);
+        //config = debugConf();
+        config = CLI.getConfigFromArgs(args);
 
         if (config == null)
             return;
@@ -34,7 +33,7 @@ public class Evaluator {
     private static void saveSmv(RunConfiguration config) throws GenerationException, DeclareParserException, IOException {
         DeclareModel model = new DeclareParser().Parse(IOHelper.readAllText(config.inFilename));
         SmvCodeGenerator gen = new SmvCodeGenerator();
-        gen.run(model, config.minLength);
+        gen.run(model, config);
         IOHelper.writeAllText(config.outFilename, gen.getSmv());
         IOHelper.writeAllText(config.outFilename + ".db.json", gen.getDataBindingJson());
     }

@@ -20,12 +20,16 @@ public class SmvCodeGenerator {
     StringBuilder smv;
     private String dataBindingJson;
 
-    public void run(DeclareModel model, int minLength) throws GenerationException {
+    public void run(DeclareModel model, RunConfiguration configuration) throws GenerationException {
         smv = new StringBuilder("MODULE main\n");
         generateVariables(model.getActivities(), getData(model));
-        generateAssign(minLength);
+        generateAssign(configuration.minLength);
         generateDataBinding(model.getActivityToData(), model.getDataToActivity());
-        new LtlGen(smv).generateConstraints(getAllConstraints(model));
+        LtlGen ltlGen = new LtlGen(smv);
+        ltlGen.generateConstraints(getAllConstraints(model));
+        if (configuration.vacuity)
+            ltlGen.addVacuity(getAllConstraints(model));
+        smv.append("FALSE");
     }
 
     private ArrayList<Constraint> getAllConstraints(DeclareModel model) throws GenerationException {

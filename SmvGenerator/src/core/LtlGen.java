@@ -2,10 +2,9 @@ package core;
 
 import declare.lang.Constraint;
 import declare.lang.DataConstraint;
+import declare.lang.Statement;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Vasiliy on 2018-03-26.
@@ -34,8 +33,6 @@ public class LtlGen {
 
             generateLtlFor(i);
         }
-
-        smv.append("FALSE");
     }
 
     public void generateLtlFor(Constraint c) throws GenerationException {
@@ -293,5 +290,28 @@ public class LtlGen {
         supported.add("NotChainResponse");
         supported.add("NotChainPrecedence");
         return supported;
+    }
+
+    public void addVacuity(ArrayList<Constraint> allConstraints) throws GenerationException {
+        Statement fakeStatement = new Statement("Vacuity constraint", -1);
+        for (Constraint i:allConstraints){
+            if (i.isBinary()){
+                Constraint existence;
+                if (i instanceof DataConstraint) {
+                    existence = new DataConstraint("Existence",
+                            Collections.singletonList(i.getArgs().get(0)),
+                            Collections.singletonList(((DataConstraint) i).getFirstFunction()),
+                            fakeStatement
+                            );
+                } else {
+                    existence = new Constraint("Existence",
+                            Collections.singletonList(i.getArgs().get(0)),
+                            fakeStatement
+                    );
+                }
+
+                generateExistence(existence);
+            }
+        }
     }
 }
