@@ -13,27 +13,13 @@ public class CLI {
             config.inFilename = args[3];
             config.outFilename = args[4];
 
-            boolean vacuity = false;
-            boolean negativeTraces = false;
-
             for (int i = 5; i < args.length; ++i) {
                 if (args[i].equals("-vacuity")) // or equalsIgnoreCase ?
-                    vacuity = true;
+                    config.vacuity = true;
                 else if (args[i].equals("-negative"))
-                    negativeTraces = true;
+                    config.negativeTraces = true;
                 else throw new IllegalArgumentException("Unknown argument '" + args[i] + "'");
             }
-
-            int n = Integer.parseInt(args[2]);
-            if (negativeTraces)
-                if (vacuity)
-                    config.nNegativeVacuousTraces = n;
-                else
-                    config.nNegativeTraces = n;
-            else if (vacuity)
-                config.nVacuousTraces = n;
-            else
-                config.nPositiveTraces = n;
 
             return config;
         } else {

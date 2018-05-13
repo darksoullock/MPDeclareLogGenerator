@@ -1,6 +1,5 @@
-package parsing;
+package declare;
 
-import declare.DeclareParser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

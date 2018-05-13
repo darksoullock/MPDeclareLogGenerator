@@ -6,13 +6,9 @@ public class RunConfiguration {
 
     public int maxLength = 10;
 
-    public int nPositiveTraces = 0;
+    public boolean vacuity = false;
 
-    public int nNegativeTraces = 0;
-
-    public int nVacuousTraces = 0;
-
-    public int nNegativeVacuousTraces = 0;
+    public boolean negativeTraces  = false;
 
     public String inFilename;
 

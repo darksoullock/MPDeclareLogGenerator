@@ -39,7 +39,6 @@ public class LtlGen {
     }
 
     public void generateLtlFor(Constraint c) throws GenerationException {
-        validateConstraint(c);
         switch (c.getName()) {
             case "Init":
                 generateInit(c);
@@ -98,10 +97,6 @@ public class LtlGen {
             default:
                 throw new GenerationException("Constraint '" + c.getName() + "' is not supported in SMV.");
         }
-
-    }
-
-    private void validateConstraint(Constraint c) {
 
     }
 
