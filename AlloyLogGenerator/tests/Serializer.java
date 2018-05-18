@@ -53,11 +53,6 @@ public class Serializer {
         }
 
         @Override
-        public ConstList<Sig> getAllReachableUserDefinedSigs() {
-            return null;
-        }
-
-        @Override
         public SafeList<Sig> getAllSigs() {
             return null;
         }
