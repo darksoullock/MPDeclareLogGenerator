@@ -26,7 +26,7 @@ public class SmvCodeGenerator {
         generateAssign(configuration.minLength);
         generateDataBinding(model.getActivityToData(), model.getDataToActivity());
         LtlGen ltlGen = new LtlGen(smv);
-        ltlGen.generateConstraints(getAllConstraints(model));
+        ltlGen.generateConstraints(getAllConstraints(model), configuration.negativeTraces);
         if (configuration.vacuity)
             ltlGen.addVacuity(getAllConstraints(model));
         smv.append("FALSE");

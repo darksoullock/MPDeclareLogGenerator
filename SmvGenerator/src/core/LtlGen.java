@@ -18,7 +18,7 @@ public class LtlGen {
         this.smv = smv;
     }
 
-    public void generateConstraints(List<Constraint> constraints) throws GenerationException {
+    public void generateConstraints(List<Constraint> constraints, boolean negativeTraces) throws GenerationException {
         // All LTL constraints are negated, because model checker gives counterexamples
         // G (state != _tail) -- eventually end of trace
         // F (state = _tail & X state != _tail) -- nothing happens after the end
@@ -26,6 +26,8 @@ public class LtlGen {
         smv.append("LTLSPEC G (state != _tail) | F (state = _tail & X state != _tail) | F (length<minlength & state = _tail) | ");
 
         Set<String> supported = getSupportedConstraints();
+        if (negativeTraces)
+            smv.append("!( ");
         for (Constraint i : constraints) {
             if (!supported.contains(i.getName()))
                 throw new GenerationException("at line " + i.getStatement().getLine() + ":\nConstraint '" + i.getName() +
@@ -33,6 +35,8 @@ public class LtlGen {
 
             generateLtlFor(i);
         }
+        if (negativeTraces)
+            smv.append(" FALSE) | ");
     }
 
     public void generateLtlFor(Constraint c) throws GenerationException {
