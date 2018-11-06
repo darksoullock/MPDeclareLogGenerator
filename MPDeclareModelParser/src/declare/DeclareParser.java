@@ -151,13 +151,13 @@ public class DeclareParser {
     }
 
     public void parseData(List<String> dataCode, List<EnumeratedData> edata,
-                                          List<IntegerData> idata, List<FloatData> fdata) {
+                          List<IntegerData> idata, List<FloatData> fdata) {
         for (String i : dataCode) {
             String[] a = i.split(":\\s*|,?\\s+");
 
-            if (a[1].equals("integer")) {
+            if (a[1].equals("integer") && a[2].equals("between")) {
                 idata.add(new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5])));
-            } else if (a[1].equals("float")) {
+            } else if (a[1].equals("float") && a[2].equals("between")) {
                 fdata.add(new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5])));
             } else {
                 edata.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList())));
@@ -202,7 +202,7 @@ public class DeclareParser {
     }
 
     public void parseTraceAttributes(List<String> traceAttributesCode, List<EnumTraceAttribute> eta,
-                                                             List<IntTraceAttribute> ita, List<FloatTraceAttribute> fta) {
+                                     List<IntTraceAttribute> ita, List<FloatTraceAttribute> fta) {
         for (String i : traceAttributesCode) {
             String[] a = i.split(":\\s*|,?\\s+");
 

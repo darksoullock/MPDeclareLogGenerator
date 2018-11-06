@@ -1,17 +1,10 @@
-import core.Evaluator;
 import core.alloy.serialization.AlloyLogExtractor;
-import core.helpers.XesHelper;
 import core.models.declare.data.NumericToken;
 import core.models.intervals.Interval;
 import core.models.serialization.EventAdapter;
 import core.models.serialization.Payload;
 import edu.mit.csail.sdg.alloy4.*;
 import edu.mit.csail.sdg.alloy4compiler.ast.*;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
-import org.deckfour.xes.model.impl.XAttributeMapImpl;
-import org.deckfour.xes.model.impl.XLogImpl;
-import org.deckfour.xes.model.impl.XTraceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -140,11 +133,5 @@ public class Serializer {
         Assert.assertTrue(bs.contains(ta));
         Assert.assertTrue(bs.contains(tb));
         Assert.assertTrue(cs.contains(tc));
-    }
-
-    private void addTraceDummy(XLog log1, int i) {
-        XTraceImpl trace = new XTraceImpl(new XAttributeMapImpl());
-        trace.getAttributes().put("n", new XAttributeLiteralImpl("n", String.valueOf(i)));
-        log1.add(trace);
     }
 }

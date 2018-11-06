@@ -1,11 +1,14 @@
 package core.alloy.serialization;
 
-import core.Exceptions.BadSolutionException;
+import core.exceptions.BadSolutionException;
 import core.Global;
 import core.TimestampGenerator;
 import core.alloy.integration.AlloyPMSolutionBrowser;
+import core.exceptions.GenerationException;
 import core.helpers.StatisticsHelper;
 import core.models.declare.data.NumericToken;
+import core.models.intervals.FloatInterval;
+import core.models.intervals.IntegerInterval;
 import core.models.intervals.Interval;
 import core.models.serialization.EventAdapter;
 import core.models.serialization.Payload;
@@ -14,6 +17,7 @@ import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
 import org.deckfour.xes.extension.XExtensionParser;
+import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.*;
@@ -50,7 +54,7 @@ public class AlloyLogExtractor {
 
     public XLog extract(A4Solution alloySolution, int nTraces, int length, int reuseSolutionCount) throws IOException, Err, BadSolutionException {
         Global.log.accept("Serialization..");
-        List<XTrace> plog = new ArrayList<>(nTraces*reuseSolutionCount);
+        List<XTrace> plog = new ArrayList<>(nTraces * reuseSolutionCount);
         int t;
         for (t = 0; t < nTraces && alloySolution.satisfiable(); ++t) {
             AlloyPMSolutionBrowser browser = new AlloyPMSolutionBrowser(alloySolution, module, length);
@@ -65,7 +69,7 @@ public class AlloyLogExtractor {
             }
         }
 
-        XLog xlog = this.initLog();
+        XLog xlog = new XLogImpl(new XAttributeMapImpl());
         xlog.addAll(plog);
         return xlog;
     }
@@ -74,30 +78,6 @@ public class AlloyLogExtractor {
         for (Interval i : numericMap.values()) {
             i.resetCaches();
         }
-    }
-
-    public XLog initLog() {
-        XLogImpl log = new XLogImpl(new XAttributeMapImpl());
-        if (Global.noExtensions)
-            return log;
-
-        try {
-            log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/lifecycle.xesext")));
-            log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/org.xesext")));
-            log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/time.xesext")));
-            log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/concept.xesext")));
-            log.getExtensions().add(XExtensionParser.instance().parse(new URI("http://www.xes-standard.org/semantic.xesext")));
-            log.getGlobalTraceAttributes().add(new XAttributeLiteralImpl("concept:name", "__INVALID__"));
-            log.getGlobalEventAttributes().add(new XAttributeLiteralImpl("concept:name", "__INVALID__"));
-            log.getAttributes().put("source", new XAttributeLiteralImpl("source", "DAlloy"));
-            log.getAttributes().put("concept:name", new XAttributeLiteralImpl("concept:name", "Artificial Log"));
-            log.getAttributes().put("lifecycle:model", new XAttributeLiteralImpl("lifecycle:model", "standard"));
-        } catch (Exception ex) {
-            Global.log.accept("O-o-ops. Something happened, no log extensions will be written. Log itself is untouched");
-            ex.printStackTrace();
-        }
-
-        return log;
     }
 
     private XTrace composeTrace(AlloyPMSolutionBrowser browser, int number) throws Err, IOException, BadSolutionException {
@@ -117,6 +97,8 @@ public class AlloyLogExtractor {
             String name = unqualifyLabel(oneStateEvent.getActivityName());
             if (Global.encodeNames)
                 name = nameEncoding.get(name);
+            if (Global.underscore_spaces)
+                name = name.replace("_", " ");
             attributes.put("concept:name", new XAttributeLiteralImpl("concept:name", name));
             attributes.put("lifecycle:transition", new XAttributeLiteralImpl("lifecycle:transition", "complete"));
             attributes.put("time:timestamp", new XAttributeTimestampImpl("time:timestamp", oneStateEvent.getTimestamp()));
@@ -164,6 +146,10 @@ public class AlloyLogExtractor {
                 if (nameEncoding.containsKey(value))
                     value = nameEncoding.get(value);
             }
+            if (Global.underscore_spaces) {
+                name = name.replace("_", " ");
+                value = value.replace("_", " ");
+            }
 
             oneTrace.getAttributes().put(name, new XAttributeLiteralImpl(name, value));
         }
@@ -173,6 +159,7 @@ public class AlloyLogExtractor {
         for (Payload p : payloads) {
             String dataKey = unqualifyLabel(p.getName());
             String dataValue = unqualifyLabel(p.getValue());
+            String type = getPayloadTypeByValue(dataValue);
             if (numericMap.containsKey(dataValue)) {
                 if (p.getTokens().isEmpty())
                     dataValue = numericMap.get(dataValue).get();
@@ -191,10 +178,36 @@ public class AlloyLogExtractor {
             if (Global.encodeNames)
                 dataKey = nameEncoding.get(dataKey);
 
+            if (Global.underscore_spaces) {
+                dataKey = dataKey.replace("_", " ");
+                dataValue = dataValue.replace("_", " ");
+            }
+
             if (dataValue.length() > dataKey.length() && dataValue.charAt(dataKey.length()) == '.' && dataValue.startsWith(dataKey))
                 dataValue = dataValue.substring(dataKey.length() + 1);
-            attributes.put(dataKey, new XAttributeLiteralImpl(dataKey, dataValue));
+            attributes.put(dataKey, createXAttribute(type, dataKey, dataValue));
         }
+    }
+
+    private XAttribute createXAttribute(String type, String dataKey, String dataValue) {
+        if ("int".equals(type))
+            return new XAttributeDiscreteImpl(dataKey, Integer.parseInt(dataValue));
+        if ("float".equals(type))
+            return new XAttributeContinuousImpl(dataKey, Double.parseDouble(dataValue));
+        return new XAttributeLiteralImpl(dataKey, dataValue);
+    }
+
+    private String getPayloadTypeByValue(String value) {
+        if (numericMap.containsKey(value)) {
+            Interval interval = numericMap.get(value);
+            if (interval instanceof IntegerInterval)
+                return "int";
+
+            if (interval instanceof FloatInterval)
+                return "float";
+        }
+
+        return "string";
     }
 
     public String unqualifyLabel(String qualifiedLabel) {

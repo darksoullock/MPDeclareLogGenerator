@@ -1,6 +1,6 @@
 package core.models.intervals;
 
-import core.Exceptions.BadSolutionException;
+import core.exceptions.BadSolutionException;
 
 import java.util.List;
 

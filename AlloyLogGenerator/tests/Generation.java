@@ -1,7 +1,7 @@
 import core.Evaluator;
-import core.Exceptions.BadSolutionException;
-import core.Exceptions.GenerationException;
 import core.Global;
+import core.exceptions.BadSolutionException;
+import core.exceptions.GenerationException;
 import core.helpers.XesHelper;
 import declare.DeclareParserException;
 import edu.mit.csail.sdg.alloy4.Err;
@@ -9,12 +9,10 @@ import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
-import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.function.BiFunction;
@@ -218,7 +216,7 @@ public class Generation {
 
 
     @Test
-    public void testExactlyAndChainPrecedence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testExactlyAndChainPrecedence() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "ChainPrecedence[DoSomething, UseTransport]\n" +
                 "Absence[UseTransport, 3]\n" +
                 "Exactly[DoSomething, 3]\n";
@@ -311,11 +309,9 @@ public class Generation {
         }
     }
 
-    private String getEventAttributeValue(XEvent event, String attr) throws NoSuchFieldException, IllegalAccessException {
+    private String getEventAttributeValue(XEvent event, String attr) {
         XAttribute xAttribute = event.getAttributes().get(attr);
-        Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
-        valueField.setAccessible(true);
-        return valueField.get(xAttribute).toString();
+        return TestHelper.getAttributeValueAsString(xAttribute);
     }
 
     @Test
@@ -356,7 +352,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistenceAndNotResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testExistenceAndNotResponse() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "NotResponse[DoSomething, UseTransport]\n" +
                 "Existence[DoSomething, 3]\n";
 
@@ -569,7 +565,7 @@ public class Generation {
     }
 
     @Test
-    public void testExistence() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testExistence() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "Existence[DoSomething]\n";
 
         XLog log = Evaluator.getLogSingleRun(
@@ -724,7 +720,7 @@ public class Generation {
     }
 
     @Test
-    public void testAlternateResponse() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testAlternateResponse() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare + "AlternateResponse[DoSomething, UseTransport]\n" +
                 "Exactly[DoSomething, 3]\n";
 
@@ -815,7 +811,7 @@ public class Generation {
                 Duration.ofHours(4));
 
         Assert.assertTrue(log.size() > 0, "No solution found");
-        Assert.assertTrue(log.size() ==100, "100 traces expected");
+        Assert.assertTrue(log.size() == 100, "100 traces expected");
 
         int satisfied = 0;
         int violated = 0;

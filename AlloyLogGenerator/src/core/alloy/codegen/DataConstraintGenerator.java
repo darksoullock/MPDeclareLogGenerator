@@ -1,6 +1,6 @@
 package core.alloy.codegen;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.Global;
 import core.models.declare.data.NumericDataImpl;
 import declare.DeclareParserException;

@@ -1,7 +1,7 @@
 package core.alloy.integration;
 
 
-import core.Exceptions.BadSolutionException;
+import core.exceptions.BadSolutionException;
 import core.Global;
 import core.models.declare.data.NumericToken;
 import core.models.serialization.EventAdapter;

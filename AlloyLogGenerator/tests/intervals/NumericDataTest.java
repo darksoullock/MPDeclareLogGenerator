@@ -1,6 +1,6 @@
 package intervals;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.models.declare.data.EnumeratedDataImpl;
 import core.models.declare.data.FloatDataImpl;
 import core.models.declare.data.IntegerDataImpl;

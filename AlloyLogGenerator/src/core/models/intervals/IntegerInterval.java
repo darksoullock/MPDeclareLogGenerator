@@ -1,6 +1,6 @@
 package core.models.intervals;
 
-import core.Exceptions.BadSolutionException;
+import core.exceptions.BadSolutionException;
 import core.Global;
 import core.interfaces.SafeFunction2;
 import declare.DeclareParserException;

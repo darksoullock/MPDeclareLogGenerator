@@ -1,4 +1,4 @@
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.alloy.codegen.AlloyCodeGenerator;
 import declare.DeclareModel;
 import declare.DeclareParser;

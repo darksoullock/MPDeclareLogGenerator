@@ -1,4 +1,4 @@
-package core.Exceptions;
+package core.exceptions;
 
 /**
  * Created by Vasiliy on 2017-11-29.

@@ -24,8 +24,7 @@ public class DataExpressionParser {
 
     public DataExpression parse(String code) throws DeclareParserException {
         List<Token> tokens = parseTokens(code);
-        DataExpression tree = buildExpressionTree(tokens);
-        return tree;
+        return buildExpressionTree(tokens);
     }
 
     private DataExpression buildExpressionTree(List<Token> tokens) throws DeclareParserException {
@@ -67,7 +66,7 @@ public class DataExpressionParser {
 
         if (tokens.size() > 1)
             throw new DeclareParserException("Error during function expression parsing.\nTokens: " + tokens.size() + "\n" +
-                    String.join(" ", tokens.stream().map(i -> i.getValue()).collect(Collectors.toList()))); // TODO: write erroneous line of code in all DeclareParseException cases
+                    String.join(" ", tokens.stream().map(Token::getValue).collect(Collectors.toList())));
 
         for (Token i : tokens) {    //values
             if (i.getType() == Token.Type.Set
@@ -77,7 +76,10 @@ public class DataExpressionParser {
                 return new ValueExpression(i);
         }
 
-        return new ValueExpression(new Token(0, Token.Type.Activity, "True[]"));   // empty expression evaluates to true
+        if (tokens.isEmpty())
+            return new ValueExpression(new Token(0, Token.Type.Activity, "True[]"));   // empty expression evaluates to true
+
+        throw new DeclareParserException(String.join(", ", tokens.stream().map(Object::toString).collect(Collectors.toList())));
     }
 
     private List<Token> unwrap(List<Token> tokens) throws DeclareParserException {

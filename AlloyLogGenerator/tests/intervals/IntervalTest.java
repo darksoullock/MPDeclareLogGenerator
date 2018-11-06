@@ -1,7 +1,7 @@
 package intervals;
 
-import core.Exceptions.BadSolutionException;
-import core.Exceptions.GenerationException;
+import core.exceptions.BadSolutionException;
+import core.exceptions.GenerationException;
 import core.models.intervals.*;
 import declare.DeclareParserException;
 import declare.fnparser.BinaryExpression;

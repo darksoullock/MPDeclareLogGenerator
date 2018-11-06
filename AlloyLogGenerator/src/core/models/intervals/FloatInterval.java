@@ -1,7 +1,7 @@
 package core.models.intervals;
 
-import core.Exceptions.BadSolutionException;
-import core.Exceptions.GenerationException;
+import core.exceptions.BadSolutionException;
+import core.exceptions.GenerationException;
 import core.interfaces.SafeFunction2;
 import declare.fnparser.BinaryExpression;
 import declare.fnparser.DataExpression;

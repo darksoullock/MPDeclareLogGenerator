@@ -1,6 +1,6 @@
 package core.models.declare.data;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.models.intervals.Interval;
 import core.models.intervals.IntervalSplit;
 import declare.DeclareParserException;

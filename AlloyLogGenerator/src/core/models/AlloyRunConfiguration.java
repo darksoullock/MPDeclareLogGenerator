@@ -5,6 +5,8 @@ package core.models;
  */
 public class AlloyRunConfiguration {
 
+    public boolean waitInputBeforeExit = false;
+
     public int intervalSplits = 1;
 
     public int minLength = 2;
@@ -38,4 +40,8 @@ public class AlloyRunConfiguration {
     public String outFilename = "out.xes";
 
     public boolean saveSmv = false;
+
+    public String function;
+
+    public boolean underscore_spaces;
 }

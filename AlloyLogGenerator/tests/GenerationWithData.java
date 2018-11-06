@@ -1,6 +1,6 @@
 import core.Evaluator;
-import core.Exceptions.BadSolutionException;
-import core.Exceptions.GenerationException;
+import core.exceptions.BadSolutionException;
+import core.exceptions.GenerationException;
 import core.Global;
 import declare.DeclareParserException;
 import edu.mit.csail.sdg.alloy4.Err;
@@ -8,12 +8,13 @@ import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
+import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -62,7 +63,7 @@ public class GenerationWithData {
             "bind DoSomething: Something\n";
 
     @Test
-    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testInit() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare
                 + "Init[ApplyForTrip A]|A.Something is One\n"
                 + "bind ApplyForTrip: Something\n";
@@ -82,15 +83,9 @@ public class GenerationWithData {
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             XEvent event = trace.get(0);
-            Assert.assertEquals(getAttributeValue(event.getAttributes().get("concept:name")), "ApplyForTrip");
-            Assert.assertEquals(getAttributeValue(event.getAttributes().get("Something")), "One");
+            Assert.assertEquals(TestHelper.getAttributeValueAsString(event.getAttributes().get("concept:name")), "ApplyForTrip");
+            Assert.assertEquals(TestHelper.getAttributeValueAsString(event.getAttributes().get("Something")), "One");
         }
-    }
-
-    private String getAttributeValue(XAttribute xAttribute) throws NoSuchFieldException, IllegalAccessException {
-        Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
-        valueField.setAccessible(true);
-        return valueField.get(xAttribute).toString();
     }
 
     @Test
@@ -349,9 +344,7 @@ public class GenerationWithData {
 
     private String getEventAttributeValue(XEvent event, String attr) throws NoSuchFieldException, IllegalAccessException {
         XAttribute xAttribute = event.getAttributes().get(attr);
-        Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
-        valueField.setAccessible(true);
-        return valueField.get(xAttribute).toString();
+        return TestHelper.getAttributeValueAsString(xAttribute);
     }
 
     @Test
@@ -536,7 +529,7 @@ public class GenerationWithData {
                 XEvent event = trace.get(j);
                 if ((getEventAttributeValue(event, "concept:name").equals("DoSomething")
                         || getEventAttributeValue(event, "concept:name").equals("UseTransport"))
-                        && getAttributeValue(event.getAttributes().get("Something")).equals("One")) {
+                        && TestHelper.getAttributeValueAsString(event.getAttributes().get("Something")).equals("One")) {
                     ok = true;
                 }
             }
@@ -568,11 +561,11 @@ public class GenerationWithData {
             for (int j = 0; j < trace.size(); ++j) {
                 XEvent event = trace.get(j);
                 if (getEventAttributeValue(event, "concept:name").equals("DoSomething")
-                        && getAttributeValue(event.getAttributes().get("Something")).equals("One")) {
+                        && TestHelper.getAttributeValueAsString(event.getAttributes().get("Something")).equals("One")) {
                     a = true;
                 }
                 if (getEventAttributeValue(event, "concept:name").equals("UseTransport")
-                        && getAttributeValue(event.getAttributes().get("Something")).equals("One")) {
+                        && TestHelper.getAttributeValueAsString(event.getAttributes().get("Something")).equals("One")) {
                     b = true;
                 }
             }
@@ -945,6 +938,46 @@ public class GenerationWithData {
             Assert.assertTrue(initViolated || responseViolated || chainResponseViolated || existenceViolated,
                     "positive trace found, trace #" + (i + 1) + "\n");
         }
+    }
+
+    @Test
+    public void testNumericValuesType() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+        String declare = baseDeclare;
+
+        XLog log = Evaluator.getLogSingleRun(
+                5, 15,
+                50,
+                2,
+                declare,
+                "./../data/temp.als",
+                2, false,
+                false, false, LocalDateTime.now(),
+                Duration.ofHours(4));
+
+        Assert.assertTrue(log.size() > 0, "No solution found");
+
+        int counter = 0;
+        for (int i = 0; i < log.size(); ++i) {
+            XTrace trace = log.get(i);
+            boolean found = false;
+            for (int j = 0; j < trace.size(); ++j) {
+                XEvent event = trace.get(j);
+                if (getEventAttributeValue(event, "concept:name").equals("BookTransport") ) {
+                    Assert.assertTrue(
+                            event.getAttributes().values().stream().anyMatch(x->x instanceof XAttributeDiscreteImpl && x.getKey().equals("Speed")),
+                            "BookTransport should contain attribute Speed of type int");
+                    Assert.assertTrue(
+                            event.getAttributes().values().stream().anyMatch(x->x instanceof XAttributeContinuousImpl && x.getKey().equals("Price")),
+                            "BookTransport should contain attribute Price of type int");
+                    found = true;
+                }
+            }
+
+            if (found)
+                ++counter;
+        }
+
+        Assert.assertTrue(counter == 50, "BookTransport should exist in all traces. Count: " + counter);
     }
 }
 

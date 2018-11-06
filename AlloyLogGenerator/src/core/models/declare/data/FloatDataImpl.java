@@ -1,6 +1,6 @@
 package core.models.declare.data;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.helpers.RandomHelper;
 import core.interfaces.SafeFunction2;
 import core.models.intervals.FloatInterval;

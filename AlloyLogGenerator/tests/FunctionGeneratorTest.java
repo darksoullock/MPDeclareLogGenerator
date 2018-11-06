@@ -1,4 +1,4 @@
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.Global;
 import core.alloy.codegen.FunctionGenerator;
 import core.models.declare.data.IntegerDataImpl;

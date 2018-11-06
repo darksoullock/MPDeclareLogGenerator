@@ -1,6 +1,6 @@
 package core.alloy.codegen;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.Global;
 import core.helpers.RandomHelper;
 import core.models.declare.data.NumericDataImpl;
@@ -277,7 +277,7 @@ public class FunctionGenerator {
                 .append(value).append("&te.data] }\n");
 
         tc.append("fact { all te:Event| some (te.data&").append(value).append(") implies #{te.tokens&").append(token)
-                .append("}<Amount[te.data&").append(value).append("]}\n");
+                .append("}<__Amount[te.data&").append(value).append("]}\n");
 
         for (int i = 0; i < maxSameInstances; ++i) {
             String ast = token + 'i' + i;

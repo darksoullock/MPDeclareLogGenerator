@@ -1,13 +1,12 @@
 package core;
 
-import core.Exceptions.GenerationException;
 import core.models.AlloyRunConfiguration;
 
 /**
  * Created by Vasiliy on 2018-03-22.
  */
 public class CLI {
-    public static AlloyRunConfiguration getConfigFromArgs(String[] args) throws GenerationException {
+    public static AlloyRunConfiguration getConfigFromArgs(String[] args) {
         AlloyRunConfiguration config = new AlloyRunConfiguration();
 
         if (args.length > 4) {
@@ -35,6 +34,12 @@ public class CLI {
                     config.maxSameInstances = Integer.parseInt(getArg(args, ++i, "msi"));
                 else if (args[i].equals("-smv"))
                     config.saveSmv = true;
+                else if (args[i].equals("-wait"))
+                    config.waitInputBeforeExit = true;
+                else if (args[i].equals("-underscore_spaces"))
+                    config.underscore_spaces = true;
+                else if (args[i].equals("-validatefn"))
+                    config.function = getArg(args, ++i, "validatefn");
                 else throw new IllegalArgumentException("Unknown argument '" + args[i] + "'");
             }
 

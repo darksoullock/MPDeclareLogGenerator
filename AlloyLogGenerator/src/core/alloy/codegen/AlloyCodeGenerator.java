@@ -1,6 +1,6 @@
 package core.alloy.codegen;
 
-import core.Exceptions.GenerationException;
+import core.exceptions.GenerationException;
 import core.Global;
 import core.helpers.RandomHelper;
 import core.models.declare.data.EnumeratedDataImpl;
@@ -235,16 +235,16 @@ public class AlloyCodeGenerator {
     }
 
     private void GenerateNumericDataItem(NumericDataImpl item) {
-        alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\namount: Int\n}\n");
+        alloy.append("abstract sig ").append(item.getType()).append(" extends Payload {\n__amount: Int\n}\n");
         alloy.append("fact { all te: Event | (lone ").append(item.getType()).append(" & te.data) }\n");
-        alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.amount=1}}\n");
-        alloy.append("fun Amount(pl: ").append(item.getType()).append("): one Int {{pl.amount}}\n");
+        alloy.append("pred Single(pl: ").append(item.getType()).append(") {{pl.__amount=1}}\n");
+        alloy.append("fun __Amount(pl: ").append(item.getType()).append("): one Int {{pl.__amount}}\n");
         int limit = (int) Math.pow(2, bitwidth - 1);
         for (String value : item.getValues()) {
             int cnt = item.getMapping().get(value).getValueCount(limit);
             if (cnt < 0)
                 cnt = limit - 1;
-            alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{amount=")
+            alloy.append("one sig ").append(value).append(" extends ").append(item.getType()).append("{}{__amount=")
                     .append(cnt).append("}\n");
         }
     }
