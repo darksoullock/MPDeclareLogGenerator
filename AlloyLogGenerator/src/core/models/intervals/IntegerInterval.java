@@ -110,4 +110,8 @@ public class IntegerInterval extends Interval { //does not include min and max v
     public int getMax() {
         return max;
     }
+
+    public boolean isIn(int value) {
+        return value < max && value > min || value == max && value == min;
+    }
 }

@@ -88,4 +88,8 @@ public class FloatInterval extends Interval {
     public int getValueCount(int limit) {
         return -1;
     }
+
+    public boolean isIn(float value) {
+        return value < max && value > min || value == max && value == min;
+    }
 }

@@ -76,7 +76,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -101,7 +102,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -137,7 +139,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -174,7 +177,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -209,7 +213,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -246,7 +251,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -283,7 +289,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -321,7 +328,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
         Assert.assertTrue(log.size() > 0, "No solution found");
 
         for (int i = 0; i < log.size(); ++i) {
@@ -360,7 +368,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -401,7 +410,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -439,7 +449,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -481,7 +492,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -519,7 +531,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
         for (int i = 0; i < log.size(); ++i) {
@@ -550,7 +563,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -586,7 +600,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -617,7 +632,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -648,7 +664,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -680,7 +697,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -717,7 +735,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -754,7 +773,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -793,7 +813,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -830,7 +851,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -853,7 +875,7 @@ public class GenerationWithData {
     }
 
     @Test
-    public void testSameDifferentForOneEvent() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testSameDifferentForOneEvent() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = "activity A\n" +
                 "activity B\n" +
                 "C: integer between 0 and 100\n" +
@@ -873,7 +895,8 @@ public class GenerationWithData {
                 2,
                 false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -886,7 +909,8 @@ public class GenerationWithData {
                 1,
                 false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() == 0, "Solution found, but it shouldn't exist");
     }
@@ -914,7 +938,8 @@ public class GenerationWithData {
                 false,
                 true,
                 false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -952,7 +977,8 @@ public class GenerationWithData {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 

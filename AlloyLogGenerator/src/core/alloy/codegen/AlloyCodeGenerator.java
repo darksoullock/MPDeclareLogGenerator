@@ -1,12 +1,15 @@
 package core.alloy.codegen;
 
-import core.exceptions.GenerationException;
 import core.Global;
+import core.exceptions.GenerationException;
 import core.helpers.RandomHelper;
+import core.helpers.XesHelper;
 import core.models.declare.data.EnumeratedDataImpl;
 import core.models.declare.data.FloatDataImpl;
 import core.models.declare.data.IntegerDataImpl;
 import core.models.declare.data.NumericDataImpl;
+import core.models.intervals.FloatInterval;
+import core.models.intervals.IntegerInterval;
 import core.models.intervals.Interval;
 import core.models.intervals.IntervalSplit;
 import declare.DeclareModel;
@@ -21,6 +24,12 @@ import declare.lang.DataConstraint;
 import declare.lang.data.EnumeratedData;
 import declare.lang.data.FloatData;
 import declare.lang.data.IntegerData;
+import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeContinuousImpl;
+import org.deckfour.xes.model.impl.XAttributeDiscreteImpl;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,10 +60,14 @@ public class AlloyCodeGenerator {
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
 
-    public void Run(DeclareModel model, boolean negativeTraces, int intervalSplits) throws DeclareParserException, GenerationException {
+    public void Run(DeclareModel model, boolean negativeTraces, int intervalSplits, XTrace trace) throws DeclareParserException, GenerationException {
 
         alloy = new StringBuilder(GetBase());
         alloyConstraints = new ArrayList<>();
+        if (trace != null && maxTraceLength < trace.size()) {
+            maxTraceLength = trace.size();
+        }
+
         List<EnumeratedDataImpl> data = collectData(model, intervalSplits);
         numericData = fillNumericDataMap(data);
         ExtendNumericData(getNumericExpressionsMap(model.getDataConstraints()));
@@ -72,6 +85,62 @@ public class AlloyCodeGenerator {
         if (shuffleConstraints)
             Collections.shuffle(alloyConstraints);
         AttachConstraints(negativeTraces);
+        GenerateTraceContent(trace, model);
+    }
+
+    private void GenerateTraceContent(XTrace trace, DeclareModel model) throws DeclareParserException {
+        if (trace == null || trace.size() == 0) {
+            return;
+        }
+
+        alloy.append("fact {\n");
+        generateTraceFlow(trace, model);
+        alloy.append("\n}\n");
+    }
+
+    private void generateTraceFlow(XTrace trace, DeclareModel model) throws DeclareParserException {
+        int index = 0;
+        for (XEvent event : trace) {
+            XAttribute nameAttribute = event.getAttributes().get("concept:name");
+            if (nameAttribute == null) {
+                throw new DeclareParserException("Event name not found in " + event);
+            }
+
+            alloy.append(XesHelper.getAttributeValue(nameAttribute)).append(" = TE").append(index).append(".task\n");
+
+            for (XAttribute attribute : event.getAttributes().values()) {
+                if (attribute instanceof XAttributeLiteralImpl &&
+                        model.getEnumeratedData().stream().anyMatch(i -> i.getType().equals(attribute.getKey()) && i.getValues().contains(((XAttributeLiteralImpl) attribute).getValue()))) {
+                    alloy.append(((XAttributeLiteralImpl) attribute).getValue()).append(" = TE").append(index).append(".data & ").append(attribute.getKey()).append("\n");
+                }
+
+                if (attribute instanceof XAttributeDiscreteImpl) {
+                    Optional<IntegerData> intData = model.getIntegerData().stream().filter(i -> i.getType().equals(attribute.getKey())).findAny();
+                    if (intData.isPresent())
+                        alloy.append(getIntervalFor(intData.get(), ((XAttributeDiscreteImpl) attribute).getValue())).append(" = TE").append(index).append(".data & ").append(attribute.getKey()).append("\n");
+                }
+
+                if (attribute instanceof XAttributeContinuousImpl) {
+                    Optional<FloatData> floatData = model.getFloatData().stream().filter(i -> i.getType().equals(attribute.getKey())).findAny();
+                    if (floatData.isPresent())
+                        alloy.append(getIntervalFor(floatData.get(), ((XAttributeContinuousImpl) attribute).getValue())).append(" = TE").append(index).append(".data & ").append(attribute.getKey()).append("\n");
+                }
+            }
+
+            ++index;
+        }
+    }
+
+    private String getIntervalFor(IntegerData integerData, long attributeValue) throws DeclareParserException {
+        NumericDataImpl numericData = this.numericData.get(integerData.getType());
+        return numericData.getMapping().entrySet().stream().filter(i -> ((IntegerInterval) i.getValue()).isIn((int) attributeValue)).map(Map.Entry::getKey).findAny()
+                .orElseThrow(() -> new DeclareParserException("no interval for " + integerData.getType() + " = " + attributeValue));
+    }
+
+    private String getIntervalFor(FloatData floatData, double attributeValue) throws DeclareParserException {
+        NumericDataImpl numericData = this.numericData.get(floatData.getType());
+        return numericData.getMapping().entrySet().stream().filter(i -> ((FloatInterval) i.getValue()).isIn((int) attributeValue)).map(Map.Entry::getKey).findAny()
+                .orElseThrow(() -> new DeclareParserException("no interval for " + floatData.getType() + " = " + attributeValue));
     }
 
     public List<EnumeratedDataImpl> collectData(DeclareModel model, int intervalSplits) {

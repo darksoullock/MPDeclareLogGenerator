@@ -1,3 +1,4 @@
+import core.AssemblyGenerationModes;
 import core.Evaluator;
 import core.Global;
 import core.exceptions.BadSolutionException;
@@ -76,7 +77,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
 
         Assert.assertTrue(log.size() > 0, "No solution found");
@@ -109,7 +111,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -134,7 +137,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -168,7 +172,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         testExactlyAndNotChainResponsePartial(log);
     }
@@ -187,7 +192,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         testExactlyAndNotChainResponsePartial(log);
     }
@@ -229,7 +235,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -263,7 +270,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         testExactlyAndNotChainPrecedencePartial(log);
     }
@@ -282,7 +290,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         testExactlyAndNotChainPrecedencePartial(log);
     }
@@ -327,7 +336,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -364,7 +374,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -400,7 +411,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -436,7 +448,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -471,7 +484,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -530,7 +544,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -553,7 +568,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -576,7 +592,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -607,7 +624,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -637,7 +655,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -667,7 +686,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -691,7 +711,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -732,7 +753,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -767,7 +789,8 @@ public class Generation {
                 "./../data/temp.als",
                 2, false,
                 false, false, LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                null);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
 
@@ -795,7 +818,7 @@ public class Generation {
                 "Existence[A]\n";
 
         Global.encodeNames = false;
-        XLog log = Evaluator.getLog(
+        XLog log = AssemblyGenerationModes.getLog(
                 1,
                 5,
                 30,
@@ -808,7 +831,8 @@ public class Generation {
                 declare,
                 "./../data/temp.als",
                 LocalDateTime.now(),
-                Duration.ofHours(4));
+                Duration.ofHours(4),
+                Evaluator::getLogSingleRun);
 
         Assert.assertTrue(log.size() > 0, "No solution found");
         Assert.assertTrue(log.size() == 100, "100 traces expected");

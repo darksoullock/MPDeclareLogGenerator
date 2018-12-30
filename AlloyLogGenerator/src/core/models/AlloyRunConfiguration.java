@@ -33,15 +33,24 @@ public class AlloyRunConfiguration {
 
     public boolean evenLengthsDistribution = false;
 
-    public String inFilename;
+    public String modelFilename;
 
     public String alsFilename = "temp.als";
 
-    public String outFilename = "out.xes";
+    public String logFilename = "out.xes";
 
     public boolean saveSmv = false;
 
     public String function;
 
     public boolean underscore_spaces;
+
+    public ExecutionMode mode;
+
+    public enum ExecutionMode {
+        GENERATION,
+        FUNCTION_VALIDATION,
+        COMPLIANCE_CHECK,
+        ;
+    }
 }

@@ -2,6 +2,8 @@ package core;
 
 import core.models.AlloyRunConfiguration;
 
+import static core.models.AlloyRunConfiguration.ExecutionMode;
+
 /**
  * Created by Vasiliy on 2018-03-22.
  */
@@ -12,9 +14,10 @@ public class CLI {
         if (args.length > 4) {
             config.minLength = Integer.parseInt(args[0]);
             config.maxLength = Integer.parseInt(args[1]);
-            config.inFilename = args[3];
-            config.outFilename = args[4];
+            config.modelFilename = args[3];
+            config.logFilename = args[4];
             config.alsFilename = "temp.als";
+            config.mode = ExecutionMode.GENERATION;
 
             boolean vacuity = false;
             boolean negativeTraces = false;
@@ -38,8 +41,13 @@ public class CLI {
                     config.waitInputBeforeExit = true;
                 else if (args[i].equals("-underscore_spaces"))
                     config.underscore_spaces = true;
-                else if (args[i].equals("-validatefn"))
+                else if (args[i].equals("-validatelog"))
+                    config.mode = ExecutionMode.COMPLIANCE_CHECK;
+                else if (args[i].equals("-validatefn")) {
                     config.function = getArg(args, ++i, "validatefn");
+                    config.mode = ExecutionMode.FUNCTION_VALIDATION;
+                }
+                
                 else throw new IllegalArgumentException("Unknown argument '" + args[i] + "'");
             }
 

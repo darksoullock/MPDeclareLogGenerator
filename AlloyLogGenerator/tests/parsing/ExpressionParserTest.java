@@ -18,12 +18,12 @@ public class ExpressionParserTest {
     @Test(expectedExceptions = DeclareParserException.class)
     public void testSpellingError() throws DeclareParserException, GenerationException {
         DeclareModel model = new DeclareParser().Parse("Choiced[A,B]\n");
-        gen.Run(model, false, 1);
+        gen.Run(model, false, 1, null);
     }
 
     @Test(expectedExceptions = DeclareParserException.class)
     public void testSpellingErrorWithData() throws DeclareParserException, GenerationException {
         DeclareModel model = new DeclareParser().Parse("Choise[A,B]||\n");
-        gen.Run(model, false, 1);
+        gen.Run(model, false, 1, null);
     }
 }

@@ -1,5 +1,6 @@
 package core.helpers;
 
+import core.Global;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
@@ -12,10 +13,17 @@ import java.lang.reflect.Field;
  * Created by Vasiliy on 2018-02-12.
  */
 public class XesHelper {
-    public static String getAttributeValue(XAttribute xAttribute) throws NoSuchFieldException, IllegalAccessException {
-        Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
-        valueField.setAccessible(true);
-        return valueField.get(xAttribute).toString();
+    public static String getAttributeValue(XAttribute xAttribute) {
+        try {
+            Field valueField = XAttributeLiteralImpl.class.getDeclaredField("value");
+            valueField.setAccessible(true);
+            return valueField.get(xAttribute).toString();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            Global.log.accept(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static void saveLog(XLog log, String outFilename) {
