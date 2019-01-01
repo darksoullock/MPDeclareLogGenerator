@@ -109,7 +109,7 @@ public class IntervalTest {
 
     @Test
     public void NegativeFloatTest() {
-        Interval iv = new FloatInterval(-11, -1, null);
+        Interval iv = new FloatInterval(-11, -1, false, false, null);
         Assert.assertEquals(iv.get().charAt(0), '-');
         Assert.assertEquals(iv.getValueCount(10), -1);
     }
@@ -122,7 +122,7 @@ public class IntervalTest {
 
     @Test
     public void FloatIntervalTest() throws BadSolutionException {
-        Interval iv = new FloatInterval(0, 10, null);
+        Interval iv = new FloatInterval(0, 10, false, false, null);
         for (int i = 0; i < 100; ++i) {
             float n = Float.parseFloat(iv.get());
             Assert.assertTrue(n < 10 && n > 0);

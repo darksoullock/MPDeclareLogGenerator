@@ -16,22 +16,27 @@ public class FloatInterval extends Interval {
 
     float min;
     float max;
-    SafeFunction2<Float, Float, Float> getValueBetween;
+    private boolean includeMin;
+    private boolean includeMax;
+    private SafeFunction2<Float, Float, Float> getValueBetween;
+    private Map<String, Set<String>> differentCache;
 
-    public FloatInterval(float min, float max, SafeFunction2 valueGenerator) {
+    public FloatInterval(float min, float max, boolean includeMin, boolean includeMax, SafeFunction2<Float, Float, Float> valueGenerator) {
         this.min = min;
         this.max = max;
+        this.includeMin = includeMin;
+        this.includeMax = includeMax;
         this.getValueBetween = valueGenerator;
-        if (valueGenerator == null)
+        if (valueGenerator == null) {
+            // todo: this should not include 0; rnd.nextFloat() -> [0,1). ideally, 0 and 1 inclusion controlled by includeMin and includeMax variables
             this.getValueBetween = (amin, amax) -> rnd.nextFloat() * (max - min) + min;
+        }
     }
 
     @Override
     public String get() {
         return String.valueOf(getValueBetween.invoke(min, max));
     }
-
-    Map<String, Set<String>> differentCache;
 
     @Override
     public String getDifferent(List<String> keys) throws BadSolutionException {
@@ -90,6 +95,6 @@ public class FloatInterval extends Interval {
     }
 
     public boolean isIn(float value) {
-        return value < max && value > min || value == max && value == min;
+        return (value < max || includeMax && value == max) && (value > min || includeMin && value == min);
     }
 }

@@ -309,7 +309,6 @@ public class ComplianceChecker {
         Assert.assertTrue(log.size() == 0, "Given trace expected to be non-compliant");
     }
 
-    /* todo fix absence of interval for exact float values (include whether min/max value alloved in float interval. currently none allowed). FloatDataImpl.generate()
     @Test
     public void testExactFloatData() throws Exception {
         String declare = baseDeclare +
@@ -365,7 +364,7 @@ public class ComplianceChecker {
                 new XesXmlParser().parse(is).get(0).get(0));
 
         Assert.assertTrue(log.size() > 0, "Given trace expected to be compliant");
-    }*/
+    }
 }
 
 
