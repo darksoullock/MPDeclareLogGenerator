@@ -6,13 +6,11 @@ import declare.DeclareParserException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.FileNotFoundException;
-
 /**
  * Created by Vasiliy on 2017-11-24.
  */
 public class VacuityTest {
-    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, true, false);
+    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, true, false, true);
     DeclareParser parser = new DeclareParser();
 
     @Test

@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
  */
 public class ExpressionParserTest {
     DataExpressionParser parser = new DataExpressionParser();
-    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, true, false);
+    AlloyCodeGenerator gen = new AlloyCodeGenerator(1, 1, 3, 0, true, false, true);
 
     @Test(expectedExceptions = DeclareParserException.class)
     public void testSpellingError() throws DeclareParserException, GenerationException {

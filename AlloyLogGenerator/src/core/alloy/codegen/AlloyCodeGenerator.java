@@ -21,9 +21,11 @@ import declare.fnparser.Token;
 import declare.lang.Activity;
 import declare.lang.Constraint;
 import declare.lang.DataConstraint;
+import declare.lang.Statement;
 import declare.lang.data.EnumeratedData;
 import declare.lang.data.FloatData;
 import declare.lang.data.IntegerData;
+import org.apache.commons.lang3.tuple.Pair;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
@@ -43,19 +45,21 @@ public class AlloyCodeGenerator {
     int bitwidth;
     boolean vacuity;
     boolean shuffleConstraints;
+    boolean writeConstraints;
 
     StringBuilder alloy;
-    List<String> alloyConstraints;
+    List<Pair<Statement, String>> alloyConstraints;
     Map<String, NumericDataImpl> numericData;
     DataConstraintGenerator gen;
 
     public AlloyCodeGenerator(int maxTraceLength, int minTraceLength, int bitwidth,
-                              int maxSameInstances, boolean vacuity, boolean shuffleConstraints) {
+                              int maxSameInstances, boolean vacuity, boolean shuffleConstraints, boolean writeConstraints) {
         this.maxTraceLength = maxTraceLength;
         this.minTraceLength = minTraceLength;
         this.bitwidth = bitwidth;
         this.vacuity = vacuity;
         this.shuffleConstraints = shuffleConstraints;
+        this.writeConstraints = writeConstraints;
         maxSameInstances = (int) Math.min(maxSameInstances, Math.pow(2, bitwidth));
         this.gen = new DataConstraintGenerator(maxSameInstances, bitwidth, vacuity);
     }
@@ -84,7 +88,8 @@ public class AlloyCodeGenerator {
         GenerateDataConstraints(model.getDataConstraints());
         if (shuffleConstraints)
             Collections.shuffle(alloyConstraints);
-        AttachConstraints(negativeTraces);
+        if (writeConstraints)
+            AttachConstraints(negativeTraces);
         GenerateTraceContent(trace, model);
     }
 
@@ -171,6 +176,10 @@ public class AlloyCodeGenerator {
         return map;
     }
 
+    public List<Pair<Statement, String>> getAlloyConstraints() {
+        return alloyConstraints;
+    }
+
     private Map<String, List<DataExpression>> getNumericExpressionsMap(List<DataConstraint> dataConstraints) throws DeclareParserException {
         Map<String, List<DataExpression>> numericExpressions = new HashMap<>();
         DataExpressionParser expressionParser = new DataExpressionParser();
@@ -184,10 +193,11 @@ public class AlloyCodeGenerator {
     }
 
     private void AttachConstraints(boolean negativeTraces) {
+        List<String> alloyConstraintsValues = alloyConstraints.stream().map(Pair::getValue).collect(Collectors.toList());
         if (negativeTraces)
-            alloy.append("fact {\n").append("(not ").append(String.join(") or not (", alloyConstraints)).append(")\n}\n");
+            alloy.append("fact {\n").append("(not ").append(String.join(") or not (", alloyConstraintsValues)).append(")\n}\n");
         else
-            alloy.append("fact {\n").append(String.join("\n", alloyConstraints)).append("\n}\n");
+            alloy.append("fact {\n").append(String.join("\n", alloyConstraintsValues)).append("\n}\n");
     }
 
     public String getAlloyCode() {
@@ -228,9 +238,9 @@ public class AlloyCodeGenerator {
                         "Try to enclose such names in single quotes, 'like this'");
 
             if (i.isBinary())
-                alloyConstraints.add(String.format("%s[%s,%s]", i.getName(), i.taskA(), i.taskB()));
+                alloyConstraints.add(Pair.of(i.getStatement(), String.format("%s[%s,%s]", i.getName(), i.taskA(), i.taskB())));
             else
-                alloyConstraints.add(String.format("%s[%s]", i.getName(), i.taskA()));
+                alloyConstraints.add(Pair.of(i.getStatement(), String.format("%s[%s]", i.getName(), i.taskA())));
         }
     }
 

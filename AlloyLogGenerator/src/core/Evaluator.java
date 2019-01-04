@@ -16,6 +16,7 @@ import core.models.serialization.trace.IntTraceAttributeImpl;
 import declare.DeclareModel;
 import declare.DeclareParser;
 import declare.DeclareParserException;
+import declare.lang.Statement;
 import declare.lang.trace.EnumTraceAttribute;
 import declare.lang.trace.FloatTraceAttribute;
 import declare.lang.trace.IntTraceAttribute;
@@ -23,6 +24,7 @@ import declare.validators.FunctionValidator;
 import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4compiler.ast.Module;
 import edu.mit.csail.sdg.alloy4compiler.translator.A4Solution;
+import org.apache.commons.lang3.tuple.Pair;
 import org.deckfour.xes.extension.XExtensionParser;
 import org.deckfour.xes.in.XesXmlParser;
 import org.deckfour.xes.model.XLog;
@@ -39,6 +41,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static core.models.AlloyRunConfiguration.ExecutionMode;
 
@@ -114,31 +117,29 @@ public class Evaluator {
             XLog log = readTracesFromLogFile(config.logFilename);
             String declare = GetDeclare(config.modelFilename);
 
-            boolean[] results = new boolean[log.size()];
+            List<Statement>[] results = new List[log.size()];
             int i = 0;
             for (XTrace trace : log) {
-                XLog plog = Evaluator.getLogSingleRun(config.minLength,
+                results[i] = Evaluator.checkCompliace(
                         config.maxLength,
-                        1,
-                        config.maxSameInstances,
                         declare,
                         config.alsFilename,
-                        1,
                         false,
-                        false,
-                        false,
-                        LocalDateTime.now(),
-                        Duration.ofHours(4),
                         trace);
-
-                results[i] = plog.size() > 0;
                 ++i;
             }
 
-            i=0;
+            i = 0;
             Global.log.accept("\n------------------");
-            for (boolean isCompliant : results) {
-                Global.log.accept(++i + ": " + (isCompliant ? "ok" : "non-compliant"));
+            for (List<Statement> violations : results) {
+                ++i;
+                if (violations.isEmpty()) {
+                    Global.log.accept(i + ": ok");
+                } else {
+                    Global.log.accept(i + ": violated\n" + String.join("\n", violations.stream().map(x -> " at line " + x.getLine() + ": " + x.getCode()).collect(Collectors.toList())));
+                }
+
+                Global.log.accept("");
             }
 
 
@@ -235,7 +236,7 @@ public class Evaluator {
         if (Global.encodeNames)
             declare = encoder.encode(declare);
         DeclareModel model = parser.Parse(declare);
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, vacuity, shuffleConstraints);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, minTraceLength, bitwidth, maxSameInstances, vacuity, shuffleConstraints, true);
         gen.Run(model, negativeTraces, intervalSplits, trace);
 
         String alloyCode = gen.getAlloyCode();
@@ -250,6 +251,45 @@ public class Evaluator {
         AlloyLogExtractor ale = new AlloyLogExtractor(world, gen.generateNumericMap(), getTraceAttributesImpl(model),
                 encoder.getEncoding(), start, duration);
         return ale.extract(solution, numberOfTraces, maxTraceLength, reuse);
+    }
+
+    // returns List of violated statements
+    public static List<Statement> checkCompliace(int maxTraceLength,
+                                                 String declare,
+                                                 String alsFilename,
+                                                 boolean vacuity,
+                                                 XTrace trace)
+            throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
+
+        int bitwidth = 5;
+        DeclareParser parser = new DeclareParser();
+        NameEncoder encoder = new NameEncoder(parser);
+        if (Global.encodeNames)
+            declare = encoder.encode(declare);
+        DeclareModel model = parser.Parse(declare);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, 0, bitwidth, 1, vacuity, false, false);
+        gen.Run(model, false, 1, trace);
+
+        String alloyCode = gen.getAlloyCode();
+        IOHelper.writeAllText(alsFilename, alloyCode);
+
+        AlloyComponent alloy = new AlloyComponent();
+        Module world = alloy.parse(alsFilename);
+        A4Solution solution = alloy.executeFromFile(maxTraceLength, bitwidth);
+
+        List<Statement> violations = new ArrayList<>();
+        if (solution != null && solution.satisfiable()) {
+            for (Pair<Statement, String> constraint : gen.getAlloyConstraints()) {
+                Object ok = solution.eval(world.parseOneExpressionFromString(constraint.getValue()));
+                if (ok instanceof Boolean && !(Boolean) ok) {
+                    violations.add(constraint.getKey());
+                }
+            }
+        } else {
+            Global.log.accept("Solution not found");
+        }
+
+        return violations;
     }
 
     private static List<AbstractTraceAttribute> getTraceAttributesImpl(DeclareModel model) {

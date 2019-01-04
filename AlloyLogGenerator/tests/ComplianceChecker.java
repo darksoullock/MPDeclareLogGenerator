@@ -43,9 +43,9 @@ public class ComplianceChecker {
     @Test
     public void testCompliant() throws Exception {
         String declare = baseDeclare +
-                "Existence[A]|A.ENUM is X\n"+
+                "Existence[A]|A.ENUM is X\n" +
                 "Existence[B]|A.INT > 50\n" +
-                "Existence[C]|A.FLOAT < 50\n"+
+                "Existence[C]|A.FLOAT < 50\n" +
                 "Absence[A]|A.ENUM is Y\n";
 
         ByteArrayInputStream is = new ByteArrayInputStream(("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
@@ -86,18 +86,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() > 0, "Given trace expected to be compliant");
+        Assert.assertTrue(compliant, "Given trace expected to be compliant");
     }
 
     @Test
@@ -124,18 +120,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() == 0, "Given trace expected to be non-compliant");
+        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
     }
 
     @Test
@@ -181,18 +173,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() ==0, "Given trace expected to be non-compliant");
+        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
     }
 
     @Test
@@ -238,18 +226,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() == 0, "Given trace expected to be non-compliant");
+        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
     }
 
     @Test
@@ -295,18 +279,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() == 0, "Given trace expected to be non-compliant");
+        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
     }
 
     @Test
@@ -352,18 +332,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        XLog log = Evaluator.getLogSingleRun(
-                0, 0,
-                1,
-                2,
+        boolean compliant = Evaluator.checkCompliace(
+                0,
                 declare,
                 "./../data/temp.als",
-                1, false,
-                false, false, LocalDateTime.now(),
-                Duration.ofHours(4),
-                new XesXmlParser().parse(is).get(0).get(0));
+                false,
+                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
 
-        Assert.assertTrue(log.size() > 0, "Given trace expected to be compliant");
+        Assert.assertTrue(compliant, "Given trace expected to be compliant");
     }
 }
 

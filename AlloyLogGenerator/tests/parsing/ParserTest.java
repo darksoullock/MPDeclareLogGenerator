@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class ParserTest {
     DeclareParser parser = new DeclareParser();
-    AlloyCodeGenerator gen = new AlloyCodeGenerator(2, 2, 2, 2, false, false);
+    AlloyCodeGenerator gen = new AlloyCodeGenerator(2, 2, 2, 2, false, false, true);
 
     @Test
     public void testData() {
