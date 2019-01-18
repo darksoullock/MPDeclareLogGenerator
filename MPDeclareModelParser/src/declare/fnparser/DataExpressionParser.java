@@ -13,14 +13,15 @@ import java.util.stream.Collectors;
  * Created by Vasiliy on 2017-10-19.
  */
 public class DataExpressionParser {
-    Pattern tokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)|is not|is|not in|in|or|and|not|same|different|-?\\d+|\\w+\\.\\w+|\\w+|\\(|\\)|<=|>=|<|>|=");
+    Pattern tokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)|is not|is|not in|in|or|and|not|same|different|-?\\d+|\\w+\\.\\w+|\\w+|[()]|<=|>=|<|>|=|\\?");
     Pattern setTokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)");
     Pattern opTokenPattern = Pattern.compile("is not|is|not in|in|or|and|not|same|different");
     Pattern varTokenPattern = Pattern.compile("\\w+\\.\\w+");
     Pattern numTokenPattern = Pattern.compile("-?\\d+");
     Pattern taskTokenPattern = Pattern.compile("\\w+");
-    Pattern groupTokenPattern = Pattern.compile("\\(|\\)");
+    Pattern groupTokenPattern = Pattern.compile("[()]");
     Pattern compTokenPattern = Pattern.compile("<=|>=|<|>|=");
+    Pattern placeholderPattern = Pattern.compile("\\?");
 
     public DataExpression parse(String code) throws DeclareParserException {
         List<Token> tokens = parseTokens(code);
@@ -72,7 +73,8 @@ public class DataExpressionParser {
             if (i.getType() == Token.Type.Set
                     || i.getType() == Token.Type.Activity
                     || i.getType() == Token.Type.Number
-                    || i.getType() == Token.Type.Variable)
+                    || i.getType() == Token.Type.Variable
+                    || i.getType() == Token.Type.R)
                 return new ValueExpression(i);
         }
 
@@ -162,6 +164,9 @@ public class DataExpressionParser {
 
         if (compTokenPattern.matcher(value).matches())
             return new Token(i, Token.Type.Comparator, value);
+
+        if (placeholderPattern.matcher(value).matches())
+            return new Token(i, Token.Type.R, value);
 
         throw new DeclareParserException("unknown token: " + value);    // TODO: write erroneous line of code
     }

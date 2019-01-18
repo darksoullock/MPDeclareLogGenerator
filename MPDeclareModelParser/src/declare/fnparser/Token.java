@@ -23,6 +23,10 @@ public class Token {
         return value;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public int getPosition() {
         return position;
     }
