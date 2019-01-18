@@ -1,13 +1,12 @@
 package core.alloy.codegen;
 
-import core.exceptions.GenerationException;
 import core.Global;
+import core.exceptions.GenerationException;
 import core.helpers.RandomHelper;
 import core.models.declare.data.NumericDataImpl;
 import core.models.intervals.Interval;
 import declare.DeclareParserException;
 import declare.fnparser.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +143,7 @@ public class FunctionGenerator {
         if (expression instanceof BinaryExpression)
             return handleBinaryExpression((BinaryExpression) expression);
 
-        throw new NotImplementedException();
+        throw new GenerationException("Expression unknown or not implemented: " + expression);
     }
 
     private String handleValueExpression(ValueExpression expression) {

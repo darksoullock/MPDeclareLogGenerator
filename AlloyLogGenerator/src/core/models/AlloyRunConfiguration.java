@@ -51,6 +51,7 @@ public class AlloyRunConfiguration {
         GENERATION,
         FUNCTION_VALIDATION,
         COMPLIANCE_CHECK,
+        QUERY,
         ;
     }
 }

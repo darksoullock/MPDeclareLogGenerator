@@ -24,7 +24,8 @@ public class AlloyComponent {
         this.config.solver = SatSolver.SAT4J; // use for windows
         //this.config.solver = SatSolver.MiniSatJNI; // use for linux
 
-        Global.log.accept("Chosen solver: " + this.config.solver);
+//        Global.log.accept("Chosen solver: " + this.config.solver);
+        Global.log.accept(".");
         this.config.skolemDepth = 4;
         this.config.noOverflow = true;
         this.reporter = new A4Reporter() {
@@ -44,7 +45,7 @@ public class AlloyComponent {
         Sig scopeChange = getSignature("this/Event", world);
         Command c = this.world.getAllCommands().get(0);
         Command newCommand = changeBitwidth(bitwidth, c.change(scopeChange, false, maxTraceLength));
-        Global.log.accept("Bitwidth: " + newCommand.bitwidth);
+//        Global.log.accept("Bitwidth: " + newCommand.bitwidth);
         return TranslateAlloyToKodkod.execute_command(this.reporter, this.world.getAllReachableSigs(), newCommand, config);
     }
 

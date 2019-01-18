@@ -86,17 +86,17 @@ public class DeclareParser {
         }
     }
 
-    private void ParseDataBindings(Map<String, List<String>> activityToData, Map<String, List<String>> dataToActivity) {
+    private void ParseDataBindings(Map<String, Set<String>> activityToData, Map<String, Set<String>> dataToActivity) {
         for (String line : dataBindingsCode) {
             line = line.substring(5);
             List<String> data = Arrays.stream(line.split("[:,\\s]+")).filter(i -> !i.isEmpty()).collect(Collectors.toList());
             String activity = data.get(0);
             if (!activityToData.containsKey(activity))
-                activityToData.put(activity, new ArrayList<>());
+                activityToData.put(activity, new HashSet<>());
             for (String i : data.stream().skip(1).collect(Collectors.toList())) {
                 activityToData.get(activity).add(i);
                 if (!dataToActivity.containsKey(i))
-                    dataToActivity.put(i, new ArrayList<>());
+                    dataToActivity.put(i, new HashSet<>());
                 dataToActivity.get(i).add(activity);
             }
         }
@@ -140,8 +140,8 @@ public class DeclareParser {
         return code.replace("\r\n", "\n").split("\n");
     }
 
-    public List<Activity> parseActivities(List<String> tasksCode) {
-        ArrayList<Activity> data = new ArrayList<>();
+    public Set<Activity> parseActivities(List<String> tasksCode) {
+        Set<Activity> data = new HashSet<>();
         for (String i : tasksCode) {
             String name = i.substring(9); // syntax: 'activity ActivityName'
             data.add(new Activity(name));
@@ -150,8 +150,8 @@ public class DeclareParser {
         return data;
     }
 
-    public void parseData(List<String> dataCode, List<EnumeratedData> edata,
-                          List<IntegerData> idata, List<FloatData> fdata) {
+    public void parseData(List<String> dataCode, Set<EnumeratedData> edata,
+                          Set<IntegerData> idata, Set<FloatData> fdata) {
         for (String i : dataCode) {
             String[] a = i.split(":\\s*|,?\\s+");
 

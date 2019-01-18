@@ -1,8 +1,8 @@
 package core.alloy.integration;
 
 
-import core.exceptions.BadSolutionException;
 import core.Global;
+import core.exceptions.BadSolutionException;
 import core.models.declare.data.NumericToken;
 import core.models.serialization.EventAdapter;
 import core.models.serialization.Payload;
@@ -17,7 +17,6 @@ import edu.mit.csail.sdg.alloy4compiler.translator.A4TupleSet;
 import edu.mit.csail.sdg.alloy4whole.Helper;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +28,6 @@ public class AlloyPMSolutionBrowser {
     private A4Solution solution;
     private Map<String, PrimSig> atomToSig;
     private int length;
-    private Field parentField;
 
     public AlloyPMSolutionBrowser(A4Solution solution, Module module, int length) {
         this.solution = solution;
@@ -43,7 +41,7 @@ public class AlloyPMSolutionBrowser {
         }
     }
 
-    public Sig atom2Sig(String atom) {
+    public PrimSig atom2Sig(String atom) {
         return atomToSig.get(atom);
     }
 
@@ -108,22 +106,7 @@ public class AlloyPMSolutionBrowser {
     }
 
     private Sig getParentSignature(String atom) {
-        try {
-            if (parentField == null) {
-                parentField = PrimSig.class.getField("parent");
-                parentField.setAccessible(true);
-            }
-
-            return (Sig) parentField.get(atom2Sig(atom));
-        } catch (NoSuchFieldException e) {
-            Global.log.accept("No 'parent' field found. It worked on alloy 4.2. Check alloy encoding for payloads");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            Global.log.accept("Is 'parentField.setAccessible(true);' still there?");
-            e.printStackTrace();
-        }
-
-        throw new Error("Critical: cannot get parent signature (data payload)");  // fail here; return null would cause other error later; should never occur
+        return atom2Sig(atom).parent;
     }
 
     private String retrieveAtomLabel(Expr exprToTupleSet) throws Err {

@@ -3,7 +3,6 @@ package core.alloy.codegen;
 import core.Global;
 import core.exceptions.GenerationException;
 import core.helpers.RandomHelper;
-import core.helpers.XesHelper;
 import core.models.declare.data.EnumeratedDataImpl;
 import core.models.declare.data.FloatDataImpl;
 import core.models.declare.data.IntegerDataImpl;
@@ -111,7 +110,8 @@ public class AlloyCodeGenerator {
                 throw new DeclareParserException("Event name not found in " + event);
             }
 
-            alloy.append(XesHelper.getAttributeValue(nameAttribute)).append(" = TE").append(index).append(".task\n");
+            String attributeValue = ((XAttributeLiteralImpl) nameAttribute).getValue();
+            alloy.append(attributeValue).append(" = TE").append(index).append(".task\n");
 
             for (XAttribute attribute : event.getAttributes().values()) {
                 if (attribute instanceof XAttributeLiteralImpl &&
@@ -328,11 +328,12 @@ public class AlloyCodeGenerator {
         }
     }
 
-    private void generateActivities(List<Activity> tasks) {
+    private void generateActivities(Set<Activity> tasks) {
+        ArrayList<Activity> taskList = new ArrayList<>(tasks);
         if (shuffleConstraints)
-            Collections.shuffle(tasks);
+            Collections.shuffle(taskList);
 
-        for (Activity i : tasks)
+        for (Activity i : taskList)
             alloy.append("one sig ").append(i.getName()).append(" extends Activity {}\n");
     }
 
@@ -359,12 +360,15 @@ public class AlloyCodeGenerator {
     private void GenerateAfterPredicate(int length) {
         alloy.append("pred After(b, a: Event){// b=before, a=after\n");
         int middle = length / 2;
-        alloy.append("b=TE0 or a=TE").append(length - 1);
-        for (int i = 1; i < length - 2; ++i) {
-            alloy.append(" or b=TE").append(i).append(" and ");
+        for (int i = 0; i < length - 1; ++i) {
+            if (i > 0) {
+                alloy.append(" or ");
+            }
+
+            alloy.append("b=TE").append(i).append(" and ");
             if (i < middle) {
-                alloy.append("not (a=TE").append(0);
-                for (int j = 1; j < i; ++j) {
+                alloy.append("not (a=TE").append(i);
+                for (int j = 0; j < i; ++j) {
                     alloy.append(" or a=TE").append(j);
                 }
                 alloy.append(")");
@@ -380,9 +384,17 @@ public class AlloyCodeGenerator {
         alloy.append("}\n");
     }
 
-    private void GenerateDataBinding(Map<String, List<String>> activityToData, Map<String, List<String>> dataToActivity) {
+    private void GenerateDataBinding(Map<String, Set<String>> activityToData, Map<String, Set<String>> dataToActivity) {
+        GenerateDataBinding(activityToData, dataToActivity, "Event");
+    }
+
+    public void generateDataBindingForQuerying(Map<String, Set<String>> activityToData, Map<String, Set<String>> dataToActivity) {
+//        GenerateDataBinding(activityToData, dataToActivity, "QueryParam");
+    }
+
+    private void GenerateDataBinding(Map<String, Set<String>> activityToData, Map<String, Set<String>> dataToActivity, String eventPlaceholderName) {
         for (String activity : activityToData.keySet()) {
-            alloy.append("fact { all te: Event | te.task = ")
+            alloy.append("fact { all te: ").append(eventPlaceholderName).append(" | te.task = ")
                     .append(activity)
                     .append(" implies (one ")
                     .append(String.join(" & te.data and one ", activityToData.get(activity)))
@@ -391,12 +403,52 @@ public class AlloyCodeGenerator {
         }
 
         for (String payload : dataToActivity.keySet()) {
-            alloy.append("fact { all te: Event | lone(").append(payload).append(" & te.data) }\n");
-            alloy.append("fact { all te: Event | some (")
+            alloy.append("fact { all te: ").append(eventPlaceholderName).append(" | lone(").append(payload).append(" & te.data) }\n");
+            alloy.append("fact { all te: ").append(eventPlaceholderName).append(" | some (")
                     .append(payload)
                     .append(" & te.data) implies te.task in (")
                     .append(String.join(" + ", dataToActivity.get(payload)))
                     .append(") }\n");
+        }
+    }
+
+    public void generateQueryPlaceholder(Map<String, String> names, Set<String> dataParams) {
+
+        boolean dataQueryParamPresent = false;
+        boolean taskQueryParamPresent = false;
+
+        for (Map.Entry<String, String> name : names.entrySet()) {
+            if (dataParams.contains(name.getKey())) {
+                alloy.append("one sig ").append(name.getValue()).append(" extends QueryParam {}\n");
+                dataQueryParamPresent = true;
+            } else {
+                alloy.append("one sig ").append(name.getValue()).append(" extends TaskQueryParam {}\n");
+                taskQueryParamPresent = true;
+            }
+
+        }
+
+        if (taskQueryParamPresent) {
+            alloy.append("abstract sig TaskQueryParam{\n" +
+                    "\ttask: one Activity,\n" +
+                    "}\n");
+
+            alloy.append("fact {\n" +
+                    "no qp: TaskQueryParam | qp.task = DummyActivity\n" +
+                    "}\n");
+
+        }
+
+        if (dataQueryParamPresent) {
+            alloy.append("abstract sig QueryParam{\n" +
+                    "\ttask: one Activity,\n" +
+                    "\tdata: set Payload\n" +
+                    "}\n");
+
+            alloy.append("fact {\n" +
+                    "no qp: QueryParam | qp.task = DummyActivity\n" +
+                    "no te: QueryParam | DummyPayload in te.data\n" +
+                    "}\n");
         }
     }
 

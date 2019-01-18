@@ -3,13 +3,13 @@ import core.Evaluator;
 import core.Global;
 import core.exceptions.BadSolutionException;
 import core.exceptions.GenerationException;
-import core.helpers.XesHelper;
 import declare.DeclareParserException;
 import edu.mit.csail.sdg.alloy4.Err;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -87,10 +87,10 @@ public class Generation {
             XTrace trace = log.get(i);
             Assert.assertEquals(trace.getAttributes().size(), 5);
 
-            Assert.assertEquals(XesHelper.getAttributeValue(trace.getAttributes().get("one")), "42");
-            int intv = Integer.parseInt(XesHelper.getAttributeValue(trace.getAttributes().get("num")));
-            float floatv = Float.parseFloat(XesHelper.getAttributeValue(trace.getAttributes().get("floatnum")));
-            String enumv = XesHelper.getAttributeValue(trace.getAttributes().get("enum"));
+            Assert.assertEquals(getAttributeValue(trace.getAttributes().get("one")), "42");
+            int intv = Integer.parseInt(getAttributeValue(trace.getAttributes().get("num")));
+            float floatv = Float.parseFloat(getAttributeValue(trace.getAttributes().get("floatnum")));
+            String enumv = getAttributeValue(trace.getAttributes().get("enum"));
 
             Assert.assertTrue(intv >= -42 && intv <= 42, "integer trace attribute is out of declared range. value: " + intv);
             Assert.assertTrue(floatv >= -1 && floatv <= 1, "float trace attribute is out of declared range. value: " + floatv);
@@ -100,7 +100,7 @@ public class Generation {
     }
 
     @Test
-    public void testInit() throws IllegalAccessException, Err, IOException, NoSuchFieldException, DeclareParserException, BadSolutionException, GenerationException {
+    public void testInit() throws Err, IOException, DeclareParserException, BadSolutionException, GenerationException {
         String declare = baseDeclare;
 
         XLog log = Evaluator.getLogSingleRun(
@@ -119,8 +119,12 @@ public class Generation {
         for (int i = 0; i < log.size(); ++i) {
             XTrace trace = log.get(i);
             XEvent event = trace.get(0);
-            Assert.assertEquals(XesHelper.getAttributeValue(event.getAttributes().get("concept:name")), "ApplyForTrip");
+            Assert.assertEquals(getAttributeValue(event.getAttributes().get("concept:name")), "ApplyForTrip");
         }
+    }
+
+    public String getAttributeValue(XAttribute xAttribute) {
+        return ((XAttributeLiteralImpl) xAttribute).getValue();
     }
 
     @Test

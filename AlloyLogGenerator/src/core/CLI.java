@@ -43,6 +43,8 @@ public class CLI {
                     config.underscore_spaces = true;
                 else if (args[i].equals("-validatelog"))
                     config.mode = ExecutionMode.COMPLIANCE_CHECK;
+                else if (args[i].equals("-query"))
+                    config.mode = ExecutionMode.QUERY;
                 else if (args[i].equals("-validatefn")) {
                     config.function = getArg(args, ++i, "validatefn");
                     config.mode = ExecutionMode.FUNCTION_VALIDATION;

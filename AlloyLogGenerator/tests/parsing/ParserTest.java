@@ -13,10 +13,7 @@ import declare.lang.data.IntegerData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vasiliy on 2017-10-25.
@@ -27,9 +24,9 @@ public class ParserTest {
 
     @Test
     public void testData() {
-        List<EnumeratedData> ed = new ArrayList<>();
-        List<IntegerData> id = new ArrayList<>();
-        List<FloatData> fd = new ArrayList<>();
+        Set<EnumeratedData> ed = new HashSet<>();
+        Set<IntegerData> id = new HashSet<>();
+        Set<FloatData> fd = new HashSet<>();
         parser.parseData(Arrays.asList(
                 "TransportType: Car, Plane, Train, Bus",
                 "Price integer between 0 and 300",
