@@ -156,11 +156,11 @@ public class DeclareParser {
             String[] a = i.split(":\\s*|,?\\s+");
 
             if (a[1].equals("integer") && a[2].equals("between")) {
-                idata.add(new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5])));
+                idata.add(new IntegerData(a[0], Integer.parseInt(a[3]), Integer.parseInt(a[5]), true));
             } else if (a[1].equals("float") && a[2].equals("between")) {
-                fdata.add(new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5])));
+                fdata.add(new FloatData(a[0], Float.parseFloat(a[3]), Float.parseFloat(a[5]), true));
             } else {
-                edata.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList())));
+                edata.add(new EnumeratedData(a[0], Arrays.stream(a).skip(1).collect(Collectors.toList()), true));
             }
         }
     }

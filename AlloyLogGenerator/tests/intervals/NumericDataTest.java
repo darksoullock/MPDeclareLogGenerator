@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class NumericDataTest {
     @Test
     public void EnumeratedDataTest() throws DeclareParserException {
-        EnumeratedDataImpl data = new EnumeratedDataImpl("data", Arrays.asList("v1", "v2"));
+        EnumeratedDataImpl data = new EnumeratedDataImpl("data", Arrays.asList("v1", "v2"), true);
         data.addValue("v3");
         Assert.assertEquals(data.getType(), "data");
         Assert.assertEquals(data.getValues().size(), 3);
@@ -26,7 +26,7 @@ public class NumericDataTest {
 
     @Test
     public void IntegerDataNoValuesTest() {
-        NumericDataImpl data = new IntegerDataImpl("idata", 0, 100, 1, null);
+        NumericDataImpl data = new IntegerDataImpl("idata", 0, 100, 1, null, true);
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 1);
         Assert.assertTrue(data.getMapping().containsKey(data.getValues().get(0)));
@@ -35,7 +35,7 @@ public class NumericDataTest {
 
     @Test
     public void IntegerDataTest() throws DeclareParserException, GenerationException {
-        NumericDataImpl data = new IntegerDataImpl("idata", 0, 100, 1, null);
+        NumericDataImpl data = new IntegerDataImpl("idata", 0, 100, 1, null, true);
         data.addSplit(new IntervalSplit("30"));
         data.addSplit(new IntervalSplit("60"));
         Assert.assertEquals(data.getType(), "idata");
@@ -47,7 +47,7 @@ public class NumericDataTest {
     @Test
     public void IntegerDataTest2() throws DeclareParserException, GenerationException {
         int increment = 10_000;
-        NumericDataImpl data = new IntegerDataImpl("idata", -2000000 + 1, 2000000 - 1, 1, null);  // -1 and +1 as min and max values in constructor are included in range
+        NumericDataImpl data = new IntegerDataImpl("idata", -2000000 + 1, 2000000 - 1, 1, null, true);  // -1 and +1 as min and max values in constructor are included in range
         for (int i = 0; i < 100; ++i) {
             data.addSplit(new IntervalSplit(String.valueOf(increment * i)));
             data.addSplit(new IntervalSplit(String.valueOf(-increment * i)));
@@ -72,7 +72,7 @@ public class NumericDataTest {
 
     @Test
     public void IntegerDataSplitsTest() throws DeclareParserException {
-        NumericDataImpl data = new IntegerDataImpl("idata", -2000000 + 1, 2000000 - 1, 1000, null);
+        NumericDataImpl data = new IntegerDataImpl("idata", -2000000 + 1, 2000000 - 1, 1000, null, true);
         for (String key : data.getMapping().keySet()) {
             Interval intl = data.getMapping().get(key);
             if (intl instanceof IntegerInterval) {
@@ -86,7 +86,7 @@ public class NumericDataTest {
 
     @Test
     public void FloatDataNoValuesTest() {
-        NumericDataImpl data = new FloatDataImpl("idata", 0, 100, 1, null);
+        NumericDataImpl data = new FloatDataImpl("idata", 0, 100, 1, null, true);
         Assert.assertEquals(data.getType(), "idata");
         Assert.assertEquals(data.getValues().size(), 1);
         Assert.assertTrue(data.getMapping().containsKey(data.getValues().get(0)));
@@ -95,7 +95,7 @@ public class NumericDataTest {
 
     @Test
     public void FloatDataTest() throws DeclareParserException, GenerationException {
-        NumericDataImpl data = new FloatDataImpl("idata", 0, 100, 1, null);
+        NumericDataImpl data = new FloatDataImpl("idata", 0, 100, 1, null, true);
         data.addSplit(new IntervalSplit("30"));
         data.addSplit(new IntervalSplit("60"));
         Assert.assertEquals(data.getType(), "idata");

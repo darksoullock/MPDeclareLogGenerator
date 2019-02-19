@@ -16,20 +16,22 @@ import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TraceToModel {
+public class LogToModel {
 
-    private Map<String, String> nameToCode = new HashMap<>();
+    private Map<String, String> activityNameToCode = new HashMap<>();
+    private Map<String, String> dataNameToCode = new HashMap<>();
+    private Map<String, String> valueNameToCode = new HashMap<>();
     private Map<String, String> codeToName = new HashMap<>();
 
-    public Map<String, String> getNameToCode() {
-        return nameToCode;
+    public Map<String, String> getActivityNameToCode() {
+        return activityNameToCode;
     }
 
     public Map<String, String> getCodeToName() {
         return codeToName;
     }
 
-    public DeclareModel parseLog(XLog log) {
+    public DeclareModel parse(XLog log) {
 
         encodeNames(log);
 
@@ -37,12 +39,14 @@ public class TraceToModel {
         Map<String, Set<String>> edata = new HashMap<>();
         Map<String, Pair<Integer, Integer>> idata = new HashMap<>();
         Map<String, Pair<Float, Float>> fdata = new HashMap<>();
+        Map<String, Map<String, Boolean>> requiredMap = new HashMap<>();
 
         for (XTrace trace : log) {
             for (XEvent event : trace) {
                 String name = ((XAttributeLiteralImpl) event.getAttributes().get("concept:name")).getValue();
 
                 model.getActivities().add(new Activity(name));
+                updateRequired(requiredMap, name, event.getAttributes().values());
 
                 for (XAttribute attribute : event.getAttributes().values()) {
                     String attributeName = attribute.getKey();
@@ -72,11 +76,35 @@ public class TraceToModel {
             }
         }
 
-        model.getEnumeratedData().addAll(edata.entrySet().stream().map(i -> new EnumeratedData(i.getKey(), new ArrayList<>(i.getValue()))).collect(Collectors.toList()));
-        model.getIntegerData().addAll(idata.entrySet().stream().map(i -> new IntegerData(i.getKey(), i.getValue().getLeft() - 1, i.getValue().getRight() + 1)).collect(Collectors.toList()));
-        model.getFloatData().addAll(fdata.entrySet().stream().map(i -> new FloatData(i.getKey(), i.getValue().getLeft() - 1, i.getValue().getRight() + 1)).collect(Collectors.toList()));
+        // whether data attribute is optional or required should be determined for each activity (in activity-data mapping)
+        // because the same attribute can be bound to multiple activities
+        // currently "required" property is temporarily in data attributes
+        Map<String, Boolean> simpleRequiredMap = requiredMap.values().stream().flatMap(i -> i.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (i, j) -> i && j));
+        model.getEnumeratedData().addAll(edata.entrySet().stream().map(i -> new EnumeratedData(i.getKey(), new ArrayList<>(i.getValue()), simpleRequiredMap.get(i.getKey()))).collect(Collectors.toList()));
+        model.getIntegerData().addAll(idata.entrySet().stream().map(i -> new IntegerData(i.getKey(), i.getValue().getLeft() - 1, i.getValue().getRight() + 1, simpleRequiredMap.get(i.getKey()))).collect(Collectors.toList()));
+        model.getFloatData().addAll(fdata.entrySet().stream().map(i -> new FloatData(i.getKey(), i.getValue().getLeft() - 1, i.getValue().getRight() + 1, simpleRequiredMap.get(i.getKey()))).collect(Collectors.toList()));
 
         return model;
+    }
+
+    private void updateRequired(Map<String, Map<String, Boolean>> requiredMap, String activity, Collection<XAttribute> attributes) {
+        Set<String> attributeNames = attributes.stream().map(XAttribute::getKey).collect(Collectors.toSet());
+        if (requiredMap.containsKey(activity)) {
+            Map<String, Boolean> attributeMap = requiredMap.get(activity);
+
+            for (String i : attributeNames)
+                if (!attributeMap.containsKey(i))
+                    attributeMap.put(i, false);
+
+            for (String i : attributeMap.keySet())
+                if (!attributeNames.contains(i))
+                    attributeMap.put(i, false);
+
+        } else {
+            Map<String, Boolean> keys = new HashMap<>();
+            attributeNames.forEach(i -> keys.put(i, true));
+            requiredMap.put(activity, keys);
+        }
     }
 
     private void encodeNames(XLog log) {
@@ -85,31 +113,32 @@ public class TraceToModel {
                 XAttributeMap encAtt = new XAttributeMapImpl();
 
                 String name = ((XAttributeLiteralImpl) event.getAttributes().get("concept:name")).getValue();
-                codeToName.put(nameToCode.computeIfAbsent(name, i -> RandomHelper.getName()), name);
+                codeToName.put(activityNameToCode.computeIfAbsent(name, i -> RandomHelper.getValidNameFor("activity", name)), name);
                 XAttributeLiteralImpl nameAttribute = (XAttributeLiteralImpl) event.getAttributes().get("concept:name");
-                nameAttribute.setValue(nameToCode.get(name));
+                nameAttribute.setValue(activityNameToCode.get(name));
                 encAtt.put("concept:name", nameAttribute);
 
                 for (XAttribute attribute : event.getAttributes().values()) {
                     if (standardAttribute(attribute.getKey()))
                         continue;
 
-                    codeToName.put(nameToCode.computeIfAbsent(attribute.getKey(), i -> RandomHelper.getName()), attribute.getKey());
+                    codeToName.put(dataNameToCode.computeIfAbsent(attribute.getKey(), i -> RandomHelper.getValidNameFor("data", attribute.getKey())), attribute.getKey());
                     if (attribute instanceof XAttributeLiteralImpl) {
                         String value = ((XAttributeLiteralImpl) attribute).getValue();
-                        codeToName.put(nameToCode.computeIfAbsent(value, i -> RandomHelper.getName()), value);
-                        ((XAttributeLiteralImpl) attribute).setValue(nameToCode.get(value));
+                        String key_value = attribute.getKey() + "_" + value;
+                        codeToName.put(valueNameToCode.computeIfAbsent(key_value, i -> RandomHelper.getValidNameFor("val", key_value)), key_value);
+                        ((XAttributeLiteralImpl) attribute).setValue(valueNameToCode.get(key_value));
                     }
 
-                    String aname = nameToCode.get(attribute.getKey());
-                    if (attribute instanceof XAttributeLiteralImpl) {
-                        encAtt.put(aname, new XAttributeLiteralImpl(aname, ((XAttributeLiteralImpl) attribute).getValue()));
-                    }
+                    String aname = dataNameToCode.get(attribute.getKey());
                     if (attribute instanceof XAttributeLiteralImpl) {
                         encAtt.put(aname, new XAttributeLiteralImpl(aname, ((XAttributeLiteralImpl) attribute).getValue()));
                     }
                     if (attribute instanceof XAttributeDiscreteImpl) {
                         encAtt.put(aname, new XAttributeDiscreteImpl(aname, ((XAttributeDiscreteImpl) attribute).getValue()));
+                    }
+                    if (attribute instanceof XAttributeContinuousImpl) {
+                        encAtt.put(aname, new XAttributeContinuousImpl(aname, ((XAttributeContinuousImpl) attribute).getValue()));
                     }
                 }
 
@@ -133,6 +162,6 @@ public class TraceToModel {
     }
 
     private boolean standardAttribute(String key) {
-        return "concept:name".equals(key) || "lifecycle:transition".equals(key) || "time:timestamp".equals(key);
+        return "concept:name".equals(key) || "lifecycle:transition".equals(key) || "time:timestamp".equals(key) || "org:group".equals(key);
     }
 }

@@ -4,13 +4,15 @@ package declare.lang.data;
  * Created by Vasiliy on 2017-10-23.
  */
 public class FloatData {
-    String type;
-    float min;
-    float max;
+    private boolean required;
+    private String type;
+    private float min;
+    private float max;
 
-    public FloatData(String type, float min, float max) {
+    public FloatData(String type, float min, float max, boolean required) {
         this.min = min;
         this.max = max;
+        this.required = required;
         this.type = type;
     }
 
@@ -24,5 +26,9 @@ public class FloatData {
 
     public float getMax() {
         return max;
+    }
+
+    public boolean isRequired() {
+        return required;
     }
 }

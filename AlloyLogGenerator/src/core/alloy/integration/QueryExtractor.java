@@ -30,10 +30,10 @@ public class QueryExtractor {
     }
 
     private QueryState getOne(A4Solution solution, Module world, Map<String, String> paramEncoding, Set<String> dataParams) throws IOException, Err {
-        List<QueryEvent> result = new ArrayList<>();
+        Map<String, QueryEvent> result = new HashMap<>();
         for (Map.Entry<String, String> param : paramEncoding.entrySet()) {
             QueryEvent item = new QueryEvent();
-            item.setParam(param.getKey());
+            item.setTemplateName(param.getKey());
             item.setActivity(getActivityName(solution, world, param.getValue()));
             if (dataParams.contains(param.getKey())) {
                 fillData(item.getData(), solution, world, param.getValue());
@@ -49,7 +49,7 @@ public class QueryExtractor {
             if (ok instanceof Boolean)
                 item.setVacuous((Boolean) ok);
 
-            result.add(item);
+            result.put(item.getTemplateName(), item);
         }
 
         return new QueryState(result);

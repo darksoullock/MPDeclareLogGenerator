@@ -13,7 +13,7 @@ public class QueryBuider {
     private Set<String> dataParams = new HashSet<>();
     private Map<String, String> nameToCode;
 
-    public QueryBuider(Map<String, String> nameToCode) {
+    public QueryBuider(Map<String, String> nameToCode ) {
         this.nameToCode = nameToCode;
     }
 

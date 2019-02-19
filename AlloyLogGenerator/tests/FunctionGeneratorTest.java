@@ -99,7 +99,7 @@ public class FunctionGeneratorTest {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "same"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
         Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
         Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
@@ -111,7 +111,7 @@ public class FunctionGeneratorTest {
         UnaryExpression expr = new UnaryExpression(new Token(0, Token.Type.Operator, "different"), new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
         Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
         Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Activity"));
@@ -126,7 +126,7 @@ public class FunctionGeneratorTest {
                                 new ValueExpression(new Token(0, Token.Type.Activity, "Activity"))));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
 
         Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
@@ -142,7 +142,7 @@ public class FunctionGeneratorTest {
                                 new ValueExpression(new Token(0, Token.Type.Activity, "Activity"))));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateFunction("fn", fn, map, Arrays.asList("T1", "T2"));
         Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
         Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));
@@ -158,7 +158,7 @@ public class FunctionGeneratorTest {
                         new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateNotFunction("fn", fn, map, Arrays.asList("T1", "T2"));
         Assert.assertTrue(afn.contains("one sig " + Global.differentPrefix + "Activity"));
         Assert.assertTrue(afn.contains("abstract sig " + Global.differentPrefix + "Activity"));
@@ -172,7 +172,7 @@ public class FunctionGeneratorTest {
                         new ValueExpression(new Token(0, Token.Type.Activity, "Activity")));
         DataFunction fn = new DataFunction(Arrays.asList("A", "B"), expr);
         Map<String, NumericDataImpl> map = new HashMap<>();
-        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null));
+        map.put("Activity", new IntegerDataImpl("Activity", 0, 5, 1, null, true));
         String afn = gen.generateNotFunction("fn", fn, map, Arrays.asList("T1", "T2"));
         Assert.assertTrue(afn.contains("one sig " + Global.samePrefix + "Activity"));
         Assert.assertTrue(afn.contains("abstract sig " + Global.samePrefix + "Activity"));

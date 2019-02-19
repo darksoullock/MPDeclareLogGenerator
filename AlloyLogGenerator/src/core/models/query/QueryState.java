@@ -1,17 +1,19 @@
 package core.models.query;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+// State of model compliant with trace.
+// Contains list valid values for each template of query
 public class QueryState {
-    private List<QueryEvent> state;
+    private Map<String, QueryEvent> templateValues;
 
-    public QueryState(List<QueryEvent> state) {
-        this.state = state;
+    public QueryState(Map<String, QueryEvent> templateValues) {
+        this.templateValues = templateValues;
     }
 
-    public List<QueryEvent> getState() {
-        return state;
+    public Map<String, QueryEvent> getTemplateValuesMap() {
+        return templateValues;
     }
 
     @Override
@@ -19,12 +21,12 @@ public class QueryState {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QueryState that = (QueryState) o;
-        return Objects.equals(state, that.state);
+        return Objects.equals(templateValues, that.templateValues);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(state);
+        return Objects.hash(templateValues);
     }
 }

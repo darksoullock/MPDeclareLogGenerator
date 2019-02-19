@@ -3,11 +3,10 @@ package core.models.query;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+//contains name and value(s) for one query template
 public class QueryEvent {
-    private String param;
+    private String templateName;
     private String activity;
     private Map<String, String> data;
     private boolean vacuous;
@@ -16,12 +15,12 @@ public class QueryEvent {
         data = new HashMap<>();
     }
 
-    public String getParam() {
-        return param;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public void setParam(String param) {
-        this.param = param;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public String getActivity() {
@@ -48,21 +47,24 @@ public class QueryEvent {
         this.vacuous = vacuous;
     }
 
-    public String toString(Map<String, String> codeToName) {
-        return param + ": " +
-                "activity: '" + codeToName.get(activity) + '\'' +
-                ", data: \n" + String.join("\n", data.entrySet().stream().map(encodedDataEntryToString(codeToName)).collect(Collectors.toList())) +
-                ", present=" + vacuous
-                ;
+    public void decode(Map<String, String> codeToName) {
+        activity = codeToName.get(activity);
+        Map<String, String> decodedData = new HashMap<>();
+        data.forEach((key, value) -> decodedData.put(codeToName.get(key), removePrefix(codeToName.getOrDefault(value, value), codeToName.get(key))));
+        data = decodedData;
     }
 
-    private Function<Map.Entry<String, String>, String> encodedDataEntryToString(Map<String, String> codeToName) {
-        return i -> codeToName.get(i.getKey()) + "=" + codeToName.get(i.getValue());
+    private String removePrefix(String s, String prefix) {
+        if (s != null && s.startsWith(prefix) && s.length() > prefix.length() + 1) {
+            return s.substring(prefix.length() + 1);
+        }
+
+        return s;
     }
 
     @Override
     public String toString() {
-        return param + ": " +
+        return templateName + ": " +
                 "activity='" + activity + '\'' +
                 ", data=" + data +
                 ", present=" + vacuous
@@ -74,7 +76,7 @@ public class QueryEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QueryEvent that = (QueryEvent) o;
-        return Objects.equals(param, that.param) &&
+        return Objects.equals(templateName, that.templateName) &&
                 Objects.equals(activity, that.activity) &&
                 Objects.equals(data, that.data);
     }
@@ -82,6 +84,6 @@ public class QueryEvent {
     @Override
     public int hashCode() {
 
-        return Objects.hash(param, activity, data);
+        return Objects.hash(templateName, activity, data);
     }
 }

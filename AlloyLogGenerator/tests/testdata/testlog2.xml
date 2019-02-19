@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7" xmlns="http://www.xes-standard.org/">
+    <string key="concept:name" value="Artificial Log"/>
+    <string key="lifecycle:model" value="standard"/>
+    <string key="source" value="DAlloy"/>
+    <trace>
+        <string key="concept:name" value="Case No. 1"/>
+        <event>
+            <string key="concept:name" value="START"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T21:27:25.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="A"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T23:33:05.405+02:00"/>
+            <string key="ENUM" value="X"/>
+        </event>
+        <event>
+            <string key="concept:name" value="B"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <int key="INT" value="54"/>
+            <date key="time:timestamp" value="2018-12-27T23:54:45.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="C"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:22:16.405+02:00"/>
+            <float key="FLOAT" value="45.2"/>
+        </event>
+        <event>
+            <string key="concept:name" value="END"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:58:30.405+02:00"/>
+        </event>
+    </trace>
+    <trace>
+        <string key="concept:name" value="Case No. 2"/>
+        <event>
+            <string key="concept:name" value="START"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T21:27:25.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="D"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T23:33:05.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="END"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:58:30.405+02:00"/>
+        </event>
+    </trace>
+    <trace>
+        <string key="concept:name" value="Case No. 1"/>
+        <event>
+            <string key="concept:name" value="START"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T21:27:25.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="A"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T23:33:05.405+02:00"/>
+            <string key="ENUM" value="Y"/>
+        </event>
+        <event>
+            <string key="concept:name" value="B"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <int key="INT" value="64"/>
+            <date key="time:timestamp" value="2018-12-27T23:54:45.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="C"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:22:16.405+02:00"/>
+            <float key="FLOAT" value="85.2"/>
+        </event>
+        <event>
+            <string key="concept:name" value="END"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:58:30.405+02:00"/>
+        </event>
+    </trace></log>

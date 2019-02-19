@@ -23,12 +23,13 @@ public class FloatDataImpl extends NumericDataImpl {
     private int intervalSplits;
     private SafeFunction2<Float, Float, Float> valueGenerator;
 
-    public FloatDataImpl(String type, float min, float max, int intervalSplits, SafeFunction2<Float, Float, Float> valueGenerator) {
+    public FloatDataImpl(String type, float min, float max, int intervalSplits, SafeFunction2<Float, Float, Float> valueGenerator, boolean required) {
         this.min = min;
         this.max = max;
         this.type = type;
         this.intervalSplits = intervalSplits;
         this.valueGenerator = valueGenerator;
+        this.required = required;
     }
 
     @Override

@@ -1,12 +1,11 @@
 import core.Evaluator;
+import declare.lang.Statement;
 import org.deckfour.xes.in.XesXmlParser;
-import org.deckfour.xes.model.XLog;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by Vasiliy on 2017-11-20.
@@ -120,14 +119,20 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        boolean compliant = Evaluator.checkCompliace(
+        List<Statement> violations = Evaluator.checkCompliace(
                 0,
                 declare,
                 "./../data/temp.als",
                 false,
-                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
+                new XesXmlParser().parse(is).get(0).get(0));
 
-        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
+        Assert.assertFalse(violations.isEmpty(), "Given trace expected to be non-compliant");
+        Assert.assertTrue(violations.contains(new Statement("Init[START]", 9)));
+        Assert.assertTrue(violations.contains(new Statement("Response[START, B]", 10)));
+        Assert.assertTrue(violations.contains(new Statement("Precedence[END, A]", 11)));
+        Assert.assertTrue(violations.contains(new Statement("Precedence[END, B]", 12)));
+        Assert.assertTrue(violations.contains(new Statement("Precedence[END, C]", 13)));
+        Assert.assertTrue(violations.contains(new Statement("Existence[C]", 17)));
     }
 
     @Test
@@ -173,14 +178,16 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        boolean compliant = Evaluator.checkCompliace(
+        List<Statement> violations = Evaluator.checkCompliace(
                 0,
                 declare,
                 "./../data/temp.als",
                 false,
-                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
+                new XesXmlParser().parse(is).get(0).get(0));
 
-        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
+        Assert.assertFalse(violations.isEmpty(), "Given trace expected to be non-compliant");
+        Assert.assertTrue(violations.contains(new Statement("Existence[A]|A.ENUM is Y", 28)));
+
     }
 
     @Test
@@ -226,14 +233,16 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        boolean compliant = Evaluator.checkCompliace(
+        List<Statement> violations = Evaluator.checkCompliace(
                 0,
                 declare,
                 "./../data/temp.als",
                 false,
-                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
+                new XesXmlParser().parse(is).get(0).get(0));
 
-        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
+        Assert.assertFalse(violations.isEmpty(), "Given trace expected to be non-compliant");
+        Assert.assertTrue(violations.contains(new Statement("Existence[B]|A.INT < 50", 28)));
+
     }
 
     @Test
@@ -279,14 +288,15 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        boolean compliant = Evaluator.checkCompliace(
+        List<Statement> violations = Evaluator.checkCompliace(
                 0,
                 declare,
                 "./../data/temp.als",
                 false,
-                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
+                new XesXmlParser().parse(is).get(0).get(0));
 
-        Assert.assertFalse(compliant, "Given trace expected to be non-compliant");
+        Assert.assertFalse(violations.isEmpty(), "Given trace expected to be non-compliant");
+        Assert.assertTrue(violations.contains(new Statement("Existence[C]|A.FLOAT > 50", 28)));
     }
 
     @Test
@@ -332,14 +342,14 @@ public class ComplianceChecker {
                 "\t</trace>\n" +
                 "</log>\n").getBytes());
 
-        boolean compliant = Evaluator.checkCompliace(
+        List<Statement> violations = Evaluator.checkCompliace(
                 0,
                 declare,
                 "./../data/temp.als",
                 false,
-                new XesXmlParser().parse(is).get(0).get(0)).isEmpty();
+                new XesXmlParser().parse(is).get(0).get(0));
 
-        Assert.assertTrue(compliant, "Given trace expected to be compliant");
+        Assert.assertTrue(violations.isEmpty(), "Given trace expected to be compliant");
     }
 }
 

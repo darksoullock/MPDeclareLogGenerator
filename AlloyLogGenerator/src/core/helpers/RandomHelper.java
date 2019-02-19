@@ -13,6 +13,19 @@ public class RandomHelper {
     }
 
     public static String getName() {
-        return "x" + UUID.randomUUID().toString().replace('-','x');
+        return "x" + UUID.randomUUID().toString().replace('-', 'x');
+    }
+
+    public static String getValidNameFor(String prefix, String name) {
+        StringBuilder sb = new StringBuilder(prefix).append("_");
+        for (int i = 0; i < name.length(); ++i) {
+            char currentChar = name.charAt(i);
+            if (Character.isLetterOrDigit(currentChar)) {
+                sb.append(currentChar);
+            }
+        }
+
+        sb.append("_r").append(++start);
+        return sb.toString();
     }
 }

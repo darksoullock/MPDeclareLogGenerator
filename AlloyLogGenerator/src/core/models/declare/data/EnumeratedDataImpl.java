@@ -7,16 +7,18 @@ import java.util.List;
  * Created by Vasiliy on 2017-10-17.
  */
 public class EnumeratedDataImpl {
-    String type;
-    List<String> values;
+    protected boolean required;
+    protected String type;
+    protected List<String> values;
 
     public EnumeratedDataImpl() {
         values = new ArrayList<>();
     }
 
-    public EnumeratedDataImpl(String type, List<String> values) {
+    public EnumeratedDataImpl(String type, List<String> values, boolean required) {
         this.type = type;
         this.values = new ArrayList<>(values);
+        this.required = required;
     }
 
     public String getType() {
@@ -29,5 +31,9 @@ public class EnumeratedDataImpl {
 
     public void addValue(String value) {
         this.values.add(value);
+    }
+
+    public boolean isRequired() {
+        return required;
     }
 }

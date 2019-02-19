@@ -13,6 +13,7 @@ import core.models.AlloyRunConfiguration;
 import core.models.query.AggregationState;
 import core.models.query.QueryEvent;
 import core.models.query.QueryState;
+import core.models.query.TraceQueryResults;
 import core.models.serialization.trace.AbstractTraceAttribute;
 import core.models.serialization.trace.EnumTraceAttributeImpl;
 import core.models.serialization.trace.FloatTraceAttributeImpl;
@@ -52,7 +53,7 @@ public class Evaluator {
 
     private static int reuse = 1;
 
-    private static final boolean testMode = false;
+    private static final boolean testMode = true;
 
     private static AlloyRunConfiguration debugConf() {
         AlloyRunConfiguration conf = new AlloyRunConfiguration();
@@ -67,7 +68,7 @@ public class Evaluator {
         conf.evenLengthsDistribution = false;
         conf.intervalSplits = 1;
         conf.alsFilename = "../data/temp.als";
-        conf.logFilename = "../data/hospital_log.xes";
+        conf.logFilename = "../data/Sepsis Cases - Event Log.xes";
 //        conf.logFilename = "../data/" + LocalDate.now() + "-L" + conf.minLength + "-" + conf.maxLength + ".xes";
         conf.mode = ExecutionMode.QUERY;
         return conf;
@@ -150,33 +151,15 @@ public class Evaluator {
             XLog log = readTracesFromLogFile(config.logFilename);
             String declare = GetDeclare(config.modelFilename);
 
-            TraceToModel traceToModel = new TraceToModel();
-            DeclareModel model = traceToModel.parseLog(log);
-
-            List<Set<QueryState>> allStates = new ArrayList<>();
-            int i = 10;
-            for (XTrace trace : log) {
-                Set<QueryState> traceStates = Evaluator.queryTrace(
-                        declare,
-                        config.alsFilename,
-                        false,
-                        trace,
-                        model,
-                        traceToModel.getNameToCode());
-
-                allStates.add(traceStates);
-                if (--i < 0)
-                    break;
-            }
-
-            Map<QueryState, AggregationState> aggregatedData = aggregate(allStates, 0.8, 0.2);
+            List<TraceQueryResults> allStates = queryLog(declare, config.alsFilename, false, log);
+            Map<QueryState, AggregationState> aggregatedData = aggregate(allStates, 0, 0);
 
             double traceCount = allStates.size();
             Global.log.accept("Found: " + aggregatedData.size());
             for (Map.Entry<QueryState, AggregationState> state : aggregatedData.entrySet()) {
                 Global.log.accept("\n accuracy: " + state.getValue().count / traceCount + "; vacuous: " + state.getValue().vacuousCount / traceCount);
-                for (QueryEvent r : state.getKey().getState()) {
-                    Global.log.accept(r.toString(traceToModel.getCodeToName()));
+                for (QueryEvent r : state.getKey().getTemplateValuesMap().values()) {
+                    Global.log.accept(r.toString());
                 }
             }
 
@@ -186,14 +169,14 @@ public class Evaluator {
         }
     }
 
-    private static Map<QueryState, AggregationState> aggregate(List<Set<QueryState>> allStates, double threshold, double vacuousThreshold) {
+    private static Map<QueryState, AggregationState> aggregate(List<TraceQueryResults> allStates, double threshold, double vacuousThreshold) {
         Map<QueryState, AggregationState> a = new HashMap<>();
-        for (Set<QueryState> traceState : allStates) {
-            for (QueryState state : traceState) {
+        for (TraceQueryResults traceState : allStates) {
+            for (QueryState state : traceState.getStates()) {
                 a.computeIfAbsent(state, i -> new AggregationState());
                 AggregationState current = a.get(state);
                 ++current.count;
-                current.vacuousCount += state.getState().stream().anyMatch(QueryEvent::isVacuous) ? 1 : 0;
+                current.vacuousCount += state.getTemplateValuesMap().values().stream().anyMatch(QueryEvent::isVacuous) ? 1 : 0;
             }
         }
 
@@ -351,7 +334,35 @@ public class Evaluator {
         return violations;
     }
 
-    public static Set<QueryState> queryTrace(String queryDeclare,
+    public static List<TraceQueryResults> queryLog(String queryDeclare,
+                                                 String alsFilename,
+                                                 boolean vacuity,
+                                                 XLog log)
+            throws Err, DeclareParserException, GenerationException, IOException {
+
+        LogToModel logToModel = new LogToModel();
+        DeclareModel model = logToModel.parse(log);
+
+        List<TraceQueryResults> allStates = new ArrayList<>();
+        for (XTrace trace : log) {
+            TraceQueryResults traceStates = Evaluator.queryTrace(
+                    queryDeclare,
+                    alsFilename,
+                    vacuity,
+                    trace,
+                    model,
+                    logToModel.getActivityNameToCode());
+
+            allStates.add(traceStates);
+        }
+
+        allStates.stream().flatMap(i->i.getStates().stream()).flatMap(i -> i.getTemplateValuesMap().values().stream())
+                .forEach(i -> i.decode(logToModel.getCodeToName()));
+
+        return allStates;
+    }
+
+    public static TraceQueryResults queryTrace(String queryDeclare,
                                              String alsFilename,
                                              boolean vacuity,
                                              XTrace trace,
@@ -374,10 +385,10 @@ public class Evaluator {
         qb.extractQueryParams(model.getDataConstraints());
 
 
-        AlloyCodeGenerator gen = new AlloyCodeGenerator(trace.size(), 0, bitwidth, 1, vacuity, false, true);
+        AlloyCodeGenerator gen = new AlloyCodeGenerator(trace.size(), 0, bitwidth, 0, vacuity, false, true);
         gen.Run(model, false, 1, trace);
-        gen.generateDataBindingForQuerying(model.getActivityToData(), model.getDataToActivity());
         gen.generateQueryPlaceholder(qb.getParamEncoding(), qb.getDataParams());
+        gen.generateDataBindingForQuerying(model.getActivityToData(), model.getDataToActivity());
 
         String alloyCode = gen.getAlloyCode();
         IOHelper.writeAllText(alsFilename, alloyCode);
@@ -387,11 +398,12 @@ public class Evaluator {
         A4Solution solution = alloy.executeFromFile(trace.size(), bitwidth);
 
         QueryExtractor extractor = new QueryExtractor();
-        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), 400);
+        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), 1000);
 
         Global.log.accept("\n");
 
-        return qlist;
+        String name = ((XAttributeLiteralImpl)trace.getAttributes().get("concept:name")).getValue();
+        return new TraceQueryResults(name, qlist);
     }
 
     private static List<AbstractTraceAttribute> getTraceAttributesImpl(DeclareModel model) {
