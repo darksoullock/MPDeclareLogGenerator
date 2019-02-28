@@ -29,7 +29,7 @@ public class QueryingData {
                 log);
 
         Assert.assertNotNull(all);
-        Assert.assertEquals(all.size(), 2);
+        Assert.assertEquals(all.size(), 4);
         TraceQueryResults result = all.get(0);
         Assert.assertEquals(result.getName(), "Case No. 1");
         Assert.assertEquals(result.getStates().size(), 2);
@@ -55,7 +55,7 @@ public class QueryingData {
                 log);
 
         Assert.assertNotNull(all);
-        Assert.assertEquals(all.size(), 3);
+        Assert.assertEquals(all.size(), 4);
         TraceQueryResults result = all.get(0);
         Assert.assertEquals(result.getName(), "Case No. 1");
         Assert.assertEquals(result.getStates().size(), 4);
@@ -83,11 +83,124 @@ public class QueryingData {
                 log);
 
         Assert.assertNotNull(all);
-        Assert.assertEquals(all.size(), 3);
+        Assert.assertEquals(all.size(), 4);
         TraceQueryResults result = all.get(0);
         Assert.assertEquals(result.getName(), "Case No. 1");
         Assert.assertEquals(result.getStates().size(), 3);
         Assert.assertEquals(result.getStates().stream().flatMap(i -> i.getTemplateValuesMap().values().stream()).map(QueryEvent::getActivity).collect(Collectors.toSet()), new HashSet<>(Arrays.asList("A", "D", "START")));
         Assert.assertEquals(getByActivity(result, "?Y", "A").get(0).getData().values().iterator().next(), "Y", "Activity 'A' expected with ENUM = Y");
     }
+
+    @Test
+    public void testExistence() throws Exception {
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+        String declare = "Existence[?X]|?";
+
+        List<TraceQueryResults> all = Evaluator.queryLog(
+                declare,
+                "./../data/temp.als",
+                false,
+                log);
+
+        Assert.assertNotNull(all);
+        Assert.assertEquals(all.size(), 4);
+        TraceQueryResults result = all.get(3);
+        Assert.assertEquals(result.getName(), "Case No. 4");
+        Assert.assertEquals(result.getStates().size(), 3);
+        List<QueryEvent> a = getByActivity(result, "?X", "A");
+        Assert.assertFalse(a.isEmpty());
+        Assert.assertEquals(a.get(0).getData().get("ENUM"), "X");
+        for (QueryState i : result.getStates()) {
+            Assert.assertTrue(i.getTemplateValuesMap().containsKey("?X"));
+            QueryEvent queryEvent = i.getTemplateValuesMap().get("?X");
+            Assert.assertTrue(queryEvent.getActivity().equals("START") || queryEvent.getActivity().equals("END")
+                    || queryEvent.getActivity().equals("A"), queryEvent.toString() + " is invalid");
+        }
+    }
+
+    @Test
+    public void testAbsence() throws Exception {
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+        String declare = "Absence[?X]|?";
+
+        List<TraceQueryResults> all = Evaluator.queryLog(
+                declare,
+                "./../data/temp.als",
+                false,
+                log);
+
+        Assert.assertNotNull(all);
+        Assert.assertEquals(all.size(), 4);
+        TraceQueryResults result = all.get(0);
+        Assert.assertEquals(result.getName(), "Case No. 1");
+        List<QueryEvent> a = getByActivity(result, "?X", "A");
+        Assert.assertFalse(a.isEmpty());
+        Assert.assertEquals(a.get(0).getData().get("ENUM"), "Y");
+        List<QueryEvent> d = getByActivity(result, "?X", "D");
+        Assert.assertFalse(d.isEmpty());
+
+    }
+
+    @Test
+    public void testExclusiveChoice() throws Exception {
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+        String declare = "ExclusiveChoice[START, ?X]||?";
+
+        List<TraceQueryResults> all = Evaluator.queryLog(
+                declare,
+                "./../data/temp.als",
+                false,
+                log);
+
+        Assert.assertNotNull(all);
+        Assert.assertEquals(all.size(), 4);
+        TraceQueryResults result = all.get(0);
+        Assert.assertEquals(result.getName(), "Case No. 1");
+        Assert.assertEquals(result.getStates().size(), 2);
+        for (QueryState i : result.getStates()) {
+            Assert.assertTrue(i.getTemplateValuesMap().containsKey("?X"));
+            QueryEvent queryEvent = i.getTemplateValuesMap().get("?X");
+            Assert.assertTrue(queryEvent.getActivity().equals("A") && !queryEvent.getData().isEmpty() ||
+                    queryEvent.getActivity().equals("D"), queryEvent.getActivity());
+        }
+    }
+
+    @Test
+    public void testChoice() throws Exception {
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+        String declare = "Choice[START, ?X]||?";
+
+        List<TraceQueryResults> all = Evaluator.queryLog(
+                declare,
+                "./../data/temp.als",
+                false,
+                log);
+
+        Assert.assertNotNull(all);
+        Assert.assertEquals(all.size(), 4);
+
+    }
+
+//    @Test
+//    public void testResponseOnNumber() throws Exception {
+//        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+//        String declare = "Response[B, ?X]|A.INT>60|?";
+//
+//        List<TraceQueryResults> all = Evaluator.queryLog(
+//                declare,
+//                "./../data/temp.als",
+//                false,
+//                log);
+//
+//        Assert.assertNotNull(all);
+//        Assert.assertEquals(all.size(), 4);
+//
+//        for (TraceQueryResults result : all) {
+//            Assert.assertEquals(result.getStates().size(), 7); //can be more if numeric data will be separated
+//        }
+//    }
+
+
+    // test optional value
+    // test correlation for specific numeric activation data value
 }

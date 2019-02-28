@@ -162,6 +162,6 @@ public class LogToModel {
     }
 
     private boolean standardAttribute(String key) {
-        return "concept:name".equals(key) || "lifecycle:transition".equals(key) || "time:timestamp".equals(key) || "org:group".equals(key);
+        return "concept:name".equals(key) || "lifecycle:transition".equals(key) || "time:timestamp".equals(key) || "org:group".equals(key) || "org:resource".equals(key);
     }
 }

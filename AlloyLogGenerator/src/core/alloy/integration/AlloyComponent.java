@@ -25,7 +25,6 @@ public class AlloyComponent {
         //this.config.solver = SatSolver.MiniSatJNI; // use for linux
 
 //        Global.log.accept("Chosen solver: " + this.config.solver);
-        Global.log.accept(".");
         this.config.skolemDepth = 4;
         this.config.noOverflow = true;
         this.reporter = new A4Reporter() {

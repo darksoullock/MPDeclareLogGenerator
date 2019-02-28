@@ -95,7 +95,7 @@ public class QueryingNoData {
     @Test
     public void testRespondedExistence() throws Exception {
         XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog1.xml")))).get(0);
-        String declare = "Response[B,?X]";
+        String declare = "RespondedExistence[D,?X]";
 
         List<TraceQueryResults> all = Evaluator.queryLog(
                 declare,
@@ -105,14 +105,14 @@ public class QueryingNoData {
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
-        TraceQueryResults result = all.get(0);
-        Assert.assertEquals(result.getName(), "Case No. 1");
-        Assert.assertEquals(result.getStates().size(), 2);
+        TraceQueryResults result = all.get(1);
+        Assert.assertEquals(result.getName(), "Case No. 2");
+        Assert.assertEquals(result.getStates().size(), 3);
         for (QueryState i : result.getStates()) {
             Assert.assertTrue(i.getTemplateValuesMap().containsKey("?X"));
             QueryEvent queryEvent = i.getTemplateValuesMap().get("?X");
             Assert.assertTrue(queryEvent.getData().isEmpty());
-            Assert.assertTrue(queryEvent.getActivity().equals("C") || queryEvent.getActivity().equals("END"),
+            Assert.assertTrue(queryEvent.getActivity().equals("START") || queryEvent.getActivity().equals("D")  || queryEvent.getActivity().equals("END"),
                     queryEvent.toString() + " is invalid");
         }
     }

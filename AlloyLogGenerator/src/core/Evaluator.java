@@ -42,6 +42,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -53,22 +55,22 @@ public class Evaluator {
 
     private static int reuse = 1;
 
-    private static final boolean testMode = true;
+    private static final boolean testMode = false;
 
     private static AlloyRunConfiguration debugConf() {
         AlloyRunConfiguration conf = new AlloyRunConfiguration();
         conf.waitInputBeforeExit = false;
-        conf.minLength = 10;
-        conf.maxLength = 10;
+        conf.minLength = 100;
+        conf.maxLength = 100;
         conf.nPositiveTraces = 10;
         //conf.nNegativeVacuousTraces = 10;
         conf.modelFilename = "../data/query.decl";
-        //conf.modelFilename = "./data/loanApplication.decl";
+//        conf.modelFilename = "../data/loanApplication.decl";
         conf.shuffleStatementsIterations = 0;
         conf.evenLengthsDistribution = false;
         conf.intervalSplits = 1;
         conf.alsFilename = "../data/temp.als";
-        conf.logFilename = "../data/Sepsis Cases - Event Log.xes";
+        conf.logFilename = "../data/BPI2012_eTime_33.xes";
 //        conf.logFilename = "../data/" + LocalDate.now() + "-L" + conf.minLength + "-" + conf.maxLength + ".xes";
         conf.mode = ExecutionMode.QUERY;
         return conf;
@@ -156,14 +158,16 @@ public class Evaluator {
 
             double traceCount = allStates.size();
             Global.log.accept("Found: " + aggregatedData.size());
+            StringBuilder out = new StringBuilder();
             for (Map.Entry<QueryState, AggregationState> state : aggregatedData.entrySet()) {
-                Global.log.accept("\n accuracy: " + state.getValue().count / traceCount + "; vacuous: " + state.getValue().vacuousCount / traceCount);
+                out.append("\n support: ").append(state.getValue().count / traceCount).append("; vacuous: ").append(state.getValue().vacuousCount / traceCount).append("\r\n");
                 for (QueryEvent r : state.getKey().getTemplateValuesMap().values()) {
-                    Global.log.accept(r.toString());
+                    out.append(r.toString()).append("\r\n");
                 }
             }
 
-
+            Global.log.accept(out.toString());
+            Files.write(Paths.get("out.txt"), out.toString().getBytes());
         } else {
             Global.log.accept("Unknown execution mode");
         }
@@ -335,39 +339,46 @@ public class Evaluator {
     }
 
     public static List<TraceQueryResults> queryLog(String queryDeclare,
-                                                 String alsFilename,
-                                                 boolean vacuity,
-                                                 XLog log)
+                                                   String alsFilename,
+                                                   boolean vacuity,
+                                                   XLog log)
             throws Err, DeclareParserException, GenerationException, IOException {
 
         LogToModel logToModel = new LogToModel();
         DeclareModel model = logToModel.parse(log);
 
         List<TraceQueryResults> allStates = new ArrayList<>();
+        int n = 0;
         for (XTrace trace : log) {
-            TraceQueryResults traceStates = Evaluator.queryTrace(
-                    queryDeclare,
-                    alsFilename,
-                    vacuity,
-                    trace,
-                    model,
-                    logToModel.getActivityNameToCode());
+            try {
+                Global.log.accept("Trace " + ++n + " / " + log.size());
+                TraceQueryResults traceStates = Evaluator.queryTrace(
+                        queryDeclare,
+                        alsFilename,
+                        vacuity,
+                        trace,
+                        model,
+                        logToModel.getActivityNameToCode());
 
-            allStates.add(traceStates);
+                allStates.add(traceStates);
+            } catch (Exception e) {
+                Global.log.accept(e.getMessage());
+                e.printStackTrace();
+            }
         }
 
-        allStates.stream().flatMap(i->i.getStates().stream()).flatMap(i -> i.getTemplateValuesMap().values().stream())
+        allStates.stream().flatMap(i -> i.getStates().stream()).flatMap(i -> i.getTemplateValuesMap().values().stream())
                 .forEach(i -> i.decode(logToModel.getCodeToName()));
 
         return allStates;
     }
 
     public static TraceQueryResults queryTrace(String queryDeclare,
-                                             String alsFilename,
-                                             boolean vacuity,
-                                             XTrace trace,
-                                             DeclareModel model,
-                                             Map<String, String> nameToCode)
+                                               String alsFilename,
+                                               boolean vacuity,
+                                               XTrace trace,
+                                               DeclareModel model,
+                                               Map<String, String> nameToCode)
             throws Err, DeclareParserException, GenerationException, IOException {
 
         int bitwidth = 5;
@@ -400,9 +411,7 @@ public class Evaluator {
         QueryExtractor extractor = new QueryExtractor();
         Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), 1000);
 
-        Global.log.accept("\n");
-
-        String name = ((XAttributeLiteralImpl)trace.getAttributes().get("concept:name")).getValue();
+        String name = ((XAttributeLiteralImpl) trace.getAttributes().get("concept:name")).getValue();
         return new TraceQueryResults(name, qlist);
     }
 

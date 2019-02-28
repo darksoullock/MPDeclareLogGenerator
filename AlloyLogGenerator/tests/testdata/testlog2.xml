@@ -53,7 +53,7 @@
         </event>
     </trace>
     <trace>
-        <string key="concept:name" value="Case No. 1"/>
+        <string key="concept:name" value="Case No. 3"/>
         <event>
             <string key="concept:name" value="START"/>
             <string key="lifecycle:transition" value="complete"/>
@@ -82,4 +82,24 @@
             <string key="lifecycle:transition" value="complete"/>
             <date key="time:timestamp" value="2018-12-28T00:58:30.405+02:00"/>
         </event>
-    </trace></log>
+    </trace>
+    <trace>
+        <string key="concept:name" value="Case No. 4"/>
+        <event>
+            <string key="concept:name" value="START"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T21:27:25.405+02:00"/>
+        </event>
+        <event>
+            <string key="concept:name" value="A"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-27T23:33:05.405+02:00"/>
+            <string key="ENUM" value="X"/>
+        </event>
+        <event>
+            <string key="concept:name" value="END"/>
+            <string key="lifecycle:transition" value="complete"/>
+            <date key="time:timestamp" value="2018-12-28T00:58:30.405+02:00"/>
+        </event>
+    </trace>
+</log>

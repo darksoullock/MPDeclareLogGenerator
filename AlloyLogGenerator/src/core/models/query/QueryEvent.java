@@ -66,8 +66,7 @@ public class QueryEvent {
     public String toString() {
         return templateName + ": " +
                 "activity='" + activity + '\'' +
-                ", data=" + data +
-                ", present=" + vacuous
+                ", data=" + data
                 ;
     }
 
