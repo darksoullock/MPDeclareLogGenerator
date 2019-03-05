@@ -87,6 +87,15 @@ public class LogToModel {
         return model;
     }
 
+    public Set<String> parseActivities(XTrace trace) {
+        Set<String> names = new HashSet<>();
+        for (XEvent event : trace) {
+            names.add(((XAttributeLiteralImpl) event.getAttributes().get("concept:name")).getValue());
+        }
+
+        return names;
+    }
+
     private void updateRequired(Map<String, Map<String, Boolean>> requiredMap, String activity, Collection<XAttribute> attributes) {
         Set<String> attributeNames = attributes.stream().map(XAttribute::getKey).collect(Collectors.toSet());
         if (requiredMap.containsKey(activity)) {

@@ -19,7 +19,7 @@ public class QueryingData {
 
     @Test
     public void testResponse() throws Exception {
-        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog1.xml")))).get(0);
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
         String declare = "Response[B,?X]||?";
 
         List<TraceQueryResults> all = Evaluator.queryLog(

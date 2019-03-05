@@ -351,6 +351,42 @@ public class ComplianceChecker {
 
         Assert.assertTrue(violations.isEmpty(), "Given trace expected to be compliant");
     }
+
+    @Test
+    public void testUndefinedActivity() throws Exception {
+        String declare = baseDeclare;
+
+        ByteArrayInputStream is = new ByteArrayInputStream(("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "<log xes.version=\"1.0\" xes.features=\"nested-attributes\" openxes.version=\"1.0RC7\" xmlns=\"http://www.xes-standard.org/\">\n" +
+                "\t<string key=\"concept:name\" value=\"Artificial Log\"/>\n" +
+                "\t<string key=\"lifecycle:model\" value=\"standard\"/>\n" +
+                "\t<string key=\"source\" value=\"DAlloy\"/>\n" +
+                "\t<trace>\n" +
+                "\t\t<string key=\"concept:name\" value=\"Case No. 1\"/>\n" +
+                "\t\t<event>\n" +
+                "\t\t\t<string key=\"concept:name\" value=\"START\"/>\n" +
+                "\t\t\t<string key=\"lifecycle:transition\" value=\"complete\"/>\n" +
+                "\t\t\t<date key=\"time:timestamp\" value=\"2018-12-28T00:58:30.405+02:00\"/>\n" +
+                "\t\t</event>\n" +
+                "\t\t<event>\n" +
+                "\t\t\t<string key=\"concept:name\" value=\"D\"/>\n" +
+                "\t\t\t<string key=\"lifecycle:transition\" value=\"complete\"/>\n" +
+                "\t\t\t<date key=\"time:timestamp\" value=\"2018-12-27T21:27:25.405+02:00\"/>\n" +
+                "\t\t</event>\n" +
+                "\t</trace>\n" +
+                "</log>\n").getBytes());
+
+        List<Statement> violations = Evaluator.checkCompliace(
+                0,
+                declare,
+                "./../data/temp.als",
+                false,
+                new XesXmlParser().parse(is).get(0).get(0));
+
+        Assert.assertFalse(violations.isEmpty(), "Given trace expected to be non-compliant");
+        Assert.assertTrue(violations.contains(new Statement("Response[START, B]", 10)));
+        Assert.assertTrue(violations.contains(new Statement("Existence[C]", 17)));
+    }
 }
 
 

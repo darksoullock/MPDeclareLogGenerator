@@ -21,6 +21,7 @@ import core.models.serialization.trace.IntTraceAttributeImpl;
 import declare.DeclareModel;
 import declare.DeclareParser;
 import declare.DeclareParserException;
+import declare.lang.Activity;
 import declare.lang.Statement;
 import declare.lang.trace.EnumTraceAttribute;
 import declare.lang.trace.FloatTraceAttribute;
@@ -313,6 +314,12 @@ public class Evaluator {
         int bitwidth = 5;
         DeclareParser parser = new DeclareParser();
         DeclareModel model = parser.Parse(declare);
+        LogToModel logToModel = new LogToModel();
+        Set<String> inferredActivities = logToModel.parseActivities(trace);
+        model.getActivities().forEach(i -> inferredActivities.remove(i.getName()));
+        inferredActivities.forEach(i -> model.getActivities().add(new Activity(i)));
+
+
         AlloyCodeGenerator gen = new AlloyCodeGenerator(maxTraceLength, 0, bitwidth, 1, vacuity, false, false);
         gen.Run(model, false, 1, trace);
 
