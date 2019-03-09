@@ -31,4 +31,9 @@ public class FloatValue extends FloatInterval {
     public int getValueCount(int limit) {
         return 1;
     }
+
+    @Override
+    public String toString() {
+        return "Float [" + max + "]";
+    }
 }

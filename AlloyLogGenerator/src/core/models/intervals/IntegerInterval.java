@@ -1,7 +1,7 @@
 package core.models.intervals;
 
-import core.exceptions.BadSolutionException;
 import core.Global;
+import core.exceptions.BadSolutionException;
 import core.interfaces.SafeFunction2;
 import declare.DeclareParserException;
 import declare.fnparser.BinaryExpression;
@@ -113,5 +113,14 @@ public class IntegerInterval extends Interval { //does not include min and max v
 
     public boolean isIn(int value) {
         return value < max && value > min || value == max && value == min;
+    }
+
+    @Override
+    public String toString() {
+        return "Integer " +
+                "[" +
+                (min + 1) + ", " +
+                (max - 1) +
+                "]";
     }
 }

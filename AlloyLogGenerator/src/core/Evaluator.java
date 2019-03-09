@@ -56,7 +56,7 @@ public class Evaluator {
 
     private static int reuse = 1;
 
-    private static final boolean testMode = false;
+    private static final boolean testMode = true;
 
     private static AlloyRunConfiguration debugConf() {
         AlloyRunConfiguration conf = new AlloyRunConfiguration();
@@ -71,7 +71,7 @@ public class Evaluator {
         conf.evenLengthsDistribution = false;
         conf.intervalSplits = 1;
         conf.alsFilename = "../data/temp.als";
-        conf.logFilename = "../data/BPI2012_eTime_33.xes";
+        conf.logFilename = "../data/2018-12-27-L10-15.xes";
 //        conf.logFilename = "../data/" + LocalDate.now() + "-L" + conf.minLength + "-" + conf.maxLength + ".xes";
         conf.mode = ExecutionMode.QUERY;
         return conf;
@@ -416,7 +416,7 @@ public class Evaluator {
         A4Solution solution = alloy.executeFromFile(trace.size(), bitwidth);
 
         QueryExtractor extractor = new QueryExtractor();
-        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), 1000);
+        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), gen.getNumericData(), 1000);
 
         String name = ((XAttributeLiteralImpl) trace.getAttributes().get("concept:name")).getValue();
         return new TraceQueryResults(name, qlist);

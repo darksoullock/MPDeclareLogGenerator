@@ -159,6 +159,10 @@ public class AlloyCodeGenerator {
                 .orElseThrow(() -> new DeclareParserException("no interval for " + floatData.getType() + " = " + attributeValue));
     }
 
+    public Map<String, NumericDataImpl> getNumericData() {
+        return numericData;
+    }
+
     public List<EnumeratedDataImpl> collectData(DeclareModel model, int intervalSplits) {
         List<EnumeratedDataImpl> data = new ArrayList<>(model.getEnumeratedData().size() +
                 model.getIntegerData().size() + model.getFloatData().size());

@@ -31,4 +31,9 @@ public class IntegerValue extends IntegerInterval {
     public int getValueCount(int limit) {
         return 1;
     }
+
+    @Override
+    public String toString() {
+        return "Integer [" + max + "]";
+    }
 }

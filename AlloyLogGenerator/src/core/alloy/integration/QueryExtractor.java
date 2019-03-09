@@ -1,6 +1,7 @@
 package core.alloy.integration;
 
 import core.Global;
+import core.models.declare.data.NumericDataImpl;
 import core.models.query.QueryEvent;
 import core.models.query.QueryState;
 import edu.mit.csail.sdg.alloy4.Err;
@@ -14,10 +15,10 @@ import java.util.*;
 
 public class QueryExtractor {
 
-    public Set<QueryState> get(A4Solution solution, Module world, Map<String, String> paramEncoding, Set<String> dataParams, int limit) throws Err, IOException {
+    public Set<QueryState> get(A4Solution solution, Module world, Map<String, String> paramEncoding, Set<String> dataParams, Map<String, NumericDataImpl> numericData, int limit) throws Err, IOException {
         Set<QueryState> result = new HashSet<>();
         while (solution != null && solution.satisfiable() && limit > 0) {
-            result.add(getOne(solution, world, paramEncoding, dataParams));
+            result.add(getOne(solution, world, paramEncoding, dataParams, numericData));
             solution = solution.next();
             --limit;
         }
@@ -29,14 +30,14 @@ public class QueryExtractor {
         return result;
     }
 
-    private QueryState getOne(A4Solution solution, Module world, Map<String, String> paramEncoding, Set<String> dataParams) throws IOException, Err {
+    private QueryState getOne(A4Solution solution, Module world, Map<String, String> paramEncoding, Set<String> dataParams, Map<String, NumericDataImpl> numericData) throws IOException, Err {
         Map<String, QueryEvent> result = new HashMap<>();
         for (Map.Entry<String, String> param : paramEncoding.entrySet()) {
             QueryEvent item = new QueryEvent();
             item.setTemplateName(param.getKey());
             item.setActivity(getActivityName(solution, world, param.getValue()));
             if (dataParams.contains(param.getKey())) {
-                fillData(item.getData(), solution, world, param.getValue());
+                fillData(item.getData(), solution, world, param.getValue(), numericData);
             }
 
             String vacuityCheck;
@@ -55,9 +56,15 @@ public class QueryExtractor {
         return new QueryState(result);
     }
 
-    private void fillData(Map<String, String> result, A4Solution solution, Module world, String param) throws IOException, Err {
+    private void fillData(Map<String, String> result, A4Solution solution, Module world, String param, Map<String, NumericDataImpl> numericData) throws IOException, Err {
         for (A4Tuple t : (A4TupleSet) solution.eval(world.parseOneExpressionFromString(param + ".data"))) {
-            result.put(t.sig(0).parent.label.substring(5), t.sig(0).label.substring(5));
+            String key = t.sig(0).parent.label.substring(5);
+            String value = t.sig(0).label.substring(5);
+            if (numericData.containsKey(key)){
+                value = numericData.get(key).getMapping().get(value).toString();
+            }
+            result.put(key, value);
+
         }
     }
 

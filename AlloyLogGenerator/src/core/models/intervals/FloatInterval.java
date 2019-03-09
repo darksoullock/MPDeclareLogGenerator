@@ -97,4 +97,13 @@ public class FloatInterval extends Interval {
     public boolean isIn(float value) {
         return (value < max || includeMax && value == max) && (value > min || includeMin && value == min);
     }
+
+    @Override
+    public String toString() {
+        return "Float " +
+                (includeMin ? "[" : "(") +
+                min + ", " +
+                max +
+                (includeMax ? "]" : ")");
+    }
 }
