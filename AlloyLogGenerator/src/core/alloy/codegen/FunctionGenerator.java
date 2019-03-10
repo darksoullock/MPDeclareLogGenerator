@@ -196,6 +196,13 @@ public class FunctionGenerator {
             return handleInverseNumericDifferent(uex.getValue().getNode().getValue());
         }
 
+        if (uex.getNode().getValue().equals("exist")) {
+            alloy.append("one (").append(args.get(0)).append(".data&");
+            tc.append(generateExpression(uex.getValue()));
+            alloy.append(')');
+            return tc.toString();
+        }
+
 
         alloy.append(uex.getNode().getValue()).append(" (");
         tc.append(generateExpression(uex.getValue()));

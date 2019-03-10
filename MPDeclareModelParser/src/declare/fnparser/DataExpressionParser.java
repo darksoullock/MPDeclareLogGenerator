@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * Created by Vasiliy on 2017-10-19.
  */
 public class DataExpressionParser {
-    Pattern tokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)|is not|is|not in|in|or|and|not|same|different|-?\\d+|\\w+\\.\\w+|\\w+|[()]|<=|>=|<|>|=|\\?");
+    Pattern tokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)|is not|is|not in|in|or|and|not|same|different|exist|-?\\d+|\\w+\\.\\w+|\\w+|[()]|<=|>=|<|>|=|\\?");
     Pattern setTokenPattern = Pattern.compile("\\(\\s*\\w+(\\s*,\\s*\\w+)+\\s*\\)");
-    Pattern opTokenPattern = Pattern.compile("is not|is|not in|in|or|and|not|same|different");
+    Pattern opTokenPattern = Pattern.compile("is not|is|not in|in|or|and|not|same|different|exist");
     Pattern varTokenPattern = Pattern.compile("\\w+\\.\\w+");
     Pattern numTokenPattern = Pattern.compile("-?\\d+");
     Pattern taskTokenPattern = Pattern.compile("\\w+");
@@ -55,7 +55,7 @@ public class DataExpressionParser {
 
         for (Token i : tokens) {    //other unary
             if ((depth = depthLevel(i, depth)) > 0) continue;
-            if (i.getType() == Token.Type.Operator && (i.getValue().equals("same") || i.getValue().equals("different")))
+            if (i.getType() == Token.Type.Operator && (i.getValue().equals("same") || i.getValue().equals("different") || i.getValue().equals("exist")))
                 return new UnaryExpression(i, getRight(tokens, i.position));
         }
 
