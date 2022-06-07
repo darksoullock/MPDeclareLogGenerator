@@ -23,7 +23,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -49,7 +49,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -74,7 +74,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -101,7 +101,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -126,7 +126,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -151,7 +151,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -175,7 +175,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -199,7 +199,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -217,7 +217,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);
@@ -236,7 +236,7 @@ public class QueryingNoData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 2);

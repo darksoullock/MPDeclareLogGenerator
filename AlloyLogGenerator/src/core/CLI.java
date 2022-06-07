@@ -48,6 +48,10 @@ public class CLI {
                 else if (args[i].equals("-validatefn")) {
                     config.function = getArg(args, ++i, "validatefn");
                     config.mode = ExecutionMode.FUNCTION_VALIDATION;
+                } else if (args[i].equals("-minsupport")) {
+                    config.minSupport = Float.parseFloat(getArg(args, ++i, "minsupport"));
+                } else if (args[i].equals("-filter")) {
+                    config.queryFilterModel = getArg(args, ++i, "filter");
                 }
                 
                 else throw new IllegalArgumentException("Unknown argument '" + args[i] + "'");
@@ -86,7 +90,7 @@ public class CLI {
                     "-msi N - max. same instances. Don't use\n\n" +
                     "-is N - interval splits count. >=1\n\n" +
                     "-smv - do not generate traces; save .smv code instead (for NuXMV-based generator)\n\n");
-
+                    // query log for constrain templates: java -jar AlloyToLog.jar 0 0 0 queries.decl log.xes -query
             return null;
         }
     }

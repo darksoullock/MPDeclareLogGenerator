@@ -26,7 +26,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -52,7 +52,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -80,7 +80,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -100,7 +100,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -127,7 +127,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -150,7 +150,7 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
@@ -174,11 +174,25 @@ public class QueryingData {
                 declare,
                 "./../data/temp.als",
                 false,
-                log);
+                log, 1);
 
         Assert.assertNotNull(all);
         Assert.assertEquals(all.size(), 4);
+    }
 
+    @Test
+    public void testResponseActivationDataQuery() throws Exception {
+        XLog log = new XesXmlParser().parse(new ByteArrayInputStream(Files.readAllBytes(Paths.get("tests/testdata/testlog2.xml")))).get(0);
+        String declare = "Response[?A, ?B]|?|";
+
+        List<TraceQueryResults> all = Evaluator.queryLog(
+                declare,
+                "./../data/temp.als",
+                true,
+                log, 1);
+
+        Assert.assertNotNull(all);
+        Assert.assertEquals(all.size(), 4);
     }
 
 //    @Test

@@ -447,19 +447,29 @@ public class AlloyCodeGenerator {
     }
 
     // has to be called before GenerateDataBinding(..., QueryParam)
-    public void generateQueryPlaceholder(Map<String, String> names, Set<String> dataParams) {
+    public void generateQueryPlaceholder(Map<String, String> names, Set<String> dataParams, Map<String, String> nameToCode) {
         dataQueryParamPresent = false;
         boolean taskQueryParamPresent = false;
 
         for (Map.Entry<String, String> name : names.entrySet()) {
-            if (dataParams.contains(name.getKey())) {
-                alloy.append("one sig ").append(name.getValue()).append(" extends QueryParam {}\n");
-                dataQueryParamPresent = true;
-            } else {
-                alloy.append("one sig ").append(name.getValue()).append(" extends TaskQueryParam {}\n");
-                taskQueryParamPresent = true;
+            if (name.getKey().startsWith("?")) {
+                if (dataParams.contains(name.getKey())) {
+                    alloy.append("one sig ").append(name.getValue()).append(" extends QueryParam {}\n");
+                    dataQueryParamPresent = true;
+                    String fixedActivityQuery = nameToCode.get(name.getKey().substring(1));
+                    if (fixedActivityQuery != null) {
+                        alloy.append("fact {\n" +
+                                "all p: ").append(name.getValue()).append(" | p.task = ").append(fixedActivityQuery).append('\n').append("}\n");
+                        if (vacuity) {
+                            alloy.append("fact {\n" +
+                                    "all q: ").append(name.getValue()).append(" | q.task = ").append(fixedActivityQuery).append(" implies (some ote: Event | q.data = ote.data) }\n");
+                        }
+                    }
+                } else {
+                    alloy.append("one sig ").append(name.getValue()).append(" extends TaskQueryParam {}\n");
+                    taskQueryParamPresent = true;
+                }
             }
-
         }
 
         if (taskQueryParamPresent) {

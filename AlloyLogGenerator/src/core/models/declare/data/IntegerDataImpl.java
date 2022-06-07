@@ -70,7 +70,7 @@ public class IntegerDataImpl extends NumericDataImpl {
     }
 
     private void addBetweenInterval(int a, int b) { // a and b are not included
-        float step = (b - a) / intervalSplits;
+        float step = (float) (b - a) / intervalSplits;
         if (step < 1) { // to avoid empty intervals -- doesn't split small intervals. can be done other way splitting it by less fractions
             intervals.put(formatBetween(a, b), new IntegerInterval(a, b, valueGenerator));
             return;

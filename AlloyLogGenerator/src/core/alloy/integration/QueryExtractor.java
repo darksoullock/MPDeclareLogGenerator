@@ -61,7 +61,11 @@ public class QueryExtractor {
             String key = t.sig(0).parent.label.substring(5);
             String value = t.sig(0).label.substring(5);
             if (numericData.containsKey(key)){
-                value = numericData.get(key).getMapping().get(value).toString();
+                if (numericData.get(key).getMapping().get(value) != null) {
+                    value = numericData.get(key).getMapping().get(value).toString();
+                } else {
+                    value = "no value";
+                }
             }
             result.put(key, value);
 

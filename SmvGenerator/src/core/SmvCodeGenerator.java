@@ -9,6 +9,7 @@ import declare.lang.data.FloatData;
 import declare.lang.data.IntegerData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class SmvCodeGenerator {
 
     public void run(DeclareModel model, RunConfiguration configuration) throws GenerationException {
         smv = new StringBuilder("MODULE main\n");
-        generateVariables(model.getActivities(), getData(model));
+        generateVariables(new ArrayList<>(model.getActivities()), getData(model));
         generateAssign(configuration.minLength);
         generateDataBinding(model.getActivityToData(), model.getDataToActivity());
         LtlGen ltlGen = new LtlGen(smv);
@@ -93,7 +94,7 @@ public class SmvCodeGenerator {
         return smv.toString();
     }
 
-    private void generateDataBinding(Map<String, List<String>> activityToData, Map<String, List<String>> dataToActivity) {
+    private void generateDataBinding(Map<String, ? extends Collection<String>> activityToData, Map<String, ? extends Collection<String>> dataToActivity) {
         dataBindingJson = new Gson().toJson(activityToData);
     }
 

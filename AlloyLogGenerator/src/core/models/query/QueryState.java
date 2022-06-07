@@ -29,4 +29,12 @@ public class QueryState {
 
         return Objects.hash(templateValues);
     }
+
+    public String getOrderingValue() {
+        if (templateValues == null || templateValues.size() == 0) {
+            return "";
+        }
+
+        return templateValues.values().stream().map(QueryEvent::getActivity).findFirst().orElse("");
+    }
 }

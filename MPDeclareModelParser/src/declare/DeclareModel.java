@@ -33,7 +33,6 @@ public class DeclareModel {
 
     public DeclareModel() {
         activities = new HashSet<>();
-        enumeratedData = new HashSet<>();
         constraints = new ArrayList<>();
         dataConstraints = new ArrayList<>();
 

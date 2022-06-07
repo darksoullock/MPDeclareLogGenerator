@@ -49,6 +49,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static core.models.AlloyRunConfiguration.ExecutionMode;
 
@@ -56,7 +57,7 @@ public class Evaluator {
 
     private static int reuse = 1;
 
-    private static final boolean testMode = true;
+    private static final boolean testMode = false;
 
     private static AlloyRunConfiguration debugConf() {
         AlloyRunConfiguration conf = new AlloyRunConfiguration();
@@ -65,19 +66,20 @@ public class Evaluator {
         conf.maxLength = 100;
         conf.nPositiveTraces = 10;
         //conf.nNegativeVacuousTraces = 10;
-        conf.modelFilename = "../data/query.decl";
+        conf.modelFilename = "data/query.decl";
 //        conf.modelFilename = "../data/loanApplication.decl";
         conf.shuffleStatementsIterations = 0;
         conf.evenLengthsDistribution = false;
         conf.intervalSplits = 1;
-        conf.alsFilename = "../data/temp.als";
-        conf.logFilename = "../data/2018-12-27-L10-15.xes";
+        conf.alsFilename = "data/temp.als";
+        conf.logFilename = "data/Sepsis Cases - Learn Set.xes";
 //        conf.logFilename = "../data/" + LocalDate.now() + "-L" + conf.minLength + "-" + conf.maxLength + ".xes";
         conf.mode = ExecutionMode.QUERY;
         return conf;
     }
 
     public static void main(String[] args) throws Exception {
+        long startTime = System.currentTimeMillis();
         AlloyRunConfiguration config = resolveConfig(args);
         if (config == null) return;
 
@@ -127,51 +129,63 @@ public class Evaluator {
             List<Statement>[] results = new List[log.size()];
             int i = 0;
             for (XTrace trace : log) {
+                if (config.minLength > 0 && i < config.minLength || config.maxLength > 0 && i > config.maxLength) {
+                    ++i;
+                    continue;
+                }
                 results[i] = Evaluator.checkCompliace(
-                        config.maxLength,
+                        0,
                         declare,
                         config.alsFilename,
                         false,
                         trace);
-                ++i;
-            }
 
-            i = 0;
-            Global.log.accept("\n------------------");
-            for (List<Statement> violations : results) {
-                ++i;
-                if (violations.isEmpty()) {
+                if (results[i].isEmpty()) {
                     Global.log.accept(i + ": ok");
                 } else {
-                    Global.log.accept(i + ": violated\n" + String.join("\n", violations.stream().map(x -> " at line " + x.getLine() + ": " + x.getCode()).collect(Collectors.toList())));
+                    Global.log.accept(i + ": violated\n" + String.join("\n", results[i].stream().map(x -> " at line " + x.getLine() + ": " + x.getCode()).collect(Collectors.toList())));
                 }
 
                 Global.log.accept("");
+                ++i;
             }
 
 
         } else if (config.mode == ExecutionMode.QUERY) {
             XLog log = readTracesFromLogFile(config.logFilename);
             String declare = GetDeclare(config.modelFilename);
+            String filterDeclare = null;
+            if (config.queryFilterModel != null) {
+                filterDeclare = GetDeclare(config.queryFilterModel);
+            }
 
-            List<TraceQueryResults> allStates = queryLog(declare, config.alsFilename, false, log);
+            List<TraceQueryResults> allStates = queryLog(declare, config.alsFilename, config.nVacuousTraces > 0, log, config.intervalSplits);
             Map<QueryState, AggregationState> aggregatedData = aggregate(allStates, 0, 0);
 
             double traceCount = allStates.size();
             Global.log.accept("Found: " + aggregatedData.size());
             StringBuilder out = new StringBuilder();
-            for (Map.Entry<QueryState, AggregationState> state : aggregatedData.entrySet()) {
-                out.append("\n support: ").append(state.getValue().count / traceCount).append("; vacuous: ").append(state.getValue().vacuousCount / traceCount).append("\r\n");
-                for (QueryEvent r : state.getKey().getTemplateValuesMap().values()) {
-                    out.append(r.toString()).append("\r\n");
+
+            List<QueryState> orderedStates = aggregatedData.keySet().stream().sorted(Comparator.comparing(QueryState::getOrderingValue)).collect(Collectors.toList());
+            for (QueryState state : orderedStates) {
+                AggregationState aggregation = aggregatedData.get(state);
+                double support = aggregation.count / traceCount;
+                if (support + 0.001 >= config.minSupport) {
+                    out.append("\n support: ").append(support).append("; non-vacuous: ").append(aggregation.vacuousCount / traceCount).append(" (").append(aggregation.vacuousCount).append("/").append(traceCount).append(")").append("\r\n");
+                    for (QueryEvent r : state.getTemplateValuesMap().values()) {
+                        out.append(r.toString()).append("\r\n");
+                    }
                 }
             }
 
-            Global.log.accept(out.toString());
-            Files.write(Paths.get("out.txt"), out.toString().getBytes());
+//            Global.log.accept(out.toString());
+            Files.write(Paths.get(config.modelFilename + ".out.txt"), out.toString().getBytes());
         } else {
             Global.log.accept("Unknown execution mode");
         }
+
+
+        System.out.println("Execution time: " + (System.currentTimeMillis() - startTime));
     }
 
     private static Map<QueryState, AggregationState> aggregate(List<TraceQueryResults> allStates, double threshold, double vacuousThreshold) {
@@ -348,8 +362,7 @@ public class Evaluator {
     public static List<TraceQueryResults> queryLog(String queryDeclare,
                                                    String alsFilename,
                                                    boolean vacuity,
-                                                   XLog log)
-            throws Err, DeclareParserException, GenerationException, IOException {
+                                                   XLog log, int intervalSplits) {
 
         LogToModel logToModel = new LogToModel();
         DeclareModel model = logToModel.parse(log);
@@ -359,13 +372,15 @@ public class Evaluator {
         for (XTrace trace : log) {
             try {
                 Global.log.accept("Trace " + ++n + " / " + log.size());
+
                 TraceQueryResults traceStates = Evaluator.queryTrace(
                         queryDeclare,
                         alsFilename,
                         vacuity,
                         trace,
                         model,
-                        logToModel.getActivityNameToCode());
+                        logToModel.getActivityNameToCode(),
+                        intervalSplits);
 
                 allStates.add(traceStates);
             } catch (Exception e) {
@@ -385,7 +400,8 @@ public class Evaluator {
                                                boolean vacuity,
                                                XTrace trace,
                                                DeclareModel model,
-                                               Map<String, String> nameToCode)
+                                               Map<String, String> nameToCode,
+                                               int intervalSplits)
             throws Err, DeclareParserException, GenerationException, IOException {
 
         int bitwidth = 5;
@@ -404,8 +420,8 @@ public class Evaluator {
 
 
         AlloyCodeGenerator gen = new AlloyCodeGenerator(trace.size(), 0, bitwidth, 0, vacuity, false, true);
-        gen.Run(model, false, 1, trace);
-        gen.generateQueryPlaceholder(qb.getParamEncoding(), qb.getDataParams());
+        gen.Run(model, false, intervalSplits, trace);
+        gen.generateQueryPlaceholder(qb.getParamEncoding(), qb.getDataParams(), nameToCode);
         gen.generateDataBindingForQuerying(model.getActivityToData(), model.getDataToActivity());
 
         String alloyCode = gen.getAlloyCode();
@@ -416,7 +432,7 @@ public class Evaluator {
         A4Solution solution = alloy.executeFromFile(trace.size(), bitwidth);
 
         QueryExtractor extractor = new QueryExtractor();
-        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), gen.getNumericData(), 1000);
+        Set<QueryState> qlist = extractor.get(solution, world, qb.getParamEncoding(), qb.getDataParams(), gen.getNumericData(), 10000);
 
         String name = ((XAttributeLiteralImpl) trace.getAttributes().get("concept:name")).getValue();
         return new TraceQueryResults(name, qlist);

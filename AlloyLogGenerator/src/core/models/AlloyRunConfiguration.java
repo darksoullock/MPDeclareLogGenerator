@@ -21,6 +21,8 @@ public class AlloyRunConfiguration {
 
     public int nNegativeVacuousTraces = 0;
 
+    public float minSupport = 0;
+
     /*
     should be 1 if 'same' or 'different' constraints
     not used or used at most once for any task.
@@ -46,6 +48,8 @@ public class AlloyRunConfiguration {
     public boolean underscore_spaces;
 
     public ExecutionMode mode;
+
+    public String queryFilterModel;
 
     public enum ExecutionMode {
         GENERATION,
