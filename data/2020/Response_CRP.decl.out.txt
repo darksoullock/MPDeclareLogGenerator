@@ -1,0 +1,62 @@
+?Y: activity='Admission_IC', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Admission_NC', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]} 
+
+?Y: activity='CRP', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='CRP', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='ER_Triage', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='IV_Antibiotics', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='IV_Antibiotics', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='IV_Liquid', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='IV_Liquid', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Leucocytes', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Leucocytes', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='Release_A', data={}
+?CRP: activity='CRP', data={CRP=Float [340.0, 508.0], Diagnose=GA, Age=Integer [42, 66]}
+
+?Y: activity='Release_A', data={}
+?CRP: activity='CRP', data={CRP=Float [4.0, 172.0], Diagnose=E, Age=Integer [19, 41]}

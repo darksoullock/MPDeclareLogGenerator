@@ -1,0 +1,95 @@
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [10.333332, 15.899999]}
+?Y: activity='CRP', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Release_B', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='LacticAcid', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='CRP', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Release_D', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='LacticAcid', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='IV_Liquid', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='IV_Liquid', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [10.333332, 15.899999]}
+?Y: activity='Leucocytes', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='CRP', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='ER_Triage', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='ER_Triage', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [10.333332, 15.899999]}
+?Y: activity='Release_B', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Leucocytes', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Release_A', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Release_A', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Release_C', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Release_E', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Leucocytes', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='IV_Antibiotics', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='IV_Antibiotics', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='ER_Sepsis_Triage', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='ER_Sepsis_Triage', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Return_ER', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Admission_IC', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Release_B', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Admission_NC', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Admission_NC', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='ER_Registration', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Release_D', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [4.766666, 10.333332]}
+?Y: activity='Admission_IC', data={}
+
+?LacticAcid: activity='LacticAcid', data={LacticAcid=Float [-0.8, 4.766666]}
+?Y: activity='Return_ER', data={}

@@ -1,0 +1,290 @@
+?Y: activity='Admission_IC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Admission_IC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='Admission_NC', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='CRP', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Registration', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='ER_Sepsis_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='ER_Triage', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='IV_Antibiotics', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='IV_Liquid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='LacticAcid', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Leucocytes', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [42, 66]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=C, Age=Integer [42, 66]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=A, Age=Integer [67, 91]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=R, Age=Integer [67, 91]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=E, Age=Integer [19, 41]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=K, Age=Integer [19, 41]}
+
+?Y: activity='Release_A', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=UA, Age=Integer [42, 66]}
+
+?Y: activity='Release_B', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [42, 66]}
+
+?Y: activity='Release_B', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=AB, Age=Integer [67, 91]}
+
+?Y: activity='Release_C', data={}
+?Leucocytes: activity='Leucocytes', data={Leucocytes=Float [-0.8, 126.89999], Diagnose=B, Age=Integer [67, 91]}
